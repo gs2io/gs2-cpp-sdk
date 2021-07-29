@@ -42,14 +42,15 @@ private:
     {
     public:
         /** リセットタイミング */
-        gs2::optional<StringHolder> resetType;
+        StringHolder resetType;
         /** カウント */
-        gs2::optional<Int64> value;
+        Int64 value;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::ScopedValue& scopedValue);
+        Data(const gs2::optional<gs2::mission::ScopedValue>& scopedValue);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzScopedValue() = default;
 
     EzScopedValue(gs2::mission::ScopedValue scopedValue);
+    EzScopedValue(gs2::optional<gs2::mission::ScopedValue> scopedValue);
 
     EzScopedValue& operator=(const EzScopedValue& ezScopedValue) = default;
     EzScopedValue& operator=(EzScopedValue&& ezScopedValue) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getResetType() const
     {
-        return *ensureData().resetType;
+        return ensureData().resetType;
     }
 
     Int64 getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     // ========================================

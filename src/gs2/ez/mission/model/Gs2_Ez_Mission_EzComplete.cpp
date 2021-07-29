@@ -24,24 +24,30 @@ EzComplete::Data::Data(const Data& data) :
     Gs2Object(data),
     missionGroupName(data.missionGroupName)
 {
-    if (data.completedMissionTaskNames)
-    {
-        completedMissionTaskNames = data.completedMissionTaskNames->deepCopy();
-    }
-    if (data.receivedMissionTaskNames)
-    {
-        receivedMissionTaskNames = data.receivedMissionTaskNames->deepCopy();
-    }
+    completedMissionTaskNames = data.completedMissionTaskNames.deepCopy();
+    receivedMissionTaskNames = data.receivedMissionTaskNames.deepCopy();
 }
 
 EzComplete::Data::Data(const gs2::mission::Complete& complete) :
-    missionGroupName(complete.getMissionGroupName()),
-    completedMissionTaskNames(complete.getCompletedMissionTaskNames()),
-    receivedMissionTaskNames(complete.getReceivedMissionTaskNames())
+    missionGroupName(complete.getMissionGroupName() ? *complete.getMissionGroupName() : StringHolder()),
+    completedMissionTaskNames(complete.getCompletedMissionTaskNames() ? *complete.getCompletedMissionTaskNames() : List<StringHolder>()),
+    receivedMissionTaskNames(complete.getReceivedMissionTaskNames() ? *complete.getReceivedMissionTaskNames() : List<StringHolder>())
+{
+}
+
+EzComplete::Data::Data(const gs2::optional<gs2::mission::Complete>& complete) :
+    missionGroupName(complete && complete->getMissionGroupName() ? *complete->getMissionGroupName() : StringHolder()),
+    completedMissionTaskNames(complete && complete->getCompletedMissionTaskNames() ? *complete->getCompletedMissionTaskNames() : List<StringHolder>()),
+    receivedMissionTaskNames(complete && complete->getReceivedMissionTaskNames() ? *complete->getReceivedMissionTaskNames() : List<StringHolder>())
 {
 }
 
 EzComplete::EzComplete(gs2::mission::Complete complete) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(complete)
+{
+}
+
+EzComplete::EzComplete(gs2::optional<gs2::mission::Complete> complete) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(complete)
 {
 }

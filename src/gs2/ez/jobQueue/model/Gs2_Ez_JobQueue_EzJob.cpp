@@ -31,15 +31,29 @@ EzJob::Data::Data(const Data& data) :
 }
 
 EzJob::Data::Data(const gs2::jobQueue::Job& job) :
-    jobId(job.getJobId()),
-    scriptId(job.getScriptId()),
-    args(job.getArgs()),
+    jobId(job.getJobId() ? *job.getJobId() : StringHolder()),
+    scriptId(job.getScriptId() ? *job.getScriptId() : StringHolder()),
+    args(job.getArgs() ? *job.getArgs() : StringHolder()),
     currentRetryCount(job.getCurrentRetryCount() ? *job.getCurrentRetryCount() : 0),
     maxTryCount(job.getMaxTryCount() ? *job.getMaxTryCount() : 0)
 {
 }
 
+EzJob::Data::Data(const gs2::optional<gs2::jobQueue::Job>& job) :
+    jobId(job && job->getJobId() ? *job->getJobId() : StringHolder()),
+    scriptId(job && job->getScriptId() ? *job->getScriptId() : StringHolder()),
+    args(job && job->getArgs() ? *job->getArgs() : StringHolder()),
+    currentRetryCount(job && job->getCurrentRetryCount() ? *job->getCurrentRetryCount() : 0),
+    maxTryCount(job && job->getMaxTryCount() ? *job->getMaxTryCount() : 0)
+{
+}
+
 EzJob::EzJob(gs2::jobQueue::Job job) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(job)
+{
+}
+
+EzJob::EzJob(gs2::optional<gs2::jobQueue::Job> job) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(job)
 {
 }

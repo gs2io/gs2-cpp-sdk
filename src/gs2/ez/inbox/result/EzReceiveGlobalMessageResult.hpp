@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::inbox::ReceiveGlobalMessageResult& receiveGlobalMessageResult)
         {
+            if (receiveGlobalMessageResult.getItem())
             {
                 auto& list = *receiveGlobalMessageResult.getItem();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzReceiveGlobalMessageResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReceiveGlobalMessageResult);
-    }
-
-    static bool isConvertible(const gs2::inbox::ReceiveGlobalMessageResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

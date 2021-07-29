@@ -44,18 +44,19 @@ private:
     {
     public:
         /** 陳列商品ID */
-        gs2::optional<StringHolder> displayItemId;
+        StringHolder displayItemId;
         /** 種類 */
-        gs2::optional<StringHolder> type;
+        StringHolder type;
         /** 陳列する商品 */
-        gs2::optional<EzSalesItem> salesItem;
+        EzSalesItem salesItem;
         /** 陳列する商品グループ */
-        gs2::optional<EzSalesItemGroup> salesItemGroup;
+        EzSalesItemGroup salesItemGroup;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::showcase::DisplayItem& displayItem);
+        Data(const gs2::optional<gs2::showcase::DisplayItem>& displayItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzDisplayItem() = default;
 
     EzDisplayItem(gs2::showcase::DisplayItem displayItem);
+    EzDisplayItem(gs2::optional<gs2::showcase::DisplayItem> displayItem);
 
     EzDisplayItem& operator=(const EzDisplayItem& ezDisplayItem) = default;
     EzDisplayItem& operator=(EzDisplayItem&& ezDisplayItem) = default;
@@ -85,22 +87,22 @@ public:
 
     const StringHolder& getDisplayItemId() const
     {
-        return *ensureData().displayItemId;
+        return ensureData().displayItemId;
     }
 
     const StringHolder& getType() const
     {
-        return *ensureData().type;
+        return ensureData().type;
     }
 
     const EzSalesItem& getSalesItem() const
     {
-        return *ensureData().salesItem;
+        return ensureData().salesItem;
     }
 
     const EzSalesItemGroup& getSalesItemGroup() const
     {
-        return *ensureData().salesItemGroup;
+        return ensureData().salesItemGroup;
     }
 
     // ========================================

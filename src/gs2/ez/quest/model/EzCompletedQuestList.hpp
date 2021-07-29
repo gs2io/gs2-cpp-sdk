@@ -42,14 +42,15 @@ private:
     {
     public:
         /** クエストグループ名 */
-        gs2::optional<StringHolder> questGroupName;
+        StringHolder questGroupName;
         /** 攻略済みのクエスト名一覧のリスト */
-        gs2::optional<List<StringHolder>> completeQuestNames;
+        List<StringHolder> completeQuestNames;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::CompletedQuestList& completedQuestList);
+        Data(const gs2::optional<gs2::quest::CompletedQuestList>& completedQuestList);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzCompletedQuestList() = default;
 
     EzCompletedQuestList(gs2::quest::CompletedQuestList completedQuestList);
+    EzCompletedQuestList(gs2::optional<gs2::quest::CompletedQuestList> completedQuestList);
 
     EzCompletedQuestList& operator=(const EzCompletedQuestList& ezCompletedQuestList) = default;
     EzCompletedQuestList& operator=(EzCompletedQuestList&& ezCompletedQuestList) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getQuestGroupName() const
     {
-        return *ensureData().questGroupName;
+        return ensureData().questGroupName;
     }
 
     const List<StringHolder>& getCompleteQuestNames() const
     {
-        return *ensureData().completeQuestNames;
+        return ensureData().completeQuestNames;
     }
 
     // ========================================

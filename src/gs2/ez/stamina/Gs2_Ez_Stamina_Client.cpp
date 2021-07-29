@@ -53,7 +53,7 @@ void Client::listStaminaModels(
                 AsyncEzListStaminaModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListStaminaModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListStaminaModelsResult ezResult(*r.getResult());
                 AsyncEzListStaminaModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getStaminaModel(
                 AsyncEzGetStaminaModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetStaminaModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetStaminaModelResult ezResult(*r.getResult());
                 AsyncEzGetStaminaModelResult asyncResult(std::move(ezResult));
@@ -127,7 +127,7 @@ void Client::getStamina(
                 AsyncEzGetStaminaResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetStaminaResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetStaminaResult ezResult(*r.getResult());
                 AsyncEzGetStaminaResult asyncResult(std::move(ezResult));
@@ -167,7 +167,7 @@ void Client::consume(
                 AsyncEzConsumeResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzConsumeResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzConsumeResult ezResult(*r.getResult());
                 AsyncEzConsumeResult asyncResult(std::move(ezResult));

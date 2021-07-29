@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::ranking::DescribeCategoryModelsResult& describeCategoryModelsResult)
         {
+            if (describeCategoryModelsResult.getItems())
             {
                 auto& list = *describeCategoryModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListCategoriesResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListCategoriesResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::DescribeCategoryModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

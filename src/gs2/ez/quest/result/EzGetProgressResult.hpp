@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::quest::GetProgressResult& getProgressResult) :
-            item(*getProgressResult.getItem()),
-            questGroup(*getProgressResult.getQuestGroup()),
-            quest(*getProgressResult.getQuest())
+            item(getProgressResult.getItem()),
+            questGroup(getProgressResult.getQuestGroup()),
+            quest(getProgressResult.getQuest())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzGetProgressResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetProgressResult);
-    }
-
-    static bool isConvertible(const gs2::quest::GetProgressResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getQuestGroup().has_value() &&
-            result.getQuest().has_value();
     }
 
     // ========================================

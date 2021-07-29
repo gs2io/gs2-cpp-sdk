@@ -44,18 +44,19 @@ private:
     {
     public:
         /** 交換レートの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 交換レートの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 消費アクションリスト */
-        gs2::optional<List<EzConsumeAction>> consumeActions;
+        List<EzConsumeAction> consumeActions;
         /** 入手アクションリスト */
-        gs2::optional<List<EzAcquireAction>> acquireActions;
+        List<EzAcquireAction> acquireActions;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::exchange::RateModel& rateModel);
+        Data(const gs2::optional<gs2::exchange::RateModel>& rateModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzRateModel() = default;
 
     EzRateModel(gs2::exchange::RateModel rateModel);
+    EzRateModel(gs2::optional<gs2::exchange::RateModel> rateModel);
 
     EzRateModel& operator=(const EzRateModel& ezRateModel) = default;
     EzRateModel& operator=(EzRateModel&& ezRateModel) = default;
@@ -85,22 +87,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzConsumeAction>& getConsumeActions() const
     {
-        return *ensureData().consumeActions;
+        return ensureData().consumeActions;
     }
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *ensureData().acquireActions;
+        return ensureData().acquireActions;
     }
 
     // ========================================

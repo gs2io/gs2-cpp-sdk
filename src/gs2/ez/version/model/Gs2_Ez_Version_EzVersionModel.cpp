@@ -27,32 +27,39 @@ EzVersionModel::Data::Data(const Data& data) :
     scope(data.scope),
     needSignature(data.needSignature)
 {
-    if (data.warningVersion)
-    {
-        warningVersion = data.warningVersion->deepCopy();
-    }
-    if (data.errorVersion)
-    {
-        errorVersion = data.errorVersion->deepCopy();
-    }
-    if (data.currentVersion)
-    {
-        currentVersion = data.currentVersion->deepCopy();
-    }
+    warningVersion = data.warningVersion.deepCopy();
+    errorVersion = data.errorVersion.deepCopy();
+    currentVersion = data.currentVersion.deepCopy();
 }
 
 EzVersionModel::Data::Data(const gs2::version::VersionModel& versionModel) :
-    name(versionModel.getName()),
-    metadata(versionModel.getMetadata()),
-    warningVersion(*versionModel.getWarningVersion()),
-    errorVersion(*versionModel.getErrorVersion()),
-    scope(versionModel.getScope()),
-    currentVersion(*versionModel.getCurrentVersion()),
+    name(versionModel.getName() ? *versionModel.getName() : StringHolder()),
+    metadata(versionModel.getMetadata() ? *versionModel.getMetadata() : StringHolder()),
+    warningVersion(versionModel.getWarningVersion()),
+    errorVersion(versionModel.getErrorVersion()),
+    scope(versionModel.getScope() ? *versionModel.getScope() : StringHolder()),
+    currentVersion(versionModel.getCurrentVersion()),
     needSignature(versionModel.getNeedSignature() ? *versionModel.getNeedSignature() : false)
 {
 }
 
+EzVersionModel::Data::Data(const gs2::optional<gs2::version::VersionModel>& versionModel) :
+    name(versionModel && versionModel->getName() ? *versionModel->getName() : StringHolder()),
+    metadata(versionModel && versionModel->getMetadata() ? *versionModel->getMetadata() : StringHolder()),
+    warningVersion(versionModel ? versionModel->getWarningVersion() : gs2::optional<gs2::version::Version>()),
+    errorVersion(versionModel ? versionModel->getErrorVersion() : gs2::optional<gs2::version::Version>()),
+    scope(versionModel && versionModel->getScope() ? *versionModel->getScope() : StringHolder()),
+    currentVersion(versionModel ? versionModel->getCurrentVersion() : gs2::optional<gs2::version::Version>()),
+    needSignature(versionModel && versionModel->getNeedSignature() ? *versionModel->getNeedSignature() : false)
+{
+}
+
 EzVersionModel::EzVersionModel(gs2::version::VersionModel versionModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(versionModel)
+{
+}
+
+EzVersionModel::EzVersionModel(gs2::optional<gs2::version::VersionModel> versionModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(versionModel)
 {
 }

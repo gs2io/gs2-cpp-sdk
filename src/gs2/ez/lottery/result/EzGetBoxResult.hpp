@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::lottery::GetBoxResult& getBoxResult) :
-            item(*getBoxResult.getItem())
+            item(getBoxResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetBoxResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetBoxResult);
-    }
-
-    static bool isConvertible(const gs2::lottery::GetBoxResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

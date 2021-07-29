@@ -53,7 +53,7 @@ void Client::listInventoryModels(
                 AsyncEzListInventoryModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListInventoryModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListInventoryModelsResult ezResult(*r.getResult());
                 AsyncEzListInventoryModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getInventoryModel(
                 AsyncEzGetInventoryModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetInventoryModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetInventoryModelResult ezResult(*r.getResult());
                 AsyncEzGetInventoryModelResult asyncResult(std::move(ezResult));
@@ -125,7 +125,7 @@ void Client::listItemModels(
                 AsyncEzListItemModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListItemModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListItemModelsResult ezResult(*r.getResult());
                 AsyncEzListItemModelsResult asyncResult(std::move(ezResult));
@@ -163,7 +163,7 @@ void Client::getItemModel(
                 AsyncEzGetItemModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetItemModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetItemModelResult ezResult(*r.getResult());
                 AsyncEzGetItemModelResult asyncResult(std::move(ezResult));
@@ -209,7 +209,7 @@ void Client::listInventories(
                 AsyncEzListInventoriesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListInventoriesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListInventoriesResult ezResult(*r.getResult());
                 AsyncEzListInventoriesResult asyncResult(std::move(ezResult));
@@ -247,7 +247,7 @@ void Client::getInventory(
                 AsyncEzGetInventoryResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetInventoryResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetInventoryResult ezResult(*r.getResult());
                 AsyncEzGetInventoryResult asyncResult(std::move(ezResult));
@@ -295,7 +295,7 @@ void Client::listItems(
                 AsyncEzListItemsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListItemsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListItemsResult ezResult(*r.getResult());
                 AsyncEzListItemsResult asyncResult(std::move(ezResult));
@@ -335,7 +335,7 @@ void Client::getItem(
                 AsyncEzGetItemResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetItemResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetItemResult ezResult(*r.getResult());
                 AsyncEzGetItemResult asyncResult(std::move(ezResult));
@@ -382,7 +382,7 @@ void Client::getItemWithSignature(
                 AsyncEzGetItemWithSignatureResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetItemWithSignatureResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetItemWithSignatureResult ezResult(*r.getResult());
                 AsyncEzGetItemWithSignatureResult asyncResult(std::move(ezResult));
@@ -429,7 +429,7 @@ void Client::consume(
                 AsyncEzConsumeResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzConsumeResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzConsumeResult ezResult(*r.getResult());
                 AsyncEzConsumeResult asyncResult(std::move(ezResult));

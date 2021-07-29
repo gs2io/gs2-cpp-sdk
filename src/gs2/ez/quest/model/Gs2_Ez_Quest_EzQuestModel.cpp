@@ -27,58 +27,78 @@ EzQuestModel::Data::Data(const Data& data) :
     metadata(data.metadata),
     challengePeriodEventId(data.challengePeriodEventId)
 {
-    if (data.contents)
-    {
-        contents = data.contents->deepCopy();
-    }
-    if (data.consumeActions)
-    {
-        consumeActions = data.consumeActions->deepCopy();
-    }
-    if (data.failedAcquireActions)
-    {
-        failedAcquireActions = data.failedAcquireActions->deepCopy();
-    }
-    if (data.premiseQuestNames)
-    {
-        premiseQuestNames = data.premiseQuestNames->deepCopy();
-    }
+    contents = data.contents.deepCopy();
+    consumeActions = data.consumeActions.deepCopy();
+    failedAcquireActions = data.failedAcquireActions.deepCopy();
+    premiseQuestNames = data.premiseQuestNames.deepCopy();
 }
 
 EzQuestModel::Data::Data(const gs2::quest::QuestModel& questModel) :
-    questModelId(questModel.getQuestModelId()),
-    name(questModel.getName()),
-    metadata(questModel.getMetadata()),
-    challengePeriodEventId(questModel.getChallengePeriodEventId()),
-    premiseQuestNames(questModel.getPremiseQuestNames())
+    questModelId(questModel.getQuestModelId() ? *questModel.getQuestModelId() : StringHolder()),
+    name(questModel.getName() ? *questModel.getName() : StringHolder()),
+    metadata(questModel.getMetadata() ? *questModel.getMetadata() : StringHolder()),
+    challengePeriodEventId(questModel.getChallengePeriodEventId() ? *questModel.getChallengePeriodEventId() : StringHolder()),
+    premiseQuestNames(questModel.getPremiseQuestNames() ? *questModel.getPremiseQuestNames() : List<StringHolder>())
 {
-    contents.emplace();
     if (questModel.getContents())
     {
         for (int i = 0; i < questModel.getContents()->getCount(); ++i)
         {
-            *contents += EzContents((*questModel.getContents())[i]);
+            contents += EzContents((*questModel.getContents())[i]);
         }
     }
-    consumeActions.emplace();
     if (questModel.getConsumeActions())
     {
         for (int i = 0; i < questModel.getConsumeActions()->getCount(); ++i)
         {
-            *consumeActions += EzConsumeAction((*questModel.getConsumeActions())[i]);
+            consumeActions += EzConsumeAction((*questModel.getConsumeActions())[i]);
         }
     }
-    failedAcquireActions.emplace();
     if (questModel.getFailedAcquireActions())
     {
         for (int i = 0; i < questModel.getFailedAcquireActions()->getCount(); ++i)
         {
-            *failedAcquireActions += EzAcquireAction((*questModel.getFailedAcquireActions())[i]);
+            failedAcquireActions += EzAcquireAction((*questModel.getFailedAcquireActions())[i]);
+        }
+    }
+}
+
+EzQuestModel::Data::Data(const gs2::optional<gs2::quest::QuestModel>& questModel) :
+    questModelId(questModel && questModel->getQuestModelId() ? *questModel->getQuestModelId() : StringHolder()),
+    name(questModel && questModel->getName() ? *questModel->getName() : StringHolder()),
+    metadata(questModel && questModel->getMetadata() ? *questModel->getMetadata() : StringHolder()),
+    challengePeriodEventId(questModel && questModel->getChallengePeriodEventId() ? *questModel->getChallengePeriodEventId() : StringHolder()),
+    premiseQuestNames(questModel && questModel->getPremiseQuestNames() ? *questModel->getPremiseQuestNames() : List<StringHolder>())
+{
+    if (questModel && questModel->getContents())
+    {
+        for (int i = 0; i < questModel->getContents()->getCount(); ++i)
+        {
+            contents += EzContents((*questModel->getContents())[i]);
+        }
+    }
+    if (questModel && questModel->getConsumeActions())
+    {
+        for (int i = 0; i < questModel->getConsumeActions()->getCount(); ++i)
+        {
+            consumeActions += EzConsumeAction((*questModel->getConsumeActions())[i]);
+        }
+    }
+    if (questModel && questModel->getFailedAcquireActions())
+    {
+        for (int i = 0; i < questModel->getFailedAcquireActions()->getCount(); ++i)
+        {
+            failedAcquireActions += EzAcquireAction((*questModel->getFailedAcquireActions())[i]);
         }
     }
 }
 
 EzQuestModel::EzQuestModel(gs2::quest::QuestModel questModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(questModel)
+{
+}
+
+EzQuestModel::EzQuestModel(gs2::optional<gs2::quest::QuestModel> questModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(questModel)
 {
 }

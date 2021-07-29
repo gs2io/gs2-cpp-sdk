@@ -42,14 +42,15 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 公開されるプロフィール */
-        gs2::optional<StringHolder> publicProfile;
+        StringHolder publicProfile;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::friend_::PublicProfile& publicProfile);
+        Data(const gs2::optional<gs2::friend_::PublicProfile>& publicProfile);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzPublicProfile() = default;
 
     EzPublicProfile(gs2::friend_::PublicProfile publicProfile);
+    EzPublicProfile(gs2::optional<gs2::friend_::PublicProfile> publicProfile);
 
     EzPublicProfile& operator=(const EzPublicProfile& ezPublicProfile) = default;
     EzPublicProfile& operator=(EzPublicProfile&& ezPublicProfile) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getPublicProfile() const
     {
-        return *ensureData().publicProfile;
+        return ensureData().publicProfile;
     }
 
     // ========================================

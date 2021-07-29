@@ -55,7 +55,7 @@ void Client::getRoom(
                 AsyncEzGetRoomResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetRoomResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetRoomResult ezResult(*r.getResult());
                 AsyncEzGetRoomResult asyncResult(std::move(ezResult));

@@ -49,6 +49,7 @@ private:
         Data(const gs2::account::DescribeTakeOversResult& describeTakeOversResult) :
             nextPageToken(describeTakeOversResult.getNextPageToken())
         {
+            if (describeTakeOversResult.getItems())
             {
                 auto& list = *describeTakeOversResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListTakeOverSettingsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListTakeOverSettingsResult);
-    }
-
-    static bool isConvertible(const gs2::account::DescribeTakeOversResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

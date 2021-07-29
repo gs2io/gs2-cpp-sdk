@@ -43,16 +43,17 @@ private:
     {
     public:
         /** フォームの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** フォームの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** スリットリスト */
-        gs2::optional<List<EzSlotModel>> slots;
+        List<EzSlotModel> slots;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::FormModel& formModel);
+        Data(const gs2::optional<gs2::formation::FormModel>& formModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzFormModel() = default;
 
     EzFormModel(gs2::formation::FormModel formModel);
+    EzFormModel(gs2::optional<gs2::formation::FormModel> formModel);
 
     EzFormModel& operator=(const EzFormModel& ezFormModel) = default;
     EzFormModel& operator=(EzFormModel&& ezFormModel) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzSlotModel>& getSlots() const
     {
-        return *ensureData().slots;
+        return ensureData().slots;
     }
 
     // ========================================

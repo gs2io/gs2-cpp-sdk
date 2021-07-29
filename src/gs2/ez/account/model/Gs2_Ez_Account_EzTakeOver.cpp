@@ -30,14 +30,27 @@ EzTakeOver::Data::Data(const Data& data) :
 }
 
 EzTakeOver::Data::Data(const gs2::account::TakeOver& takeOver) :
-    userId(takeOver.getUserId()),
+    userId(takeOver.getUserId() ? *takeOver.getUserId() : StringHolder()),
     type(takeOver.getType() ? *takeOver.getType() : 0),
-    userIdentifier(takeOver.getUserIdentifier()),
+    userIdentifier(takeOver.getUserIdentifier() ? *takeOver.getUserIdentifier() : StringHolder()),
     createdAt(takeOver.getCreatedAt() ? *takeOver.getCreatedAt() : 0)
 {
 }
 
+EzTakeOver::Data::Data(const gs2::optional<gs2::account::TakeOver>& takeOver) :
+    userId(takeOver && takeOver->getUserId() ? *takeOver->getUserId() : StringHolder()),
+    type(takeOver && takeOver->getType() ? *takeOver->getType() : 0),
+    userIdentifier(takeOver && takeOver->getUserIdentifier() ? *takeOver->getUserIdentifier() : StringHolder()),
+    createdAt(takeOver && takeOver->getCreatedAt() ? *takeOver->getCreatedAt() : 0)
+{
+}
+
 EzTakeOver::EzTakeOver(gs2::account::TakeOver takeOver) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(takeOver)
+{
+}
+
+EzTakeOver::EzTakeOver(gs2::optional<gs2::account::TakeOver> takeOver) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(takeOver)
 {
 }

@@ -25,39 +25,56 @@ EzSalesItem::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata)
 {
-    if (data.consumeActions)
-    {
-        consumeActions = data.consumeActions->deepCopy();
-    }
-    if (data.acquireActions)
-    {
-        acquireActions = data.acquireActions->deepCopy();
-    }
+    consumeActions = data.consumeActions.deepCopy();
+    acquireActions = data.acquireActions.deepCopy();
 }
 
 EzSalesItem::Data::Data(const gs2::showcase::SalesItem& salesItem) :
-    name(salesItem.getName()),
-    metadata(salesItem.getMetadata())
+    name(salesItem.getName() ? *salesItem.getName() : StringHolder()),
+    metadata(salesItem.getMetadata() ? *salesItem.getMetadata() : StringHolder())
 {
-    consumeActions.emplace();
     if (salesItem.getConsumeActions())
     {
         for (int i = 0; i < salesItem.getConsumeActions()->getCount(); ++i)
         {
-            *consumeActions += EzConsumeAction((*salesItem.getConsumeActions())[i]);
+            consumeActions += EzConsumeAction((*salesItem.getConsumeActions())[i]);
         }
     }
-    acquireActions.emplace();
     if (salesItem.getAcquireActions())
     {
         for (int i = 0; i < salesItem.getAcquireActions()->getCount(); ++i)
         {
-            *acquireActions += EzAcquireAction((*salesItem.getAcquireActions())[i]);
+            acquireActions += EzAcquireAction((*salesItem.getAcquireActions())[i]);
+        }
+    }
+}
+
+EzSalesItem::Data::Data(const gs2::optional<gs2::showcase::SalesItem>& salesItem) :
+    name(salesItem && salesItem->getName() ? *salesItem->getName() : StringHolder()),
+    metadata(salesItem && salesItem->getMetadata() ? *salesItem->getMetadata() : StringHolder())
+{
+    if (salesItem && salesItem->getConsumeActions())
+    {
+        for (int i = 0; i < salesItem->getConsumeActions()->getCount(); ++i)
+        {
+            consumeActions += EzConsumeAction((*salesItem->getConsumeActions())[i]);
+        }
+    }
+    if (salesItem && salesItem->getAcquireActions())
+    {
+        for (int i = 0; i < salesItem->getAcquireActions()->getCount(); ++i)
+        {
+            acquireActions += EzAcquireAction((*salesItem->getAcquireActions())[i]);
         }
     }
 }
 
 EzSalesItem::EzSalesItem(gs2::showcase::SalesItem salesItem) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(salesItem)
+{
+}
+
+EzSalesItem::EzSalesItem(gs2::optional<gs2::showcase::SalesItem> salesItem) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(salesItem)
 {
 }

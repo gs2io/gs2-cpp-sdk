@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::dictionary::GetEntryWithSignatureResult& getEntryWithSignatureResult) :
-            item(*getEntryWithSignatureResult.getItem()),
-            body(*getEntryWithSignatureResult.getBody()),
-            signature(*getEntryWithSignatureResult.getSignature())
+            item(getEntryWithSignatureResult.getItem()),
+            body(getEntryWithSignatureResult.getBody() ? *getEntryWithSignatureResult.getBody() : StringHolder()),
+            signature(getEntryWithSignatureResult.getSignature() ? *getEntryWithSignatureResult.getSignature() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzGetEntryWithSignatureResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetEntryWithSignatureResult);
-    }
-
-    static bool isConvertible(const gs2::dictionary::GetEntryWithSignatureResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getBody().has_value() &&
-            result.getSignature().has_value();
     }
 
     // ========================================

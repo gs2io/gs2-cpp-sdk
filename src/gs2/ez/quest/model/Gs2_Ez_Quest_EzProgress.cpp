@@ -27,29 +27,45 @@ EzProgress::Data::Data(const Data& data) :
     questModelId(data.questModelId),
     randomSeed(data.randomSeed)
 {
-    if (data.rewards)
-    {
-        rewards = data.rewards->deepCopy();
-    }
+    rewards = data.rewards.deepCopy();
 }
 
 EzProgress::Data::Data(const gs2::quest::Progress& progress) :
-    progressId(progress.getProgressId()),
-    transactionId(progress.getTransactionId()),
-    questModelId(progress.getQuestModelId()),
+    progressId(progress.getProgressId() ? *progress.getProgressId() : StringHolder()),
+    transactionId(progress.getTransactionId() ? *progress.getTransactionId() : StringHolder()),
+    questModelId(progress.getQuestModelId() ? *progress.getQuestModelId() : StringHolder()),
     randomSeed(progress.getRandomSeed() ? *progress.getRandomSeed() : 0)
 {
-    rewards.emplace();
     if (progress.getRewards())
     {
         for (int i = 0; i < progress.getRewards()->getCount(); ++i)
         {
-            *rewards += EzReward((*progress.getRewards())[i]);
+            rewards += EzReward((*progress.getRewards())[i]);
+        }
+    }
+}
+
+EzProgress::Data::Data(const gs2::optional<gs2::quest::Progress>& progress) :
+    progressId(progress && progress->getProgressId() ? *progress->getProgressId() : StringHolder()),
+    transactionId(progress && progress->getTransactionId() ? *progress->getTransactionId() : StringHolder()),
+    questModelId(progress && progress->getQuestModelId() ? *progress->getQuestModelId() : StringHolder()),
+    randomSeed(progress && progress->getRandomSeed() ? *progress->getRandomSeed() : 0)
+{
+    if (progress && progress->getRewards())
+    {
+        for (int i = 0; i < progress->getRewards()->getCount(); ++i)
+        {
+            rewards += EzReward((*progress->getRewards())[i]);
         }
     }
 }
 
 EzProgress::EzProgress(gs2::quest::Progress progress) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
+{
+}
+
+EzProgress::EzProgress(gs2::optional<gs2::quest::Progress> progress) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
 {
 }

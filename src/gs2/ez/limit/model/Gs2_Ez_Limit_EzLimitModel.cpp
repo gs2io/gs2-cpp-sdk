@@ -33,17 +33,33 @@ EzLimitModel::Data::Data(const Data& data) :
 }
 
 EzLimitModel::Data::Data(const gs2::limit::LimitModel& limitModel) :
-    limitModelId(limitModel.getLimitModelId()),
-    name(limitModel.getName()),
-    metadata(limitModel.getMetadata()),
-    resetType(limitModel.getResetType()),
+    limitModelId(limitModel.getLimitModelId() ? *limitModel.getLimitModelId() : StringHolder()),
+    name(limitModel.getName() ? *limitModel.getName() : StringHolder()),
+    metadata(limitModel.getMetadata() ? *limitModel.getMetadata() : StringHolder()),
+    resetType(limitModel.getResetType() ? *limitModel.getResetType() : StringHolder()),
     resetDayOfMonth(limitModel.getResetDayOfMonth() ? *limitModel.getResetDayOfMonth() : 0),
-    resetDayOfWeek(limitModel.getResetDayOfWeek()),
+    resetDayOfWeek(limitModel.getResetDayOfWeek() ? *limitModel.getResetDayOfWeek() : StringHolder()),
     resetHour(limitModel.getResetHour() ? *limitModel.getResetHour() : 0)
 {
 }
 
+EzLimitModel::Data::Data(const gs2::optional<gs2::limit::LimitModel>& limitModel) :
+    limitModelId(limitModel && limitModel->getLimitModelId() ? *limitModel->getLimitModelId() : StringHolder()),
+    name(limitModel && limitModel->getName() ? *limitModel->getName() : StringHolder()),
+    metadata(limitModel && limitModel->getMetadata() ? *limitModel->getMetadata() : StringHolder()),
+    resetType(limitModel && limitModel->getResetType() ? *limitModel->getResetType() : StringHolder()),
+    resetDayOfMonth(limitModel && limitModel->getResetDayOfMonth() ? *limitModel->getResetDayOfMonth() : 0),
+    resetDayOfWeek(limitModel && limitModel->getResetDayOfWeek() ? *limitModel->getResetDayOfWeek() : StringHolder()),
+    resetHour(limitModel && limitModel->getResetHour() ? *limitModel->getResetHour() : 0)
+{
+}
+
 EzLimitModel::EzLimitModel(gs2::limit::LimitModel limitModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(limitModel)
+{
+}
+
+EzLimitModel::EzLimitModel(gs2::optional<gs2::limit::LimitModel> limitModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(limitModel)
 {
 }

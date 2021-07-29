@@ -42,16 +42,17 @@ private:
     {
     public:
         /** スロットモデル名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** プロパティID */
-        gs2::optional<StringHolder> propertyId;
+        StringHolder propertyId;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::Slot& slot);
+        Data(const gs2::optional<gs2::formation::Slot>& slot);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzSlot() = default;
 
     EzSlot(gs2::formation::Slot slot);
+    EzSlot(gs2::optional<gs2::formation::Slot> slot);
 
     EzSlot& operator=(const EzSlot& ezSlot) = default;
     EzSlot& operator=(EzSlot&& ezSlot) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getPropertyId() const
     {
-        return *ensureData().propertyId;
+        return ensureData().propertyId;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     // ========================================

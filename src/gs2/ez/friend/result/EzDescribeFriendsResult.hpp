@@ -49,6 +49,7 @@ private:
         Data(const gs2::friend_::DescribeFriendsResult& describeFriendsResult) :
             nextPageToken(describeFriendsResult.getNextPageToken())
         {
+            if (describeFriendsResult.getItems())
             {
                 auto& list = *describeFriendsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzDescribeFriendsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeFriendsResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::DescribeFriendsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

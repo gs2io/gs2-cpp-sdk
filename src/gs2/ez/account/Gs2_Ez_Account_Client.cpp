@@ -53,7 +53,7 @@ void Client::create(
                 AsyncEzCreateResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCreateResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCreateResult ezResult(*r.getResult());
                 AsyncEzCreateResult asyncResult(std::move(ezResult));
@@ -93,7 +93,7 @@ void Client::authentication(
                 AsyncEzAuthenticationResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzAuthenticationResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzAuthenticationResult ezResult(*r.getResult());
                 AsyncEzAuthenticationResult asyncResult(std::move(ezResult));
@@ -135,7 +135,7 @@ void Client::addTakeOverSetting(
                 AsyncEzAddTakeOverSettingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzAddTakeOverSettingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzAddTakeOverSettingResult ezResult(*r.getResult());
                 AsyncEzAddTakeOverSettingResult asyncResult(std::move(ezResult));
@@ -181,7 +181,7 @@ void Client::listTakeOverSettings(
                 AsyncEzListTakeOverSettingsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListTakeOverSettingsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListTakeOverSettingsResult ezResult(*r.getResult());
                 AsyncEzListTakeOverSettingsResult asyncResult(std::move(ezResult));
@@ -223,7 +223,7 @@ void Client::updateTakeOverSetting(
                 AsyncEzUpdateTakeOverSettingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUpdateTakeOverSettingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUpdateTakeOverSettingResult ezResult(*r.getResult());
                 AsyncEzUpdateTakeOverSettingResult asyncResult(std::move(ezResult));
@@ -293,7 +293,7 @@ void Client::doTakeOver(
                 AsyncEzDoTakeOverResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDoTakeOverResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDoTakeOverResult ezResult(*r.getResult());
                 AsyncEzDoTakeOverResult asyncResult(std::move(ezResult));

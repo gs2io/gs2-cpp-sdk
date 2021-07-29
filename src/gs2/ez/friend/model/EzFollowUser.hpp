@@ -42,12 +42,13 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::friend_::FollowUser& followUser);
+        Data(const gs2::optional<gs2::friend_::FollowUser>& followUser);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -63,6 +64,7 @@ public:
     ~EzFollowUser() = default;
 
     EzFollowUser(gs2::friend_::FollowUser followUser);
+    EzFollowUser(gs2::optional<gs2::friend_::FollowUser> followUser);
 
     EzFollowUser& operator=(const EzFollowUser& ezFollowUser) = default;
     EzFollowUser& operator=(EzFollowUser&& ezFollowUser) = default;
@@ -77,7 +79,7 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     // ========================================

@@ -65,7 +65,7 @@ void Client::list(
                 AsyncEzListResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListResult ezResult(*r.getResult());
                 AsyncEzListResult asyncResult(std::move(ezResult));
@@ -101,7 +101,7 @@ void Client::receiveGlobalMessage(
                 AsyncEzReceiveGlobalMessageResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzReceiveGlobalMessageResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzReceiveGlobalMessageResult ezResult(*r.getResult());
                 AsyncEzReceiveGlobalMessageResult asyncResult(std::move(ezResult));
@@ -142,7 +142,7 @@ void Client::read(
                 AsyncEzReadResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzReadResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzReadResult ezResult(*r.getResult());
                 AsyncEzReadResult asyncResult(std::move(ezResult));

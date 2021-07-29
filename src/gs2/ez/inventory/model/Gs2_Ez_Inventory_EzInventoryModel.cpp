@@ -30,14 +30,27 @@ EzInventoryModel::Data::Data(const Data& data) :
 }
 
 EzInventoryModel::Data::Data(const gs2::inventory::InventoryModel& inventoryModel) :
-    name(inventoryModel.getName()),
-    metadata(inventoryModel.getMetadata()),
+    name(inventoryModel.getName() ? *inventoryModel.getName() : StringHolder()),
+    metadata(inventoryModel.getMetadata() ? *inventoryModel.getMetadata() : StringHolder()),
     initialCapacity(inventoryModel.getInitialCapacity() ? *inventoryModel.getInitialCapacity() : 0),
     maxCapacity(inventoryModel.getMaxCapacity() ? *inventoryModel.getMaxCapacity() : 0)
 {
 }
 
+EzInventoryModel::Data::Data(const gs2::optional<gs2::inventory::InventoryModel>& inventoryModel) :
+    name(inventoryModel && inventoryModel->getName() ? *inventoryModel->getName() : StringHolder()),
+    metadata(inventoryModel && inventoryModel->getMetadata() ? *inventoryModel->getMetadata() : StringHolder()),
+    initialCapacity(inventoryModel && inventoryModel->getInitialCapacity() ? *inventoryModel->getInitialCapacity() : 0),
+    maxCapacity(inventoryModel && inventoryModel->getMaxCapacity() ? *inventoryModel->getMaxCapacity() : 0)
+{
+}
+
 EzInventoryModel::EzInventoryModel(gs2::inventory::InventoryModel inventoryModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(inventoryModel)
+{
+}
+
+EzInventoryModel::EzInventoryModel(gs2::optional<gs2::inventory::InventoryModel> inventoryModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(inventoryModel)
 {
 }

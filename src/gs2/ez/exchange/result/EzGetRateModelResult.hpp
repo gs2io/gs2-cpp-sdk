@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::exchange::GetRateModelResult& getRateModelResult) :
-            item(*getRateModelResult.getItem())
+            item(getRateModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetRateModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetRateModelResult);
-    }
-
-    static bool isConvertible(const gs2::exchange::GetRateModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -42,16 +42,17 @@ private:
     {
     public:
         /** メジャーバージョン */
-        gs2::optional<Int32> major_;
+        Int32 major_;
         /** マイナーバージョン */
-        gs2::optional<Int32> minor_;
+        Int32 minor_;
         /** マイクロバージョン */
-        gs2::optional<Int32> micro;
+        Int32 micro;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::version::Version& version);
+        Data(const gs2::optional<gs2::version::Version>& version);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzVersion() = default;
 
     EzVersion(gs2::version::Version version);
+    EzVersion(gs2::optional<gs2::version::Version> version);
 
     EzVersion& operator=(const EzVersion& ezVersion) = default;
     EzVersion& operator=(EzVersion&& ezVersion) = default;
@@ -81,17 +83,17 @@ public:
 
     Int32 getMajor() const
     {
-        return *ensureData().major_;
+        return ensureData().major_;
     }
 
     Int32 getMinor() const
     {
-        return *ensureData().minor_;
+        return ensureData().minor_;
     }
 
     Int32 getMicro() const
     {
-        return *ensureData().micro;
+        return ensureData().micro;
     }
 
     // ========================================

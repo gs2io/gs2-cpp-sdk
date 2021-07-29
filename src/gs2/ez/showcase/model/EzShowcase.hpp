@@ -43,16 +43,17 @@ private:
     {
     public:
         /** 商品名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 商品のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** インベントリに格納可能なアイテムモデル一覧 */
-        gs2::optional<List<EzDisplayItem>> displayItems;
+        List<EzDisplayItem> displayItems;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::showcase::Showcase& showcase);
+        Data(const gs2::optional<gs2::showcase::Showcase>& showcase);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzShowcase() = default;
 
     EzShowcase(gs2::showcase::Showcase showcase);
+    EzShowcase(gs2::optional<gs2::showcase::Showcase> showcase);
 
     EzShowcase& operator=(const EzShowcase& ezShowcase) = default;
     EzShowcase& operator=(EzShowcase&& ezShowcase) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzDisplayItem>& getDisplayItems() const
     {
-        return *ensureData().displayItems;
+        return ensureData().displayItems;
     }
 
     // ========================================

@@ -57,7 +57,7 @@ void Client::setUserId(
                 AsyncEzSetUserIdResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzSetUserIdResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzSetUserIdResult ezResult(*r.getResult());
                 AsyncEzSetUserIdResult asyncResult(std::move(ezResult));

@@ -30,14 +30,27 @@ EzEntry::Data::Data(const Data& data) :
 }
 
 EzEntry::Data::Data(const gs2::dictionary::Entry& entry) :
-    entryId(entry.getEntryId()),
-    userId(entry.getUserId()),
-    name(entry.getName()),
+    entryId(entry.getEntryId() ? *entry.getEntryId() : StringHolder()),
+    userId(entry.getUserId() ? *entry.getUserId() : StringHolder()),
+    name(entry.getName() ? *entry.getName() : StringHolder()),
     acquiredAt(entry.getAcquiredAt() ? *entry.getAcquiredAt() : 0)
 {
 }
 
+EzEntry::Data::Data(const gs2::optional<gs2::dictionary::Entry>& entry) :
+    entryId(entry && entry->getEntryId() ? *entry->getEntryId() : StringHolder()),
+    userId(entry && entry->getUserId() ? *entry->getUserId() : StringHolder()),
+    name(entry && entry->getName() ? *entry->getName() : StringHolder()),
+    acquiredAt(entry && entry->getAcquiredAt() ? *entry->getAcquiredAt() : 0)
+{
+}
+
 EzEntry::EzEntry(gs2::dictionary::Entry entry) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(entry)
+{
+}
+
+EzEntry::EzEntry(gs2::optional<gs2::dictionary::Entry> entry) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(entry)
 {
 }

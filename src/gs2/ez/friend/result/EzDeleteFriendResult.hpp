@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::DeleteFriendResult& deleteFriendResult) :
-            item(*deleteFriendResult.getItem())
+            item(deleteFriendResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzDeleteFriendResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteFriendResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::DeleteFriendResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

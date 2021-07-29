@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::exchange::SkipResult& skipResult) :
-            item(*skipResult.getItem()),
-            stampSheet(*skipResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*skipResult.getStampSheetEncryptionKeyId())
+            item(skipResult.getItem()),
+            stampSheet(skipResult.getStampSheet() ? *skipResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(skipResult.getStampSheetEncryptionKeyId() ? *skipResult.getStampSheetEncryptionKeyId() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzSkipResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSkipResult);
-    }
-
-    static bool isConvertible(const gs2::exchange::SkipResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================

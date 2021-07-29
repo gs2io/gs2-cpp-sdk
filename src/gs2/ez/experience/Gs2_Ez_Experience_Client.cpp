@@ -53,7 +53,7 @@ void Client::listExperienceModels(
                 AsyncEzListExperienceModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListExperienceModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListExperienceModelsResult ezResult(*r.getResult());
                 AsyncEzListExperienceModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getExperienceModel(
                 AsyncEzGetExperienceModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetExperienceModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetExperienceModelResult ezResult(*r.getResult());
                 AsyncEzGetExperienceModelResult asyncResult(std::move(ezResult));
@@ -140,7 +140,7 @@ void Client::listStatuses(
                 AsyncEzListStatusesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListStatusesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListStatusesResult ezResult(*r.getResult());
                 AsyncEzListStatusesResult asyncResult(std::move(ezResult));
@@ -180,7 +180,7 @@ void Client::getStatus(
                 AsyncEzGetStatusResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetStatusResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetStatusResult ezResult(*r.getResult());
                 AsyncEzGetStatusResult asyncResult(std::move(ezResult));

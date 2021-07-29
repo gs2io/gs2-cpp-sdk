@@ -43,20 +43,21 @@ private:
     {
     public:
         /** クエスト挑戦 */
-        gs2::optional<StringHolder> progressId;
+        StringHolder progressId;
         /** トランザクションID */
-        gs2::optional<StringHolder> transactionId;
+        StringHolder transactionId;
         /** クエストモデル */
-        gs2::optional<StringHolder> questModelId;
+        StringHolder questModelId;
         /** 乱数シード */
-        gs2::optional<Int64> randomSeed;
+        Int64 randomSeed;
         /** クエストで得られる報酬の上限 */
-        gs2::optional<List<EzReward>> rewards;
+        List<EzReward> rewards;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::Progress& progress);
+        Data(const gs2::optional<gs2::quest::Progress>& progress);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -72,6 +73,7 @@ public:
     ~EzProgress() = default;
 
     EzProgress(gs2::quest::Progress progress);
+    EzProgress(gs2::optional<gs2::quest::Progress> progress);
 
     EzProgress& operator=(const EzProgress& ezProgress) = default;
     EzProgress& operator=(EzProgress&& ezProgress) = default;
@@ -86,27 +88,27 @@ public:
 
     const StringHolder& getProgressId() const
     {
-        return *ensureData().progressId;
+        return ensureData().progressId;
     }
 
     const StringHolder& getTransactionId() const
     {
-        return *ensureData().transactionId;
+        return ensureData().transactionId;
     }
 
     const StringHolder& getQuestModelId() const
     {
-        return *ensureData().questModelId;
+        return ensureData().questModelId;
     }
 
     Int64 getRandomSeed() const
     {
-        return *ensureData().randomSeed;
+        return ensureData().randomSeed;
     }
 
     const List<EzReward>& getRewards() const
     {
-        return *ensureData().rewards;
+        return ensureData().rewards;
     }
 
     // ========================================

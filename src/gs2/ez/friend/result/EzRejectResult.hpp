@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::RejectRequestResult& rejectRequestResult) :
-            item(*rejectRequestResult.getItem())
+            item(rejectRequestResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzRejectResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRejectResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::RejectRequestResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

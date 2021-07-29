@@ -31,15 +31,29 @@ EzItemModel::Data::Data(const Data& data) :
 }
 
 EzItemModel::Data::Data(const gs2::inventory::ItemModel& itemModel) :
-    name(itemModel.getName()),
-    metadata(itemModel.getMetadata()),
+    name(itemModel.getName() ? *itemModel.getName() : StringHolder()),
+    metadata(itemModel.getMetadata() ? *itemModel.getMetadata() : StringHolder()),
     stackingLimit(itemModel.getStackingLimit() ? *itemModel.getStackingLimit() : 0),
     allowMultipleStacks(itemModel.getAllowMultipleStacks() ? *itemModel.getAllowMultipleStacks() : false),
     sortValue(itemModel.getSortValue() ? *itemModel.getSortValue() : 0)
 {
 }
 
+EzItemModel::Data::Data(const gs2::optional<gs2::inventory::ItemModel>& itemModel) :
+    name(itemModel && itemModel->getName() ? *itemModel->getName() : StringHolder()),
+    metadata(itemModel && itemModel->getMetadata() ? *itemModel->getMetadata() : StringHolder()),
+    stackingLimit(itemModel && itemModel->getStackingLimit() ? *itemModel->getStackingLimit() : 0),
+    allowMultipleStacks(itemModel && itemModel->getAllowMultipleStacks() ? *itemModel->getAllowMultipleStacks() : false),
+    sortValue(itemModel && itemModel->getSortValue() ? *itemModel->getSortValue() : 0)
+{
+}
+
 EzItemModel::EzItemModel(gs2::inventory::ItemModel itemModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(itemModel)
+{
+}
+
+EzItemModel::EzItemModel(gs2::optional<gs2::inventory::ItemModel> itemModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(itemModel)
 {
 }

@@ -55,7 +55,7 @@ void Client::listNewses(
                 AsyncEzListNewsesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListNewsesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListNewsesResult ezResult(*r.getResult());
                 AsyncEzListNewsesResult asyncResult(std::move(ezResult));
@@ -91,7 +91,7 @@ void Client::getContentsUrl(
                 AsyncEzGetContentsUrlResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetContentsUrlResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetContentsUrlResult ezResult(*r.getResult());
                 AsyncEzGetContentsUrlResult asyncResult(std::move(ezResult));

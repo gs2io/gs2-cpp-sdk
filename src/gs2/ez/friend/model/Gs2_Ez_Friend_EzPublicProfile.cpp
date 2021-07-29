@@ -28,12 +28,23 @@ EzPublicProfile::Data::Data(const Data& data) :
 }
 
 EzPublicProfile::Data::Data(const gs2::friend_::PublicProfile& publicProfile) :
-    userId(publicProfile.getUserId()),
-    publicProfile(publicProfile.getPublicProfile())
+    userId(publicProfile.getUserId() ? *publicProfile.getUserId() : StringHolder()),
+    publicProfile(publicProfile.getPublicProfile() ? *publicProfile.getPublicProfile() : StringHolder())
+{
+}
+
+EzPublicProfile::Data::Data(const gs2::optional<gs2::friend_::PublicProfile>& publicProfile) :
+    userId(publicProfile && publicProfile->getUserId() ? *publicProfile->getUserId() : StringHolder()),
+    publicProfile(publicProfile && publicProfile->getPublicProfile() ? *publicProfile->getPublicProfile() : StringHolder())
 {
 }
 
 EzPublicProfile::EzPublicProfile(gs2::friend_::PublicProfile publicProfile) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(publicProfile)
+{
+}
+
+EzPublicProfile::EzPublicProfile(gs2::optional<gs2::friend_::PublicProfile> publicProfile) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(publicProfile)
 {
 }

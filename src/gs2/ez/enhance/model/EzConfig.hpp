@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 名前 */
-        gs2::optional<StringHolder> key;
+        StringHolder key;
         /** 値 */
-        gs2::optional<StringHolder> value;
+        StringHolder value;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::enhance::Config& config);
+        Data(const gs2::optional<gs2::enhance::Config>& config);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzConfig() = default;
 
     EzConfig(gs2::enhance::Config config);
+    EzConfig(gs2::optional<gs2::enhance::Config> config);
 
     EzConfig& operator=(const EzConfig& ezConfig) = default;
     EzConfig& operator=(EzConfig&& ezConfig) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getKey() const
     {
-        return *ensureData().key;
+        return ensureData().key;
     }
 
     const StringHolder& getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     // ========================================

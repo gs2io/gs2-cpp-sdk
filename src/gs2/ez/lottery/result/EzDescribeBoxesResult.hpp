@@ -49,6 +49,7 @@ private:
         Data(const gs2::lottery::DescribeBoxesResult& describeBoxesResult) :
             nextPageToken(describeBoxesResult.getNextPageToken())
         {
+            if (describeBoxesResult.getItems())
             {
                 auto& list = *describeBoxesResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzDescribeBoxesResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeBoxesResult);
-    }
-
-    static bool isConvertible(const gs2::lottery::DescribeBoxesResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

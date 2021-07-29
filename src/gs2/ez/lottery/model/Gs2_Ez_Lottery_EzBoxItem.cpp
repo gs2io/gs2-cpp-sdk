@@ -25,27 +25,41 @@ EzBoxItem::Data::Data(const Data& data) :
     remaining(data.remaining),
     initial(data.initial)
 {
-    if (data.acquireActions)
-    {
-        acquireActions = data.acquireActions->deepCopy();
-    }
+    acquireActions = data.acquireActions.deepCopy();
 }
 
 EzBoxItem::Data::Data(const gs2::lottery::BoxItem& boxItem) :
     remaining(boxItem.getRemaining() ? *boxItem.getRemaining() : 0),
     initial(boxItem.getInitial() ? *boxItem.getInitial() : 0)
 {
-    acquireActions.emplace();
     if (boxItem.getAcquireActions())
     {
         for (int i = 0; i < boxItem.getAcquireActions()->getCount(); ++i)
         {
-            *acquireActions += EzAcquireAction((*boxItem.getAcquireActions())[i]);
+            acquireActions += EzAcquireAction((*boxItem.getAcquireActions())[i]);
+        }
+    }
+}
+
+EzBoxItem::Data::Data(const gs2::optional<gs2::lottery::BoxItem>& boxItem) :
+    remaining(boxItem && boxItem->getRemaining() ? *boxItem->getRemaining() : 0),
+    initial(boxItem && boxItem->getInitial() ? *boxItem->getInitial() : 0)
+{
+    if (boxItem && boxItem->getAcquireActions())
+    {
+        for (int i = 0; i < boxItem->getAcquireActions()->getCount(); ++i)
+        {
+            acquireActions += EzAcquireAction((*boxItem->getAcquireActions())[i]);
         }
     }
 }
 
 EzBoxItem::EzBoxItem(gs2::lottery::BoxItem boxItem) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(boxItem)
+{
+}
+
+EzBoxItem::EzBoxItem(gs2::optional<gs2::lottery::BoxItem> boxItem) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(boxItem)
 {
 }

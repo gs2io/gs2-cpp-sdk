@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::VoteResult& voteResult) :
-            item(*voteResult.getItem())
+            item(voteResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzVoteResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzVoteResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::VoteResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::quest::DescribeQuestModelsResult& describeQuestModelsResult)
         {
+            if (describeQuestModelsResult.getItems())
             {
                 auto& list = *describeQuestModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListQuestsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListQuestsResult);
-    }
-
-    static bool isConvertible(const gs2::quest::DescribeQuestModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

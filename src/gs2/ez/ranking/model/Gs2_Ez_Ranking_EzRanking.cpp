@@ -34,14 +34,29 @@ EzRanking::Data::Data(const Data& data) :
 EzRanking::Data::Data(const gs2::ranking::Ranking& ranking) :
     rank(ranking.getRank() ? *ranking.getRank() : 0),
     index(ranking.getIndex() ? *ranking.getIndex() : 0),
-    userId(ranking.getUserId()),
+    userId(ranking.getUserId() ? *ranking.getUserId() : StringHolder()),
     score(ranking.getScore() ? *ranking.getScore() : 0),
-    metadata(ranking.getMetadata()),
+    metadata(ranking.getMetadata() ? *ranking.getMetadata() : StringHolder()),
     createdAt(ranking.getCreatedAt() ? *ranking.getCreatedAt() : 0)
 {
 }
 
+EzRanking::Data::Data(const gs2::optional<gs2::ranking::Ranking>& ranking) :
+    rank(ranking && ranking->getRank() ? *ranking->getRank() : 0),
+    index(ranking && ranking->getIndex() ? *ranking->getIndex() : 0),
+    userId(ranking && ranking->getUserId() ? *ranking->getUserId() : StringHolder()),
+    score(ranking && ranking->getScore() ? *ranking->getScore() : 0),
+    metadata(ranking && ranking->getMetadata() ? *ranking->getMetadata() : StringHolder()),
+    createdAt(ranking && ranking->getCreatedAt() ? *ranking->getCreatedAt() : 0)
+{
+}
+
 EzRanking::EzRanking(gs2::ranking::Ranking ranking) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(ranking)
+{
+}
+
+EzRanking::EzRanking(gs2::optional<gs2::ranking::Ranking> ranking) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(ranking)
 {
 }

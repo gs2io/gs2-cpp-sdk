@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::lottery::DescribeProbabilitiesResult& describeProbabilitiesResult)
         {
+            if (describeProbabilitiesResult.getItems())
             {
                 auto& list = *describeProbabilitiesResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListProbabilitiesResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListProbabilitiesResult);
-    }
-
-    static bool isConvertible(const gs2::lottery::DescribeProbabilitiesResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

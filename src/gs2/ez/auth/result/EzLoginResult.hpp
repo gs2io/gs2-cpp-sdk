@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::auth::LoginBySignatureResult& loginBySignatureResult) :
-            token(*loginBySignatureResult.getToken()),
-            userId(*loginBySignatureResult.getUserId()),
-            expire(*loginBySignatureResult.getExpire())
+            token(loginBySignatureResult.getToken() ? *loginBySignatureResult.getToken() : StringHolder()),
+            userId(loginBySignatureResult.getUserId() ? *loginBySignatureResult.getUserId() : StringHolder()),
+            expire(loginBySignatureResult.getExpire() ? *loginBySignatureResult.getExpire() : 0)
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzLoginResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzLoginResult);
-    }
-
-    static bool isConvertible(const gs2::auth::LoginBySignatureResult& result)
-    {
-        return
-            result.getToken().has_value() &&
-            result.getUserId().has_value() &&
-            result.getExpire().has_value();
     }
 
     // ========================================

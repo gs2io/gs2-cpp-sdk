@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::limit::DescribeLimitModelsResult& describeLimitModelsResult)
         {
+            if (describeLimitModelsResult.getItems())
             {
                 auto& list = *describeLimitModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListLimitModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListLimitModelsResult);
-    }
-
-    static bool isConvertible(const gs2::limit::DescribeLimitModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

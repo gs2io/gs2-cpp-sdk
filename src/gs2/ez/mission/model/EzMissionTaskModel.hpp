@@ -43,24 +43,25 @@ private:
     {
     public:
         /** タスク名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** カウンター名 */
-        gs2::optional<StringHolder> counterName;
+        StringHolder counterName;
         /** 目標値 */
-        gs2::optional<Int64> targetValue;
+        Int64 targetValue;
         /** ミッション達成時の報酬 */
-        gs2::optional<List<EzAcquireAction>> completeAcquireActions;
+        List<EzAcquireAction> completeAcquireActions;
         /** 達成報酬の受け取り可能な期間を指定するイベントマスター のGRN */
-        gs2::optional<StringHolder> challengePeriodEventId;
+        StringHolder challengePeriodEventId;
         /** このタスクに挑戦するために達成しておく必要のあるタスクの名前 */
-        gs2::optional<StringHolder> premiseMissionTaskName;
+        StringHolder premiseMissionTaskName;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::MissionTaskModel& missionTaskModel);
+        Data(const gs2::optional<gs2::mission::MissionTaskModel>& missionTaskModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -76,6 +77,7 @@ public:
     ~EzMissionTaskModel() = default;
 
     EzMissionTaskModel(gs2::mission::MissionTaskModel missionTaskModel);
+    EzMissionTaskModel(gs2::optional<gs2::mission::MissionTaskModel> missionTaskModel);
 
     EzMissionTaskModel& operator=(const EzMissionTaskModel& ezMissionTaskModel) = default;
     EzMissionTaskModel& operator=(EzMissionTaskModel&& ezMissionTaskModel) = default;
@@ -90,37 +92,37 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getCounterName() const
     {
-        return *ensureData().counterName;
+        return ensureData().counterName;
     }
 
     Int64 getTargetValue() const
     {
-        return *ensureData().targetValue;
+        return ensureData().targetValue;
     }
 
     const List<EzAcquireAction>& getCompleteAcquireActions() const
     {
-        return *ensureData().completeAcquireActions;
+        return ensureData().completeAcquireActions;
     }
 
     const StringHolder& getChallengePeriodEventId() const
     {
-        return *ensureData().challengePeriodEventId;
+        return ensureData().challengePeriodEventId;
     }
 
     const StringHolder& getPremiseMissionTaskName() const
     {
-        return *ensureData().premiseMissionTaskName;
+        return ensureData().premiseMissionTaskName;
     }
 
     // ========================================

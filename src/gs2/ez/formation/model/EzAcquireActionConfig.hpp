@@ -43,14 +43,15 @@ private:
     {
     public:
         /** スロット名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** スタンプシートに使用するコンフィグ */
-        gs2::optional<List<EzConfig>> config;
+        List<EzConfig> config;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::AcquireActionConfig& acquireActionConfig);
+        Data(const gs2::optional<gs2::formation::AcquireActionConfig>& acquireActionConfig);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,6 +67,7 @@ public:
     ~EzAcquireActionConfig() = default;
 
     EzAcquireActionConfig(gs2::formation::AcquireActionConfig acquireActionConfig);
+    EzAcquireActionConfig(gs2::optional<gs2::formation::AcquireActionConfig> acquireActionConfig);
 
     EzAcquireActionConfig& operator=(const EzAcquireActionConfig& ezAcquireActionConfig) = default;
     EzAcquireActionConfig& operator=(EzAcquireActionConfig&& ezAcquireActionConfig) = default;
@@ -80,12 +82,12 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const List<EzConfig>& getConfig() const
     {
-        return *ensureData().config;
+        return ensureData().config;
     }
 
     // ========================================

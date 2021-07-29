@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::experience::GetExperienceModelResult& getExperienceModelResult) :
-            item(*getExperienceModelResult.getItem())
+            item(getExperienceModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetExperienceModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetExperienceModelResult);
-    }
-
-    static bool isConvertible(const gs2::experience::GetExperienceModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

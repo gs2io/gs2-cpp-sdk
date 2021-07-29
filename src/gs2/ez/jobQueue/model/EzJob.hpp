@@ -42,20 +42,21 @@ private:
     {
     public:
         /** ジョブ */
-        gs2::optional<StringHolder> jobId;
+        StringHolder jobId;
         /** ジョブの実行に使用するスクリプト のGRN */
-        gs2::optional<StringHolder> scriptId;
+        StringHolder scriptId;
         /** 引数 */
-        gs2::optional<StringHolder> args;
+        StringHolder args;
         /** 現在のリトライ回数 */
-        gs2::optional<Int32> currentRetryCount;
+        Int32 currentRetryCount;
         /** 最大試行回数 */
-        gs2::optional<Int32> maxTryCount;
+        Int32 maxTryCount;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::jobQueue::Job& job);
+        Data(const gs2::optional<gs2::jobQueue::Job>& job);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzJob() = default;
 
     EzJob(gs2::jobQueue::Job job);
+    EzJob(gs2::optional<gs2::jobQueue::Job> job);
 
     EzJob& operator=(const EzJob& ezJob) = default;
     EzJob& operator=(EzJob&& ezJob) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getJobId() const
     {
-        return *ensureData().jobId;
+        return ensureData().jobId;
     }
 
     const StringHolder& getScriptId() const
     {
-        return *ensureData().scriptId;
+        return ensureData().scriptId;
     }
 
     const StringHolder& getArgs() const
     {
-        return *ensureData().args;
+        return ensureData().args;
     }
 
     Int32 getCurrentRetryCount() const
     {
-        return *ensureData().currentRetryCount;
+        return ensureData().currentRetryCount;
     }
 
     Int32 getMaxTryCount() const
     {
-        return *ensureData().maxTryCount;
+        return ensureData().maxTryCount;
     }
 
     // ========================================

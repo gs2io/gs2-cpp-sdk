@@ -53,7 +53,7 @@ void Client::listCounterModels(
                 AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCounterModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListCounterModelsResult ezResult(*r.getResult());
                 AsyncEzListCounterModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getCounterModel(
                 AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCounterModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetCounterModelResult ezResult(*r.getResult());
                 AsyncEzGetCounterModelResult asyncResult(std::move(ezResult));
@@ -135,7 +135,7 @@ void Client::listCounters(
                 AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListCountersResult ezResult(*r.getResult());
                 AsyncEzListCountersResult asyncResult(std::move(ezResult));
@@ -173,7 +173,7 @@ void Client::getCounter(
                 AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetCounterResult ezResult(*r.getResult());
                 AsyncEzGetCounterResult asyncResult(std::move(ezResult));
@@ -209,7 +209,7 @@ void Client::listMissionTaskModels(
                 AsyncEzListMissionTaskModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMissionTaskModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMissionTaskModelsResult ezResult(*r.getResult());
                 AsyncEzListMissionTaskModelsResult asyncResult(std::move(ezResult));
@@ -247,7 +247,7 @@ void Client::getMissionTaskModel(
                 AsyncEzGetMissionTaskModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetMissionTaskModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetMissionTaskModelResult ezResult(*r.getResult());
                 AsyncEzGetMissionTaskModelResult asyncResult(std::move(ezResult));
@@ -281,7 +281,7 @@ void Client::listMissionGroupModels(
                 AsyncEzListMissionGroupModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMissionGroupModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMissionGroupModelsResult ezResult(*r.getResult());
                 AsyncEzListMissionGroupModelsResult asyncResult(std::move(ezResult));
@@ -317,7 +317,7 @@ void Client::getMissionGroupModel(
                 AsyncEzGetMissionGroupModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetMissionGroupModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetMissionGroupModelResult ezResult(*r.getResult());
                 AsyncEzGetMissionGroupModelResult asyncResult(std::move(ezResult));
@@ -363,7 +363,7 @@ void Client::listCompletes(
                 AsyncEzListCompletesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCompletesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListCompletesResult ezResult(*r.getResult());
                 AsyncEzListCompletesResult asyncResult(std::move(ezResult));
@@ -401,7 +401,7 @@ void Client::getComplete(
                 AsyncEzGetCompleteResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCompleteResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetCompleteResult ezResult(*r.getResult());
                 AsyncEzGetCompleteResult asyncResult(std::move(ezResult));
@@ -441,7 +441,7 @@ void Client::receiveRewards(
                 AsyncEzReceiveRewardsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzReceiveRewardsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzReceiveRewardsResult ezResult(*r.getResult());
                 AsyncEzReceiveRewardsResult asyncResult(std::move(ezResult));

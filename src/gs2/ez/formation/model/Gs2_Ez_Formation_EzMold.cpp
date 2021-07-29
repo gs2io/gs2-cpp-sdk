@@ -29,13 +29,25 @@ EzMold::Data::Data(const Data& data) :
 }
 
 EzMold::Data::Data(const gs2::formation::Mold& mold) :
-    name(mold.getName()),
-    userId(mold.getUserId()),
+    name(mold.getName() ? *mold.getName() : StringHolder()),
+    userId(mold.getUserId() ? *mold.getUserId() : StringHolder()),
     capacity(mold.getCapacity() ? *mold.getCapacity() : 0)
 {
 }
 
+EzMold::Data::Data(const gs2::optional<gs2::formation::Mold>& mold) :
+    name(mold && mold->getName() ? *mold->getName() : StringHolder()),
+    userId(mold && mold->getUserId() ? *mold->getUserId() : StringHolder()),
+    capacity(mold && mold->getCapacity() ? *mold->getCapacity() : 0)
+{
+}
+
 EzMold::EzMold(gs2::formation::Mold mold) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(mold)
+{
+}
+
+EzMold::EzMold(gs2::optional<gs2::formation::Mold> mold) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(mold)
 {
 }

@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::distributor::RunStampTaskWithoutNamespaceResult& runStampTaskWithoutNamespaceResult) :
-            contextStack(*runStampTaskWithoutNamespaceResult.getContextStack()),
-            result(*runStampTaskWithoutNamespaceResult.getResult())
+            contextStack(runStampTaskWithoutNamespaceResult.getContextStack() ? *runStampTaskWithoutNamespaceResult.getContextStack() : StringHolder()),
+            result(runStampTaskWithoutNamespaceResult.getResult() ? *runStampTaskWithoutNamespaceResult.getResult() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzRunStampTaskWithoutNamespaceResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampTaskWithoutNamespaceResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::RunStampTaskWithoutNamespaceResult& result)
-    {
-        return
-            result.getContextStack().has_value() &&
-            result.getResult().has_value();
     }
 
     // ========================================

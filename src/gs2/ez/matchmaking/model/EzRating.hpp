@@ -42,22 +42,23 @@ private:
     {
     public:
         /** レーティング */
-        gs2::optional<StringHolder> ratingId;
+        StringHolder ratingId;
         /** レーティング名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** None */
-        gs2::optional<Float> rateValue;
+        Float rateValue;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
         /** 最終更新日時 */
-        gs2::optional<Int64> updatedAt;
+        Int64 updatedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::Rating& rating);
+        Data(const gs2::optional<gs2::matchmaking::Rating>& rating);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzRating() = default;
 
     EzRating(gs2::matchmaking::Rating rating);
+    EzRating(gs2::optional<gs2::matchmaking::Rating> rating);
 
     EzRating& operator=(const EzRating& ezRating) = default;
     EzRating& operator=(EzRating&& ezRating) = default;
@@ -87,32 +89,32 @@ public:
 
     const StringHolder& getRatingId() const
     {
-        return *ensureData().ratingId;
+        return ensureData().ratingId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Float getRateValue() const
     {
-        return *ensureData().rateValue;
+        return ensureData().rateValue;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *ensureData().updatedAt;
+        return ensureData().updatedAt;
     }
 
     // ========================================

@@ -42,18 +42,19 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** レーティング計算に使用するレーティング名 */
-        gs2::optional<StringHolder> ratingName;
+        StringHolder ratingName;
         /** 投票対象のギャザリング名 */
-        gs2::optional<StringHolder> gatheringName;
+        StringHolder gatheringName;
         /** 参加人数 */
-        gs2::optional<Int32> numberOfPlayer;
+        Int32 numberOfPlayer;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::Ballot& ballot);
+        Data(const gs2::optional<gs2::matchmaking::Ballot>& ballot);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzBallot() = default;
 
     EzBallot(gs2::matchmaking::Ballot ballot);
+    EzBallot(gs2::optional<gs2::matchmaking::Ballot> ballot);
 
     EzBallot& operator=(const EzBallot& ezBallot) = default;
     EzBallot& operator=(EzBallot&& ezBallot) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getRatingName() const
     {
-        return *ensureData().ratingName;
+        return ensureData().ratingName;
     }
 
     const StringHolder& getGatheringName() const
     {
-        return *ensureData().gatheringName;
+        return ensureData().gatheringName;
     }
 
     Int32 getNumberOfPlayer() const
     {
-        return *ensureData().numberOfPlayer;
+        return ensureData().numberOfPlayer;
     }
 
     // ========================================

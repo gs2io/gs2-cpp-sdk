@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::distributor::RunStampSheetExpressResult& runStampSheetExpressResult) :
-            taskResults(*runStampSheetExpressResult.getTaskResults()),
-            sheetResult(*runStampSheetExpressResult.getSheetResult())
+            taskResults(runStampSheetExpressResult.getTaskResults() ? *runStampSheetExpressResult.getTaskResults() : List<StringHolder>()),
+            sheetResult(runStampSheetExpressResult.getSheetResult() ? *runStampSheetExpressResult.getSheetResult() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzRunStampSheetExpressResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampSheetExpressResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::RunStampSheetExpressResult& result)
-    {
-        return
-            result.getTaskResults().has_value() &&
-            result.getSheetResult().has_value();
     }
 
     // ========================================

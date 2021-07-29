@@ -56,7 +56,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::jobQueue::RunResult& runResult) :
-            isLastJob(*runResult.getIsLastJob())
+            isLastJob(runResult.getIsLastJob() ? *runResult.getIsLastJob() : false)
         {
             if (runResult.getItem())
             {
@@ -92,12 +92,6 @@ public:
     EzRunResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunResult);
-    }
-
-    static bool isConvertible(const gs2::jobQueue::RunResult& result)
-    {
-        return
-            result.getIsLastJob().has_value();
     }
 
     // ========================================

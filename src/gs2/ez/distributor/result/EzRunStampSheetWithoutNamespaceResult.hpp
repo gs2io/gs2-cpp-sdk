@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::distributor::RunStampSheetWithoutNamespaceResult& runStampSheetWithoutNamespaceResult) :
-            result(*runStampSheetWithoutNamespaceResult.getResult())
+            result(runStampSheetWithoutNamespaceResult.getResult() ? *runStampSheetWithoutNamespaceResult.getResult() : StringHolder())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzRunStampSheetWithoutNamespaceResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampSheetWithoutNamespaceResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::RunStampSheetWithoutNamespaceResult& result)
-    {
-        return
-            result.getResult().has_value();
     }
 
     // ========================================

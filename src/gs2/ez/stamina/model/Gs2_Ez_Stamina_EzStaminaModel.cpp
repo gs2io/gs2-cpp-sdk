@@ -30,35 +30,45 @@ EzStaminaModel::Data::Data(const Data& data) :
     isOverflow(data.isOverflow),
     maxCapacity(data.maxCapacity)
 {
-    if (data.maxStaminaTable)
-    {
-        maxStaminaTable = data.maxStaminaTable->deepCopy();
-    }
-    if (data.recoverIntervalTable)
-    {
-        recoverIntervalTable = data.recoverIntervalTable->deepCopy();
-    }
-    if (data.recoverValueTable)
-    {
-        recoverValueTable = data.recoverValueTable->deepCopy();
-    }
+    maxStaminaTable = data.maxStaminaTable.deepCopy();
+    recoverIntervalTable = data.recoverIntervalTable.deepCopy();
+    recoverValueTable = data.recoverValueTable.deepCopy();
 }
 
 EzStaminaModel::Data::Data(const gs2::stamina::StaminaModel& staminaModel) :
-    name(staminaModel.getName()),
-    metadata(staminaModel.getMetadata()),
+    name(staminaModel.getName() ? *staminaModel.getName() : StringHolder()),
+    metadata(staminaModel.getMetadata() ? *staminaModel.getMetadata() : StringHolder()),
     recoverIntervalMinutes(staminaModel.getRecoverIntervalMinutes() ? *staminaModel.getRecoverIntervalMinutes() : 0),
     recoverValue(staminaModel.getRecoverValue() ? *staminaModel.getRecoverValue() : 0),
     initialCapacity(staminaModel.getInitialCapacity() ? *staminaModel.getInitialCapacity() : 0),
     isOverflow(staminaModel.getIsOverflow() ? *staminaModel.getIsOverflow() : false),
     maxCapacity(staminaModel.getMaxCapacity() ? *staminaModel.getMaxCapacity() : 0),
-    maxStaminaTable(*staminaModel.getMaxStaminaTable()),
-    recoverIntervalTable(*staminaModel.getRecoverIntervalTable()),
-    recoverValueTable(*staminaModel.getRecoverValueTable())
+    maxStaminaTable(staminaModel.getMaxStaminaTable()),
+    recoverIntervalTable(staminaModel.getRecoverIntervalTable()),
+    recoverValueTable(staminaModel.getRecoverValueTable())
+{
+}
+
+EzStaminaModel::Data::Data(const gs2::optional<gs2::stamina::StaminaModel>& staminaModel) :
+    name(staminaModel && staminaModel->getName() ? *staminaModel->getName() : StringHolder()),
+    metadata(staminaModel && staminaModel->getMetadata() ? *staminaModel->getMetadata() : StringHolder()),
+    recoverIntervalMinutes(staminaModel && staminaModel->getRecoverIntervalMinutes() ? *staminaModel->getRecoverIntervalMinutes() : 0),
+    recoverValue(staminaModel && staminaModel->getRecoverValue() ? *staminaModel->getRecoverValue() : 0),
+    initialCapacity(staminaModel && staminaModel->getInitialCapacity() ? *staminaModel->getInitialCapacity() : 0),
+    isOverflow(staminaModel && staminaModel->getIsOverflow() ? *staminaModel->getIsOverflow() : false),
+    maxCapacity(staminaModel && staminaModel->getMaxCapacity() ? *staminaModel->getMaxCapacity() : 0),
+    maxStaminaTable(staminaModel ? staminaModel->getMaxStaminaTable() : gs2::optional<gs2::stamina::MaxStaminaTable>()),
+    recoverIntervalTable(staminaModel ? staminaModel->getRecoverIntervalTable() : gs2::optional<gs2::stamina::RecoverIntervalTable>()),
+    recoverValueTable(staminaModel ? staminaModel->getRecoverValueTable() : gs2::optional<gs2::stamina::RecoverValueTable>())
 {
 }
 
 EzStaminaModel::EzStaminaModel(gs2::stamina::StaminaModel staminaModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(staminaModel)
+{
+}
+
+EzStaminaModel::EzStaminaModel(gs2::optional<gs2::stamina::StaminaModel> staminaModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(staminaModel)
 {
 }

@@ -24,19 +24,27 @@ EzProbability::Data::Data(const Data& data) :
     Gs2Object(data),
     rate(data.rate)
 {
-    if (data.prize)
-    {
-        prize = data.prize->deepCopy();
-    }
+    prize = data.prize.deepCopy();
 }
 
 EzProbability::Data::Data(const gs2::lottery::Probability& probability) :
-    prize(*probability.getPrize()),
+    prize(probability.getPrize()),
     rate(probability.getRate() ? *probability.getRate() : 0)
 {
 }
 
+EzProbability::Data::Data(const gs2::optional<gs2::lottery::Probability>& probability) :
+    prize(probability ? probability->getPrize() : gs2::optional<gs2::lottery::DrawnPrize>()),
+    rate(probability && probability->getRate() ? *probability->getRate() : 0)
+{
+}
+
 EzProbability::EzProbability(gs2::lottery::Probability probability) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(probability)
+{
+}
+
+EzProbability::EzProbability(gs2::optional<gs2::lottery::Probability> probability) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(probability)
 {
 }

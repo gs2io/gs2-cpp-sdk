@@ -42,16 +42,17 @@ private:
     {
     public:
         /** スクリプト のGRN */
-        gs2::optional<StringHolder> scriptId;
+        StringHolder scriptId;
         /** 引数 */
-        gs2::optional<StringHolder> args;
+        StringHolder args;
         /** 最大試行回数 */
-        gs2::optional<Int32> maxTryCount;
+        Int32 maxTryCount;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::jobQueue::JobEntry& jobEntry);
+        Data(const gs2::optional<gs2::jobQueue::JobEntry>& jobEntry);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzJobEntry() = default;
 
     EzJobEntry(gs2::jobQueue::JobEntry jobEntry);
+    EzJobEntry(gs2::optional<gs2::jobQueue::JobEntry> jobEntry);
 
     EzJobEntry& operator=(const EzJobEntry& ezJobEntry) = default;
     EzJobEntry& operator=(EzJobEntry&& ezJobEntry) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getScriptId() const
     {
-        return *ensureData().scriptId;
+        return ensureData().scriptId;
     }
 
     const StringHolder& getArgs() const
     {
-        return *ensureData().args;
+        return ensureData().args;
     }
 
     Int32 getMaxTryCount() const
     {
-        return *ensureData().maxTryCount;
+        return ensureData().maxTryCount;
     }
 
     // ========================================

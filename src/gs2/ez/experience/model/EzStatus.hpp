@@ -42,20 +42,21 @@ private:
     {
     public:
         /** 経験値の種類の名前 */
-        gs2::optional<StringHolder> experienceName;
+        StringHolder experienceName;
         /** プロパティID */
-        gs2::optional<StringHolder> propertyId;
+        StringHolder propertyId;
         /** 累計獲得経験値 */
-        gs2::optional<Int64> experienceValue;
+        Int64 experienceValue;
         /** 現在のランク */
-        gs2::optional<Int64> rankValue;
+        Int64 rankValue;
         /** 現在のランクキャップ */
-        gs2::optional<Int64> rankCapValue;
+        Int64 rankCapValue;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::experience::Status& status);
+        Data(const gs2::optional<gs2::experience::Status>& status);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzStatus() = default;
 
     EzStatus(gs2::experience::Status status);
+    EzStatus(gs2::optional<gs2::experience::Status> status);
 
     EzStatus& operator=(const EzStatus& ezStatus) = default;
     EzStatus& operator=(EzStatus&& ezStatus) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getExperienceName() const
     {
-        return *ensureData().experienceName;
+        return ensureData().experienceName;
     }
 
     const StringHolder& getPropertyId() const
     {
-        return *ensureData().propertyId;
+        return ensureData().propertyId;
     }
 
     Int64 getExperienceValue() const
     {
-        return *ensureData().experienceValue;
+        return ensureData().experienceValue;
     }
 
     Int64 getRankValue() const
     {
-        return *ensureData().rankValue;
+        return ensureData().rankValue;
     }
 
     Int64 getRankCapValue() const
     {
-        return *ensureData().rankCapValue;
+        return ensureData().rankCapValue;
     }
 
     // ========================================

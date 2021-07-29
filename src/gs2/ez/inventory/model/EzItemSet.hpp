@@ -42,24 +42,25 @@ private:
     {
     public:
         /** 有効期限ごとのアイテム所持数量 */
-        gs2::optional<StringHolder> itemSetId;
+        StringHolder itemSetId;
         /** アイテムセットを識別する名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** インベントリの名前 */
-        gs2::optional<StringHolder> inventoryName;
+        StringHolder inventoryName;
         /** アイテムマスターの名前 */
-        gs2::optional<StringHolder> itemName;
+        StringHolder itemName;
         /** 所持数量 */
-        gs2::optional<Int64> count;
+        Int64 count;
         /** 表示順番 */
-        gs2::optional<Int32> sortValue;
+        Int32 sortValue;
         /** 有効期限 */
-        gs2::optional<Int64> expiresAt;
+        Int64 expiresAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inventory::ItemSet& itemSet);
+        Data(const gs2::optional<gs2::inventory::ItemSet>& itemSet);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -75,6 +76,7 @@ public:
     ~EzItemSet() = default;
 
     EzItemSet(gs2::inventory::ItemSet itemSet);
+    EzItemSet(gs2::optional<gs2::inventory::ItemSet> itemSet);
 
     EzItemSet& operator=(const EzItemSet& ezItemSet) = default;
     EzItemSet& operator=(EzItemSet&& ezItemSet) = default;
@@ -89,37 +91,37 @@ public:
 
     const StringHolder& getItemSetId() const
     {
-        return *ensureData().itemSetId;
+        return ensureData().itemSetId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getInventoryName() const
     {
-        return *ensureData().inventoryName;
+        return ensureData().inventoryName;
     }
 
     const StringHolder& getItemName() const
     {
-        return *ensureData().itemName;
+        return ensureData().itemName;
     }
 
     Int64 getCount() const
     {
-        return *ensureData().count;
+        return ensureData().count;
     }
 
     Int32 getSortValue() const
     {
-        return *ensureData().sortValue;
+        return ensureData().sortValue;
     }
 
     Int64 getExpiresAt() const
     {
-        return *ensureData().expiresAt;
+        return ensureData().expiresAt;
     }
 
     // ========================================

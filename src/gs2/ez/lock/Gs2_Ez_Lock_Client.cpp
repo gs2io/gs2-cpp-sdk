@@ -61,7 +61,7 @@ void Client::lock(
                 AsyncEzLockResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzLockResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzLockResult ezResult(*r.getResult());
                 AsyncEzLockResult asyncResult(std::move(ezResult));
@@ -101,7 +101,7 @@ void Client::unlock(
                 AsyncEzUnlockResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUnlockResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUnlockResult ezResult(*r.getResult());
                 AsyncEzUnlockResult asyncResult(std::move(ezResult));

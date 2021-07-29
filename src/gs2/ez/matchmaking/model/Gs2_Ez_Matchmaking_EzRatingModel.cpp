@@ -29,13 +29,25 @@ EzRatingModel::Data::Data(const Data& data) :
 }
 
 EzRatingModel::Data::Data(const gs2::matchmaking::RatingModel& ratingModel) :
-    name(ratingModel.getName()),
-    metadata(ratingModel.getMetadata()),
+    name(ratingModel.getName() ? *ratingModel.getName() : StringHolder()),
+    metadata(ratingModel.getMetadata() ? *ratingModel.getMetadata() : StringHolder()),
     volatility(ratingModel.getVolatility() ? *ratingModel.getVolatility() : 0)
 {
 }
 
+EzRatingModel::Data::Data(const gs2::optional<gs2::matchmaking::RatingModel>& ratingModel) :
+    name(ratingModel && ratingModel->getName() ? *ratingModel->getName() : StringHolder()),
+    metadata(ratingModel && ratingModel->getMetadata() ? *ratingModel->getMetadata() : StringHolder()),
+    volatility(ratingModel && ratingModel->getVolatility() ? *ratingModel->getVolatility() : 0)
+{
+}
+
 EzRatingModel::EzRatingModel(gs2::matchmaking::RatingModel ratingModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(ratingModel)
+{
+}
+
+EzRatingModel::EzRatingModel(gs2::optional<gs2::matchmaking::RatingModel> ratingModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(ratingModel)
 {
 }

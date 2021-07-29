@@ -42,18 +42,19 @@ private:
     {
     public:
         /** ルーム名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** IPアドレス */
-        gs2::optional<StringHolder> ipAddress;
+        StringHolder ipAddress;
         /** 待受ポート */
-        gs2::optional<Int32> port;
+        Int32 port;
         /** 暗号鍵 */
-        gs2::optional<StringHolder> encryptionKey;
+        StringHolder encryptionKey;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::realtime::Room& room);
+        Data(const gs2::optional<gs2::realtime::Room>& room);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzRoom() = default;
 
     EzRoom(gs2::realtime::Room room);
+    EzRoom(gs2::optional<gs2::realtime::Room> room);
 
     EzRoom& operator=(const EzRoom& ezRoom) = default;
     EzRoom& operator=(EzRoom&& ezRoom) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getIpAddress() const
     {
-        return *ensureData().ipAddress;
+        return ensureData().ipAddress;
     }
 
     Int32 getPort() const
     {
-        return *ensureData().port;
+        return ensureData().port;
     }
 
     const StringHolder& getEncryptionKey() const
     {
-        return *ensureData().encryptionKey;
+        return ensureData().encryptionKey;
     }
 
     // ========================================

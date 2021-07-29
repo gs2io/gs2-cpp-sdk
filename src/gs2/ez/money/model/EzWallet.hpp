@@ -42,18 +42,19 @@ private:
     {
     public:
         /** スロット番号 */
-        gs2::optional<Int32> slot;
+        Int32 slot;
         /** 有償課金通貨所持量 */
-        gs2::optional<Int32> paid;
+        Int32 paid;
         /** 無償課金通貨所持量 */
-        gs2::optional<Int32> free;
+        Int32 free;
         /** 最終更新日時 */
-        gs2::optional<Int64> updatedAt;
+        Int64 updatedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::money::Wallet& wallet);
+        Data(const gs2::optional<gs2::money::Wallet>& wallet);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzWallet() = default;
 
     EzWallet(gs2::money::Wallet wallet);
+    EzWallet(gs2::optional<gs2::money::Wallet> wallet);
 
     EzWallet& operator=(const EzWallet& ezWallet) = default;
     EzWallet& operator=(EzWallet&& ezWallet) = default;
@@ -83,22 +85,22 @@ public:
 
     Int32 getSlot() const
     {
-        return *ensureData().slot;
+        return ensureData().slot;
     }
 
     Int32 getPaid() const
     {
-        return *ensureData().paid;
+        return ensureData().paid;
     }
 
     Int32 getFree() const
     {
-        return *ensureData().free;
+        return ensureData().free;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *ensureData().updatedAt;
+        return ensureData().updatedAt;
     }
 
     // ========================================

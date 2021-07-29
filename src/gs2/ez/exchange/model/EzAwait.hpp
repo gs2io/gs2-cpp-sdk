@@ -42,18 +42,19 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 交換レート名 */
-        gs2::optional<StringHolder> rateName;
+        StringHolder rateName;
         /** 交換待機の名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 作成日時 */
-        gs2::optional<Int64> exchangedAt;
+        Int64 exchangedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::exchange::Await& await_);
+        Data(const gs2::optional<gs2::exchange::Await>& await_);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzAwait() = default;
 
     EzAwait(gs2::exchange::Await await_);
+    EzAwait(gs2::optional<gs2::exchange::Await> await_);
 
     EzAwait& operator=(const EzAwait& ezAwait) = default;
     EzAwait& operator=(EzAwait&& ezAwait) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getRateName() const
     {
-        return *ensureData().rateName;
+        return ensureData().rateName;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int64 getExchangedAt() const
     {
-        return *ensureData().exchangedAt;
+        return ensureData().exchangedAt;
     }
 
     // ========================================

@@ -44,28 +44,29 @@ private:
     {
     public:
         /** ギャザリング */
-        gs2::optional<StringHolder> gatheringId;
+        StringHolder gatheringId;
         /** ギャザリング名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 募集条件 */
-        gs2::optional<List<EzAttributeRange>> attributeRanges;
+        List<EzAttributeRange> attributeRanges;
         /** 参加者 */
-        gs2::optional<List<EzCapacityOfRole>> capacityOfRoles;
+        List<EzCapacityOfRole> capacityOfRoles;
         /** 参加を許可するユーザIDリスト */
-        gs2::optional<List<StringHolder>> allowUserIds;
+        List<StringHolder> allowUserIds;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** ギャザリングの有効期限 */
-        gs2::optional<Int64> expiresAt;
+        Int64 expiresAt;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
         /** 最終更新日時 */
-        gs2::optional<Int64> updatedAt;
+        Int64 updatedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::Gathering& gathering);
+        Data(const gs2::optional<gs2::matchmaking::Gathering>& gathering);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,6 +82,7 @@ public:
     ~EzGathering() = default;
 
     EzGathering(gs2::matchmaking::Gathering gathering);
+    EzGathering(gs2::optional<gs2::matchmaking::Gathering> gathering);
 
     EzGathering& operator=(const EzGathering& ezGathering) = default;
     EzGathering& operator=(EzGathering&& ezGathering) = default;
@@ -95,47 +97,47 @@ public:
 
     const StringHolder& getGatheringId() const
     {
-        return *ensureData().gatheringId;
+        return ensureData().gatheringId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const List<EzAttributeRange>& getAttributeRanges() const
     {
-        return *ensureData().attributeRanges;
+        return ensureData().attributeRanges;
     }
 
     const List<EzCapacityOfRole>& getCapacityOfRoles() const
     {
-        return *ensureData().capacityOfRoles;
+        return ensureData().capacityOfRoles;
     }
 
     const List<StringHolder>& getAllowUserIds() const
     {
-        return *ensureData().allowUserIds;
+        return ensureData().allowUserIds;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int64 getExpiresAt() const
     {
-        return *ensureData().expiresAt;
+        return ensureData().expiresAt;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *ensureData().updatedAt;
+        return ensureData().updatedAt;
     }
 
     // ========================================

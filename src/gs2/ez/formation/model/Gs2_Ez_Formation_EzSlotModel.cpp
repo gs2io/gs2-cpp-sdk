@@ -29,13 +29,25 @@ EzSlotModel::Data::Data(const Data& data) :
 }
 
 EzSlotModel::Data::Data(const gs2::formation::SlotModel& slotModel) :
-    name(slotModel.getName()),
-    propertyRegex(slotModel.getPropertyRegex()),
-    metadata(slotModel.getMetadata())
+    name(slotModel.getName() ? *slotModel.getName() : StringHolder()),
+    propertyRegex(slotModel.getPropertyRegex() ? *slotModel.getPropertyRegex() : StringHolder()),
+    metadata(slotModel.getMetadata() ? *slotModel.getMetadata() : StringHolder())
+{
+}
+
+EzSlotModel::Data::Data(const gs2::optional<gs2::formation::SlotModel>& slotModel) :
+    name(slotModel && slotModel->getName() ? *slotModel->getName() : StringHolder()),
+    propertyRegex(slotModel && slotModel->getPropertyRegex() ? *slotModel->getPropertyRegex() : StringHolder()),
+    metadata(slotModel && slotModel->getMetadata() ? *slotModel->getMetadata() : StringHolder())
 {
 }
 
 EzSlotModel::EzSlotModel(gs2::formation::SlotModel slotModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(slotModel)
+{
+}
+
+EzSlotModel::EzSlotModel(gs2::optional<gs2::formation::SlotModel> slotModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(slotModel)
 {
 }

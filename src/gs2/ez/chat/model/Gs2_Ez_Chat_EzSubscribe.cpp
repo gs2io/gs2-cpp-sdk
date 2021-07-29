@@ -25,27 +25,41 @@ EzSubscribe::Data::Data(const Data& data) :
     userId(data.userId),
     roomName(data.roomName)
 {
-    if (data.notificationTypes)
-    {
-        notificationTypes = data.notificationTypes->deepCopy();
-    }
+    notificationTypes = data.notificationTypes.deepCopy();
 }
 
 EzSubscribe::Data::Data(const gs2::chat::Subscribe& subscribe) :
-    userId(subscribe.getUserId()),
-    roomName(subscribe.getRoomName())
+    userId(subscribe.getUserId() ? *subscribe.getUserId() : StringHolder()),
+    roomName(subscribe.getRoomName() ? *subscribe.getRoomName() : StringHolder())
 {
-    notificationTypes.emplace();
     if (subscribe.getNotificationTypes())
     {
         for (int i = 0; i < subscribe.getNotificationTypes()->getCount(); ++i)
         {
-            *notificationTypes += EzNotificationType((*subscribe.getNotificationTypes())[i]);
+            notificationTypes += EzNotificationType((*subscribe.getNotificationTypes())[i]);
+        }
+    }
+}
+
+EzSubscribe::Data::Data(const gs2::optional<gs2::chat::Subscribe>& subscribe) :
+    userId(subscribe && subscribe->getUserId() ? *subscribe->getUserId() : StringHolder()),
+    roomName(subscribe && subscribe->getRoomName() ? *subscribe->getRoomName() : StringHolder())
+{
+    if (subscribe && subscribe->getNotificationTypes())
+    {
+        for (int i = 0; i < subscribe->getNotificationTypes()->getCount(); ++i)
+        {
+            notificationTypes += EzNotificationType((*subscribe->getNotificationTypes())[i]);
         }
     }
 }
 
 EzSubscribe::EzSubscribe(gs2::chat::Subscribe subscribe) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(subscribe)
+{
+}
+
+EzSubscribe::EzSubscribe(gs2::optional<gs2::chat::Subscribe> subscribe) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(subscribe)
 {
 }

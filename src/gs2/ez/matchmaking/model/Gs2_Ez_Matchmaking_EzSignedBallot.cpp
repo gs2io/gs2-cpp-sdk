@@ -28,12 +28,23 @@ EzSignedBallot::Data::Data(const Data& data) :
 }
 
 EzSignedBallot::Data::Data(const gs2::matchmaking::SignedBallot& signedBallot) :
-    body(signedBallot.getBody()),
-    signature(signedBallot.getSignature())
+    body(signedBallot.getBody() ? *signedBallot.getBody() : StringHolder()),
+    signature(signedBallot.getSignature() ? *signedBallot.getSignature() : StringHolder())
+{
+}
+
+EzSignedBallot::Data::Data(const gs2::optional<gs2::matchmaking::SignedBallot>& signedBallot) :
+    body(signedBallot && signedBallot->getBody() ? *signedBallot->getBody() : StringHolder()),
+    signature(signedBallot && signedBallot->getSignature() ? *signedBallot->getSignature() : StringHolder())
 {
 }
 
 EzSignedBallot::EzSignedBallot(gs2::matchmaking::SignedBallot signedBallot) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(signedBallot)
+{
+}
+
+EzSignedBallot::EzSignedBallot(gs2::optional<gs2::matchmaking::SignedBallot> signedBallot) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(signedBallot)
 {
 }

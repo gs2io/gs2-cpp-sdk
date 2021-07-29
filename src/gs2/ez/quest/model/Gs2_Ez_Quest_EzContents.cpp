@@ -24,26 +24,39 @@ EzContents::Data::Data(const Data& data) :
     Gs2Object(data),
     metadata(data.metadata)
 {
-    if (data.completeAcquireActions)
-    {
-        completeAcquireActions = data.completeAcquireActions->deepCopy();
-    }
+    completeAcquireActions = data.completeAcquireActions.deepCopy();
 }
 
 EzContents::Data::Data(const gs2::quest::Contents& contents) :
-    metadata(contents.getMetadata())
+    metadata(contents.getMetadata() ? *contents.getMetadata() : StringHolder())
 {
-    completeAcquireActions.emplace();
     if (contents.getCompleteAcquireActions())
     {
         for (int i = 0; i < contents.getCompleteAcquireActions()->getCount(); ++i)
         {
-            *completeAcquireActions += EzAcquireAction((*contents.getCompleteAcquireActions())[i]);
+            completeAcquireActions += EzAcquireAction((*contents.getCompleteAcquireActions())[i]);
+        }
+    }
+}
+
+EzContents::Data::Data(const gs2::optional<gs2::quest::Contents>& contents) :
+    metadata(contents && contents->getMetadata() ? *contents->getMetadata() : StringHolder())
+{
+    if (contents && contents->getCompleteAcquireActions())
+    {
+        for (int i = 0; i < contents->getCompleteAcquireActions()->getCount(); ++i)
+        {
+            completeAcquireActions += EzAcquireAction((*contents->getCompleteAcquireActions())[i]);
         }
     }
 }
 
 EzContents::EzContents(gs2::quest::Contents contents) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(contents)
+{
+}
+
+EzContents::EzContents(gs2::optional<gs2::quest::Contents> contents) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(contents)
 {
 }

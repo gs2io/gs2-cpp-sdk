@@ -43,16 +43,17 @@ private:
     {
     public:
         /** フォームの保存領域の名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 保存領域のインデックス */
-        gs2::optional<Int32> index;
+        Int32 index;
         /** スロットリスト */
-        gs2::optional<List<EzSlot>> slots;
+        List<EzSlot> slots;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::Form& form);
+        Data(const gs2::optional<gs2::formation::Form>& form);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzForm() = default;
 
     EzForm(gs2::formation::Form form);
+    EzForm(gs2::optional<gs2::formation::Form> form);
 
     EzForm& operator=(const EzForm& ezForm) = default;
     EzForm& operator=(EzForm&& ezForm) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int32 getIndex() const
     {
-        return *ensureData().index;
+        return ensureData().index;
     }
 
     const List<EzSlot>& getSlots() const
     {
-        return *ensureData().slots;
+        return ensureData().slots;
     }
 
     // ========================================

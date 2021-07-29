@@ -42,20 +42,21 @@ private:
     {
     public:
         /** スロットモデル名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** プロパティの種類 */
-        gs2::optional<StringHolder> propertyType;
+        StringHolder propertyType;
         /** ペイロード */
-        gs2::optional<StringHolder> body;
+        StringHolder body;
         /** プロパティIDのリソースを所有していることを証明する署名 */
-        gs2::optional<StringHolder> signature;
+        StringHolder signature;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::SlotWithSignature& slotWithSignature);
+        Data(const gs2::optional<gs2::formation::SlotWithSignature>& slotWithSignature);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzSlotWithSignature() = default;
 
     EzSlotWithSignature(gs2::formation::SlotWithSignature slotWithSignature);
+    EzSlotWithSignature(gs2::optional<gs2::formation::SlotWithSignature> slotWithSignature);
 
     EzSlotWithSignature& operator=(const EzSlotWithSignature& ezSlotWithSignature) = default;
     EzSlotWithSignature& operator=(EzSlotWithSignature&& ezSlotWithSignature) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getPropertyType() const
     {
-        return *ensureData().propertyType;
+        return ensureData().propertyType;
     }
 
     const StringHolder& getBody() const
     {
-        return *ensureData().body;
+        return ensureData().body;
     }
 
     const StringHolder& getSignature() const
     {
-        return *ensureData().signature;
+        return ensureData().signature;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     // ========================================

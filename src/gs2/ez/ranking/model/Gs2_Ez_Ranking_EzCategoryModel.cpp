@@ -30,14 +30,27 @@ EzCategoryModel::Data::Data(const Data& data) :
 }
 
 EzCategoryModel::Data::Data(const gs2::ranking::CategoryModel& categoryModel) :
-    name(categoryModel.getName()),
-    metadata(categoryModel.getMetadata()),
-    entryPeriodEventId(categoryModel.getEntryPeriodEventId()),
-    accessPeriodEventId(categoryModel.getAccessPeriodEventId())
+    name(categoryModel.getName() ? *categoryModel.getName() : StringHolder()),
+    metadata(categoryModel.getMetadata() ? *categoryModel.getMetadata() : StringHolder()),
+    entryPeriodEventId(categoryModel.getEntryPeriodEventId() ? *categoryModel.getEntryPeriodEventId() : StringHolder()),
+    accessPeriodEventId(categoryModel.getAccessPeriodEventId() ? *categoryModel.getAccessPeriodEventId() : StringHolder())
+{
+}
+
+EzCategoryModel::Data::Data(const gs2::optional<gs2::ranking::CategoryModel>& categoryModel) :
+    name(categoryModel && categoryModel->getName() ? *categoryModel->getName() : StringHolder()),
+    metadata(categoryModel && categoryModel->getMetadata() ? *categoryModel->getMetadata() : StringHolder()),
+    entryPeriodEventId(categoryModel && categoryModel->getEntryPeriodEventId() ? *categoryModel->getEntryPeriodEventId() : StringHolder()),
+    accessPeriodEventId(categoryModel && categoryModel->getAccessPeriodEventId() ? *categoryModel->getAccessPeriodEventId() : StringHolder())
 {
 }
 
 EzCategoryModel::EzCategoryModel(gs2::ranking::CategoryModel categoryModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(categoryModel)
+{
+}
+
+EzCategoryModel::EzCategoryModel(gs2::optional<gs2::ranking::CategoryModel> categoryModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(categoryModel)
 {
 }

@@ -42,18 +42,19 @@ private:
     {
     public:
         /** カテゴリ名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** カテゴリのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** スコアの登録可能期間とするイベントマスター のGRN */
-        gs2::optional<StringHolder> entryPeriodEventId;
+        StringHolder entryPeriodEventId;
         /** アクセス可能期間とするイベントマスター のGRN */
-        gs2::optional<StringHolder> accessPeriodEventId;
+        StringHolder accessPeriodEventId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::ranking::CategoryModel& categoryModel);
+        Data(const gs2::optional<gs2::ranking::CategoryModel>& categoryModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzCategoryModel() = default;
 
     EzCategoryModel(gs2::ranking::CategoryModel categoryModel);
+    EzCategoryModel(gs2::optional<gs2::ranking::CategoryModel> categoryModel);
 
     EzCategoryModel& operator=(const EzCategoryModel& ezCategoryModel) = default;
     EzCategoryModel& operator=(EzCategoryModel&& ezCategoryModel) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getEntryPeriodEventId() const
     {
-        return *ensureData().entryPeriodEventId;
+        return ensureData().entryPeriodEventId;
     }
 
     const StringHolder& getAccessPeriodEventId() const
     {
-        return *ensureData().accessPeriodEventId;
+        return ensureData().accessPeriodEventId;
     }
 
     // ========================================

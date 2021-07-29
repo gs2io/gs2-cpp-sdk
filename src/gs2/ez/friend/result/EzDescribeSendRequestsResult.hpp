@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::friend_::DescribeSendRequestsResult& describeSendRequestsResult)
         {
+            if (describeSendRequestsResult.getItems())
             {
                 auto& list = *describeSendRequestsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzDescribeSendRequestsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeSendRequestsResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::DescribeSendRequestsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

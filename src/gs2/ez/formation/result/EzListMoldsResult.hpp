@@ -49,6 +49,7 @@ private:
         Data(const gs2::formation::DescribeMoldsResult& describeMoldsResult) :
             nextPageToken(describeMoldsResult.getNextPageToken())
         {
+            if (describeMoldsResult.getItems())
             {
                 auto& list = *describeMoldsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListMoldsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListMoldsResult);
-    }
-
-    static bool isConvertible(const gs2::formation::DescribeMoldsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

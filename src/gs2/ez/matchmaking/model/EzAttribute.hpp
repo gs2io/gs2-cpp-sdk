@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 属性名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 属性値 */
-        gs2::optional<Int32> value;
+        Int32 value;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::Attribute& attribute);
+        Data(const gs2::optional<gs2::matchmaking::Attribute>& attribute);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzAttribute() = default;
 
     EzAttribute(gs2::matchmaking::Attribute attribute);
+    EzAttribute(gs2::optional<gs2::matchmaking::Attribute> attribute);
 
     EzAttribute& operator=(const EzAttribute& ezAttribute) = default;
     EzAttribute& operator=(EzAttribute&& ezAttribute) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int32 getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     // ========================================

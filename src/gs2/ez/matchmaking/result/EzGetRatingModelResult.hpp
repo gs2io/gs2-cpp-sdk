@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::GetRatingModelResult& getRatingModelResult) :
-            item(*getRatingModelResult.getItem())
+            item(getRatingModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetRatingModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetRatingModelResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::GetRatingModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

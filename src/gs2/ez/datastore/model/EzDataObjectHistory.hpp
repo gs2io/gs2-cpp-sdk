@@ -42,18 +42,19 @@ private:
     {
     public:
         /** データオブジェクト履歴 */
-        gs2::optional<StringHolder> dataObjectHistoryId;
+        StringHolder dataObjectHistoryId;
         /** 世代ID */
-        gs2::optional<StringHolder> generation;
+        StringHolder generation;
         /** データサイズ */
-        gs2::optional<Int64> contentLength;
+        Int64 contentLength;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::datastore::DataObjectHistory& dataObjectHistory);
+        Data(const gs2::optional<gs2::datastore::DataObjectHistory>& dataObjectHistory);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzDataObjectHistory() = default;
 
     EzDataObjectHistory(gs2::datastore::DataObjectHistory dataObjectHistory);
+    EzDataObjectHistory(gs2::optional<gs2::datastore::DataObjectHistory> dataObjectHistory);
 
     EzDataObjectHistory& operator=(const EzDataObjectHistory& ezDataObjectHistory) = default;
     EzDataObjectHistory& operator=(EzDataObjectHistory&& ezDataObjectHistory) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getDataObjectHistoryId() const
     {
-        return *ensureData().dataObjectHistoryId;
+        return ensureData().dataObjectHistoryId;
     }
 
     const StringHolder& getGeneration() const
     {
-        return *ensureData().generation;
+        return ensureData().generation;
     }
 
     Int64 getContentLength() const
     {
-        return *ensureData().contentLength;
+        return ensureData().contentLength;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     // ========================================

@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 投票用紙の署名対象のデータ */
-        gs2::optional<StringHolder> body;
+        StringHolder body;
         /** 投票用紙の署名 */
-        gs2::optional<StringHolder> signature;
+        StringHolder signature;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::SignedBallot& signedBallot);
+        Data(const gs2::optional<gs2::matchmaking::SignedBallot>& signedBallot);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzSignedBallot() = default;
 
     EzSignedBallot(gs2::matchmaking::SignedBallot signedBallot);
+    EzSignedBallot(gs2::optional<gs2::matchmaking::SignedBallot> signedBallot);
 
     EzSignedBallot& operator=(const EzSignedBallot& ezSignedBallot) = default;
     EzSignedBallot& operator=(EzSignedBallot&& ezSignedBallot) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getBody() const
     {
-        return *ensureData().body;
+        return ensureData().body;
     }
 
     const StringHolder& getSignature() const
     {
-        return *ensureData().signature;
+        return ensureData().signature;
     }
 
     // ========================================

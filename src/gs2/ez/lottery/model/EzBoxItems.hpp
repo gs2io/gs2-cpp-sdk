@@ -43,16 +43,17 @@ private:
     {
     public:
         /** ボックス */
-        gs2::optional<StringHolder> boxId;
+        StringHolder boxId;
         /** 排出確率テーブル名 */
-        gs2::optional<StringHolder> prizeTableName;
+        StringHolder prizeTableName;
         /** ボックスから取り出したアイテムのリスト */
-        gs2::optional<List<EzBoxItem>> items;
+        List<EzBoxItem> items;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lottery::BoxItems& boxItems);
+        Data(const gs2::optional<gs2::lottery::BoxItems>& boxItems);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzBoxItems() = default;
 
     EzBoxItems(gs2::lottery::BoxItems boxItems);
+    EzBoxItems(gs2::optional<gs2::lottery::BoxItems> boxItems);
 
     EzBoxItems& operator=(const EzBoxItems& ezBoxItems) = default;
     EzBoxItems& operator=(EzBoxItems&& ezBoxItems) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getBoxId() const
     {
-        return *ensureData().boxId;
+        return ensureData().boxId;
     }
 
     const StringHolder& getPrizeTableName() const
     {
-        return *ensureData().prizeTableName;
+        return ensureData().prizeTableName;
     }
 
     const List<EzBoxItem>& getItems() const
     {
-        return *ensureData().items;
+        return ensureData().items;
     }
 
     // ========================================

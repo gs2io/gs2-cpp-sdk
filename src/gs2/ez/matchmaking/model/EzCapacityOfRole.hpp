@@ -43,18 +43,19 @@ private:
     {
     public:
         /** ロール名 */
-        gs2::optional<StringHolder> roleName;
+        StringHolder roleName;
         /** ロール名の別名リスト */
-        gs2::optional<List<StringHolder>> roleAliases;
+        List<StringHolder> roleAliases;
         /** 募集人数 */
-        gs2::optional<Int32> capacity;
+        Int32 capacity;
         /** 参加者のプレイヤー情報リスト */
-        gs2::optional<List<EzPlayer>> participants;
+        List<EzPlayer> participants;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::CapacityOfRole& capacityOfRole);
+        Data(const gs2::optional<gs2::matchmaking::CapacityOfRole>& capacityOfRole);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,6 +71,7 @@ public:
     ~EzCapacityOfRole() = default;
 
     EzCapacityOfRole(gs2::matchmaking::CapacityOfRole capacityOfRole);
+    EzCapacityOfRole(gs2::optional<gs2::matchmaking::CapacityOfRole> capacityOfRole);
 
     EzCapacityOfRole& operator=(const EzCapacityOfRole& ezCapacityOfRole) = default;
     EzCapacityOfRole& operator=(EzCapacityOfRole&& ezCapacityOfRole) = default;
@@ -84,22 +86,22 @@ public:
 
     const StringHolder& getRoleName() const
     {
-        return *ensureData().roleName;
+        return ensureData().roleName;
     }
 
     const List<StringHolder>& getRoleAliases() const
     {
-        return *ensureData().roleAliases;
+        return ensureData().roleAliases;
     }
 
     Int32 getCapacity() const
     {
-        return *ensureData().capacity;
+        return ensureData().capacity;
     }
 
     const List<EzPlayer>& getParticipants() const
     {
-        return *ensureData().participants;
+        return ensureData().participants;
     }
 
     // ========================================

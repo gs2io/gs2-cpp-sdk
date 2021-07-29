@@ -31,15 +31,29 @@ EzScore::Data::Data(const Data& data) :
 }
 
 EzScore::Data::Data(const gs2::ranking::Score& score) :
-    categoryName(score.getCategoryName()),
-    userId(score.getUserId()),
-    scorerUserId(score.getScorerUserId()),
+    categoryName(score.getCategoryName() ? *score.getCategoryName() : StringHolder()),
+    userId(score.getUserId() ? *score.getUserId() : StringHolder()),
+    scorerUserId(score.getScorerUserId() ? *score.getScorerUserId() : StringHolder()),
     score(score.getScore() ? *score.getScore() : 0),
-    metadata(score.getMetadata())
+    metadata(score.getMetadata() ? *score.getMetadata() : StringHolder())
+{
+}
+
+EzScore::Data::Data(const gs2::optional<gs2::ranking::Score>& score) :
+    categoryName(score && score->getCategoryName() ? *score->getCategoryName() : StringHolder()),
+    userId(score && score->getUserId() ? *score->getUserId() : StringHolder()),
+    scorerUserId(score && score->getScorerUserId() ? *score->getScorerUserId() : StringHolder()),
+    score(score && score->getScore() ? *score->getScore() : 0),
+    metadata(score && score->getMetadata() ? *score->getMetadata() : StringHolder())
 {
 }
 
 EzScore::EzScore(gs2::ranking::Score score) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(score)
+{
+}
+
+EzScore::EzScore(gs2::optional<gs2::ranking::Score> score) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(score)
 {
 }

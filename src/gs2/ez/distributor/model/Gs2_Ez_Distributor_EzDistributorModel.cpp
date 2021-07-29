@@ -26,21 +26,31 @@ EzDistributorModel::Data::Data(const Data& data) :
     metadata(data.metadata),
     inboxNamespaceId(data.inboxNamespaceId)
 {
-    if (data.whiteListTargetIds)
-    {
-        whiteListTargetIds = data.whiteListTargetIds->deepCopy();
-    }
+    whiteListTargetIds = data.whiteListTargetIds.deepCopy();
 }
 
 EzDistributorModel::Data::Data(const gs2::distributor::DistributorModel& distributorModel) :
-    name(distributorModel.getName()),
-    metadata(distributorModel.getMetadata()),
-    inboxNamespaceId(distributorModel.getInboxNamespaceId()),
-    whiteListTargetIds(distributorModel.getWhiteListTargetIds())
+    name(distributorModel.getName() ? *distributorModel.getName() : StringHolder()),
+    metadata(distributorModel.getMetadata() ? *distributorModel.getMetadata() : StringHolder()),
+    inboxNamespaceId(distributorModel.getInboxNamespaceId() ? *distributorModel.getInboxNamespaceId() : StringHolder()),
+    whiteListTargetIds(distributorModel.getWhiteListTargetIds() ? *distributorModel.getWhiteListTargetIds() : List<StringHolder>())
+{
+}
+
+EzDistributorModel::Data::Data(const gs2::optional<gs2::distributor::DistributorModel>& distributorModel) :
+    name(distributorModel && distributorModel->getName() ? *distributorModel->getName() : StringHolder()),
+    metadata(distributorModel && distributorModel->getMetadata() ? *distributorModel->getMetadata() : StringHolder()),
+    inboxNamespaceId(distributorModel && distributorModel->getInboxNamespaceId() ? *distributorModel->getInboxNamespaceId() : StringHolder()),
+    whiteListTargetIds(distributorModel && distributorModel->getWhiteListTargetIds() ? *distributorModel->getWhiteListTargetIds() : List<StringHolder>())
 {
 }
 
 EzDistributorModel::EzDistributorModel(gs2::distributor::DistributorModel distributorModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(distributorModel)
+{
+}
+
+EzDistributorModel::EzDistributorModel(gs2::optional<gs2::distributor::DistributorModel> distributorModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(distributorModel)
 {
 }

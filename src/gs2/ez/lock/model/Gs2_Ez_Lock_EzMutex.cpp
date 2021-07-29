@@ -31,15 +31,29 @@ EzMutex::Data::Data(const Data& data) :
 }
 
 EzMutex::Data::Data(const gs2::lock::Mutex& mutex) :
-    mutexId(mutex.getMutexId()),
-    propertyId(mutex.getPropertyId()),
-    transactionId(mutex.getTransactionId()),
+    mutexId(mutex.getMutexId() ? *mutex.getMutexId() : StringHolder()),
+    propertyId(mutex.getPropertyId() ? *mutex.getPropertyId() : StringHolder()),
+    transactionId(mutex.getTransactionId() ? *mutex.getTransactionId() : StringHolder()),
     referenceCount(mutex.getReferenceCount() ? *mutex.getReferenceCount() : 0),
     ttlAt(mutex.getTtlAt() ? *mutex.getTtlAt() : 0)
 {
 }
 
+EzMutex::Data::Data(const gs2::optional<gs2::lock::Mutex>& mutex) :
+    mutexId(mutex && mutex->getMutexId() ? *mutex->getMutexId() : StringHolder()),
+    propertyId(mutex && mutex->getPropertyId() ? *mutex->getPropertyId() : StringHolder()),
+    transactionId(mutex && mutex->getTransactionId() ? *mutex->getTransactionId() : StringHolder()),
+    referenceCount(mutex && mutex->getReferenceCount() ? *mutex->getReferenceCount() : 0),
+    ttlAt(mutex && mutex->getTtlAt() ? *mutex->getTtlAt() : 0)
+{
+}
+
 EzMutex::EzMutex(gs2::lock::Mutex mutex) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(mutex)
+{
+}
+
+EzMutex::EzMutex(gs2::optional<gs2::lock::Mutex> mutex) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(mutex)
 {
 }

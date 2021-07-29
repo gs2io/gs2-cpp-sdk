@@ -53,7 +53,7 @@ void Client::listEntryModels(
                 AsyncEzListEntryModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListEntryModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListEntryModelsResult ezResult(*r.getResult());
                 AsyncEzListEntryModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getEntryModel(
                 AsyncEzGetEntryModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetEntryModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetEntryModelResult ezResult(*r.getResult());
                 AsyncEzGetEntryModelResult asyncResult(std::move(ezResult));
@@ -135,7 +135,7 @@ void Client::listEntries(
                 AsyncEzListEntriesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListEntriesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListEntriesResult ezResult(*r.getResult());
                 AsyncEzListEntriesResult asyncResult(std::move(ezResult));
@@ -173,7 +173,7 @@ void Client::getEntry(
                 AsyncEzGetEntryResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetEntryResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetEntryResult ezResult(*r.getResult());
                 AsyncEzGetEntryResult asyncResult(std::move(ezResult));
@@ -213,7 +213,7 @@ void Client::getEntryWithSignature(
                 AsyncEzGetEntryWithSignatureResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetEntryWithSignatureResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetEntryWithSignatureResult ezResult(*r.getResult());
                 AsyncEzGetEntryWithSignatureResult asyncResult(std::move(ezResult));

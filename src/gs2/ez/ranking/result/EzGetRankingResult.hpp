@@ -49,6 +49,7 @@ private:
         Data(const gs2::ranking::DescribeRankingsResult& describeRankingsResult) :
             nextPageToken(describeRankingsResult.getNextPageToken())
         {
+            if (describeRankingsResult.getItems())
             {
                 auto& list = *describeRankingsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzGetRankingResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetRankingResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::DescribeRankingsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

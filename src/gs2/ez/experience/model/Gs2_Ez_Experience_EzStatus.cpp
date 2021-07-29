@@ -31,15 +31,29 @@ EzStatus::Data::Data(const Data& data) :
 }
 
 EzStatus::Data::Data(const gs2::experience::Status& status) :
-    experienceName(status.getExperienceName()),
-    propertyId(status.getPropertyId()),
+    experienceName(status.getExperienceName() ? *status.getExperienceName() : StringHolder()),
+    propertyId(status.getPropertyId() ? *status.getPropertyId() : StringHolder()),
     experienceValue(status.getExperienceValue() ? *status.getExperienceValue() : 0),
     rankValue(status.getRankValue() ? *status.getRankValue() : 0),
     rankCapValue(status.getRankCapValue() ? *status.getRankCapValue() : 0)
 {
 }
 
+EzStatus::Data::Data(const gs2::optional<gs2::experience::Status>& status) :
+    experienceName(status && status->getExperienceName() ? *status->getExperienceName() : StringHolder()),
+    propertyId(status && status->getPropertyId() ? *status->getPropertyId() : StringHolder()),
+    experienceValue(status && status->getExperienceValue() ? *status->getExperienceValue() : 0),
+    rankValue(status && status->getRankValue() ? *status->getRankValue() : 0),
+    rankCapValue(status && status->getRankCapValue() ? *status->getRankCapValue() : 0)
+{
+}
+
 EzStatus::EzStatus(gs2::experience::Status status) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(status)
+{
+}
+
+EzStatus::EzStatus(gs2::optional<gs2::experience::Status> status) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(status)
 {
 }

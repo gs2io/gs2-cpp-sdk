@@ -42,16 +42,17 @@ private:
     {
     public:
         /** コネクションID */
-        gs2::optional<StringHolder> connectionId;
+        StringHolder connectionId;
         /** ネームスペース名 */
-        gs2::optional<StringHolder> namespaceName;
+        StringHolder namespaceName;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::gateway::WebSocketSession& webSocketSession);
+        Data(const gs2::optional<gs2::gateway::WebSocketSession>& webSocketSession);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzWebSocketSession() = default;
 
     EzWebSocketSession(gs2::gateway::WebSocketSession webSocketSession);
+    EzWebSocketSession(gs2::optional<gs2::gateway::WebSocketSession> webSocketSession);
 
     EzWebSocketSession& operator=(const EzWebSocketSession& ezWebSocketSession) = default;
     EzWebSocketSession& operator=(EzWebSocketSession&& ezWebSocketSession) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getConnectionId() const
     {
-        return *ensureData().connectionId;
+        return ensureData().connectionId;
     }
 
     const StringHolder& getNamespaceName() const
     {
-        return *ensureData().namespaceName;
+        return ensureData().namespaceName;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     // ========================================

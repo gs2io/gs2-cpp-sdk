@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::exchange::GetAwaitResult& getAwaitResult) :
-            item(*getAwaitResult.getItem())
+            item(getAwaitResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetAwaitResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetAwaitResult);
-    }
-
-    static bool isConvertible(const gs2::exchange::GetAwaitResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

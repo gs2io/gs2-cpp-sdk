@@ -42,18 +42,19 @@ private:
     {
     public:
         /** ディストリビューターの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** ディストリビューターの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
-        gs2::optional<StringHolder> inboxNamespaceId;
+        StringHolder inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
-        gs2::optional<List<StringHolder>> whiteListTargetIds;
+        List<StringHolder> whiteListTargetIds;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::distributor::DistributorModel& distributorModel);
+        Data(const gs2::optional<gs2::distributor::DistributorModel>& distributorModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzDistributorModel() = default;
 
     EzDistributorModel(gs2::distributor::DistributorModel distributorModel);
+    EzDistributorModel(gs2::optional<gs2::distributor::DistributorModel> distributorModel);
 
     EzDistributorModel& operator=(const EzDistributorModel& ezDistributorModel) = default;
     EzDistributorModel& operator=(EzDistributorModel&& ezDistributorModel) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getInboxNamespaceId() const
     {
-        return *ensureData().inboxNamespaceId;
+        return ensureData().inboxNamespaceId;
     }
 
     const List<StringHolder>& getWhiteListTargetIds() const
     {
-        return *ensureData().whiteListTargetIds;
+        return ensureData().whiteListTargetIds;
     }
 
     // ========================================

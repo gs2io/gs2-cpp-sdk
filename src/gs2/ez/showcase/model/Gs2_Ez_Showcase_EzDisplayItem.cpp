@@ -25,25 +25,32 @@ EzDisplayItem::Data::Data(const Data& data) :
     displayItemId(data.displayItemId),
     type(data.type)
 {
-    if (data.salesItem)
-    {
-        salesItem = data.salesItem->deepCopy();
-    }
-    if (data.salesItemGroup)
-    {
-        salesItemGroup = data.salesItemGroup->deepCopy();
-    }
+    salesItem = data.salesItem.deepCopy();
+    salesItemGroup = data.salesItemGroup.deepCopy();
 }
 
 EzDisplayItem::Data::Data(const gs2::showcase::DisplayItem& displayItem) :
-    displayItemId(displayItem.getDisplayItemId()),
-    type(displayItem.getType()),
-    salesItem(*displayItem.getSalesItem()),
-    salesItemGroup(*displayItem.getSalesItemGroup())
+    displayItemId(displayItem.getDisplayItemId() ? *displayItem.getDisplayItemId() : StringHolder()),
+    type(displayItem.getType() ? *displayItem.getType() : StringHolder()),
+    salesItem(displayItem.getSalesItem()),
+    salesItemGroup(displayItem.getSalesItemGroup())
+{
+}
+
+EzDisplayItem::Data::Data(const gs2::optional<gs2::showcase::DisplayItem>& displayItem) :
+    displayItemId(displayItem && displayItem->getDisplayItemId() ? *displayItem->getDisplayItemId() : StringHolder()),
+    type(displayItem && displayItem->getType() ? *displayItem->getType() : StringHolder()),
+    salesItem(displayItem ? displayItem->getSalesItem() : gs2::optional<gs2::showcase::SalesItem>()),
+    salesItemGroup(displayItem ? displayItem->getSalesItemGroup() : gs2::optional<gs2::showcase::SalesItemGroup>())
 {
 }
 
 EzDisplayItem::EzDisplayItem(gs2::showcase::DisplayItem displayItem) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(displayItem)
+{
+}
+
+EzDisplayItem::EzDisplayItem(gs2::optional<gs2::showcase::DisplayItem> displayItem) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(displayItem)
 {
 }

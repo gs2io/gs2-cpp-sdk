@@ -30,14 +30,27 @@ EzAwait::Data::Data(const Data& data) :
 }
 
 EzAwait::Data::Data(const gs2::exchange::Await& await_) :
-    userId(await_.getUserId()),
-    rateName(await_.getRateName()),
-    name(await_.getName()),
+    userId(await_.getUserId() ? *await_.getUserId() : StringHolder()),
+    rateName(await_.getRateName() ? *await_.getRateName() : StringHolder()),
+    name(await_.getName() ? *await_.getName() : StringHolder()),
     exchangedAt(await_.getExchangedAt() ? *await_.getExchangedAt() : 0)
 {
 }
 
+EzAwait::Data::Data(const gs2::optional<gs2::exchange::Await>& await_) :
+    userId(await_ && await_->getUserId() ? *await_->getUserId() : StringHolder()),
+    rateName(await_ && await_->getRateName() ? *await_->getRateName() : StringHolder()),
+    name(await_ && await_->getName() ? *await_->getName() : StringHolder()),
+    exchangedAt(await_ && await_->getExchangedAt() ? *await_->getExchangedAt() : 0)
+{
+}
+
 EzAwait::EzAwait(gs2::exchange::Await await_) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(await_)
+{
+}
+
+EzAwait::EzAwait(gs2::optional<gs2::exchange::Await> await_) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(await_)
 {
 }

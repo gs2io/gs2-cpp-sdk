@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::SendRequestResult& sendRequestResult) :
-            item(*sendRequestResult.getItem())
+            item(sendRequestResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzSendRequestResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSendRequestResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::SendRequestResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

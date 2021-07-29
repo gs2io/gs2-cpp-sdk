@@ -42,16 +42,17 @@ private:
     {
     public:
         /** ミッショングループ名 */
-        gs2::optional<StringHolder> missionGroupName;
+        StringHolder missionGroupName;
         /** 達成済みのタスク名リスト */
-        gs2::optional<List<StringHolder>> completedMissionTaskNames;
+        List<StringHolder> completedMissionTaskNames;
         /** 報酬の受け取り済みのタスク名リスト */
-        gs2::optional<List<StringHolder>> receivedMissionTaskNames;
+        List<StringHolder> receivedMissionTaskNames;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::Complete& complete);
+        Data(const gs2::optional<gs2::mission::Complete>& complete);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzComplete() = default;
 
     EzComplete(gs2::mission::Complete complete);
+    EzComplete(gs2::optional<gs2::mission::Complete> complete);
 
     EzComplete& operator=(const EzComplete& ezComplete) = default;
     EzComplete& operator=(EzComplete&& ezComplete) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getMissionGroupName() const
     {
-        return *ensureData().missionGroupName;
+        return ensureData().missionGroupName;
     }
 
     const List<StringHolder>& getCompletedMissionTaskNames() const
     {
-        return *ensureData().completedMissionTaskNames;
+        return ensureData().completedMissionTaskNames;
     }
 
     const List<StringHolder>& getReceivedMissionTaskNames() const
     {
-        return *ensureData().receivedMissionTaskNames;
+        return ensureData().receivedMissionTaskNames;
     }
 
     // ========================================

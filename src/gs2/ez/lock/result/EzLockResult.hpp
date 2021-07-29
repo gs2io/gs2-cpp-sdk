@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::lock::LockResult& lockResult) :
-            item(*lockResult.getItem())
+            item(lockResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzLockResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzLockResult);
-    }
-
-    static bool isConvertible(const gs2::lock::LockResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

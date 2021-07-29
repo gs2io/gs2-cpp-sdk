@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::chat::UnsubscribeResult& unsubscribeResult) :
-            item(*unsubscribeResult.getItem())
+            item(unsubscribeResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzUnsubscribeResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUnsubscribeResult);
-    }
-
-    static bool isConvertible(const gs2::chat::UnsubscribeResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::datastore::PrepareDownloadByUserIdAndDataObjectNameResult& prepareDownloadByUserIdAndDataObjectNameResult) :
-            item(*prepareDownloadByUserIdAndDataObjectNameResult.getItem()),
-            fileUrl(*prepareDownloadByUserIdAndDataObjectNameResult.getFileUrl()),
-            contentLength(*prepareDownloadByUserIdAndDataObjectNameResult.getContentLength())
+            item(prepareDownloadByUserIdAndDataObjectNameResult.getItem()),
+            fileUrl(prepareDownloadByUserIdAndDataObjectNameResult.getFileUrl() ? *prepareDownloadByUserIdAndDataObjectNameResult.getFileUrl() : StringHolder()),
+            contentLength(prepareDownloadByUserIdAndDataObjectNameResult.getContentLength() ? *prepareDownloadByUserIdAndDataObjectNameResult.getContentLength() : 0)
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzPrepareDownloadByUserIdAndDataObjectNameResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPrepareDownloadByUserIdAndDataObjectNameResult);
-    }
-
-    static bool isConvertible(const gs2::datastore::PrepareDownloadByUserIdAndDataObjectNameResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getFileUrl().has_value() &&
-            result.getContentLength().has_value();
     }
 
     // ========================================

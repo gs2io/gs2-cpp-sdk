@@ -24,19 +24,27 @@ EzBox::Data::Data(const Data& data) :
     Gs2Object(data),
     prizeTableName(data.prizeTableName)
 {
-    if (data.drawnIndexes)
-    {
-        drawnIndexes = data.drawnIndexes->deepCopy();
-    }
+    drawnIndexes = data.drawnIndexes.deepCopy();
 }
 
 EzBox::Data::Data(const gs2::lottery::Box& box) :
-    prizeTableName(box.getPrizeTableName()),
-    drawnIndexes(box.getDrawnIndexes())
+    prizeTableName(box.getPrizeTableName() ? *box.getPrizeTableName() : StringHolder()),
+    drawnIndexes(box.getDrawnIndexes() ? *box.getDrawnIndexes() : List<Int32>())
+{
+}
+
+EzBox::Data::Data(const gs2::optional<gs2::lottery::Box>& box) :
+    prizeTableName(box && box->getPrizeTableName() ? *box->getPrizeTableName() : StringHolder()),
+    drawnIndexes(box && box->getDrawnIndexes() ? *box->getDrawnIndexes() : List<Int32>())
 {
 }
 
 EzBox::EzBox(gs2::lottery::Box box) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(box)
+{
+}
+
+EzBox::EzBox(gs2::optional<gs2::lottery::Box> box) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(box)
 {
 }

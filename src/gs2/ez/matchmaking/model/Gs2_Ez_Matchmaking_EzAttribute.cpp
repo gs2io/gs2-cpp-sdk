@@ -28,12 +28,23 @@ EzAttribute::Data::Data(const Data& data) :
 }
 
 EzAttribute::Data::Data(const gs2::matchmaking::Attribute& attribute) :
-    name(attribute.getName()),
+    name(attribute.getName() ? *attribute.getName() : StringHolder()),
     value(attribute.getValue() ? *attribute.getValue() : 0)
 {
 }
 
+EzAttribute::Data::Data(const gs2::optional<gs2::matchmaking::Attribute>& attribute) :
+    name(attribute && attribute->getName() ? *attribute->getName() : StringHolder()),
+    value(attribute && attribute->getValue() ? *attribute->getValue() : 0)
+{
+}
+
 EzAttribute::EzAttribute(gs2::matchmaking::Attribute attribute) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(attribute)
+{
+}
+
+EzAttribute::EzAttribute(gs2::optional<gs2::matchmaking::Attribute> attribute) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(attribute)
 {
 }

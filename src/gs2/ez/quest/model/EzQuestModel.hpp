@@ -45,26 +45,27 @@ private:
     {
     public:
         /** クエストモデル */
-        gs2::optional<StringHolder> questModelId;
+        StringHolder questModelId;
         /** クエストモデル名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** クエストモデルのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** クエストの内容 */
-        gs2::optional<List<EzContents>> contents;
+        List<EzContents> contents;
         /** 挑戦可能な期間を指定するイベントマスター のGRN */
-        gs2::optional<StringHolder> challengePeriodEventId;
+        StringHolder challengePeriodEventId;
         /** クエストの参加料 */
-        gs2::optional<List<EzConsumeAction>> consumeActions;
+        List<EzConsumeAction> consumeActions;
         /** クエスト失敗時の報酬 */
-        gs2::optional<List<EzAcquireAction>> failedAcquireActions;
+        List<EzAcquireAction> failedAcquireActions;
         /** クエストに挑戦するためにクリアしておく必要のあるクエスト名 */
-        gs2::optional<List<StringHolder>> premiseQuestNames;
+        List<StringHolder> premiseQuestNames;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::QuestModel& questModel);
+        Data(const gs2::optional<gs2::quest::QuestModel>& questModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -80,6 +81,7 @@ public:
     ~EzQuestModel() = default;
 
     EzQuestModel(gs2::quest::QuestModel questModel);
+    EzQuestModel(gs2::optional<gs2::quest::QuestModel> questModel);
 
     EzQuestModel& operator=(const EzQuestModel& ezQuestModel) = default;
     EzQuestModel& operator=(EzQuestModel&& ezQuestModel) = default;
@@ -94,42 +96,42 @@ public:
 
     const StringHolder& getQuestModelId() const
     {
-        return *ensureData().questModelId;
+        return ensureData().questModelId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzContents>& getContents() const
     {
-        return *ensureData().contents;
+        return ensureData().contents;
     }
 
     const StringHolder& getChallengePeriodEventId() const
     {
-        return *ensureData().challengePeriodEventId;
+        return ensureData().challengePeriodEventId;
     }
 
     const List<EzConsumeAction>& getConsumeActions() const
     {
-        return *ensureData().consumeActions;
+        return ensureData().consumeActions;
     }
 
     const List<EzAcquireAction>& getFailedAcquireActions() const
     {
-        return *ensureData().failedAcquireActions;
+        return ensureData().failedAcquireActions;
     }
 
     const List<StringHolder>& getPremiseQuestNames() const
     {
-        return *ensureData().premiseQuestNames;
+        return ensureData().premiseQuestNames;
     }
 
     // ========================================

@@ -70,7 +70,7 @@ void Client::listCounters(
                 AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListCountersResult ezResult(*r.getResult());
                 AsyncEzListCountersResult asyncResult(std::move(ezResult));
@@ -110,7 +110,7 @@ void Client::getCounter(
                 AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetCounterResult ezResult(*r.getResult());
                 AsyncEzGetCounterResult asyncResult(std::move(ezResult));
@@ -160,7 +160,7 @@ void Client::countUp(
                 AsyncEzCountUpResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCountUpResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCountUpResult ezResult(*r.getResult());
                 AsyncEzCountUpResult asyncResult(std::move(ezResult));
@@ -194,7 +194,7 @@ void Client::listLimitModels(
                 AsyncEzListLimitModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListLimitModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListLimitModelsResult ezResult(*r.getResult());
                 AsyncEzListLimitModelsResult asyncResult(std::move(ezResult));
@@ -230,7 +230,7 @@ void Client::getLimitModel(
                 AsyncEzGetLimitModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetLimitModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetLimitModelResult ezResult(*r.getResult());
                 AsyncEzGetLimitModelResult asyncResult(std::move(ezResult));

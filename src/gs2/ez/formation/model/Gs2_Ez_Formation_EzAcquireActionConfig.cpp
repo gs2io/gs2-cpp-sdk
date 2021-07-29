@@ -24,26 +24,39 @@ EzAcquireActionConfig::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name)
 {
-    if (data.config)
-    {
-        config = data.config->deepCopy();
-    }
+    config = data.config.deepCopy();
 }
 
 EzAcquireActionConfig::Data::Data(const gs2::formation::AcquireActionConfig& acquireActionConfig) :
-    name(acquireActionConfig.getName())
+    name(acquireActionConfig.getName() ? *acquireActionConfig.getName() : StringHolder())
 {
-    config.emplace();
     if (acquireActionConfig.getConfig())
     {
         for (int i = 0; i < acquireActionConfig.getConfig()->getCount(); ++i)
         {
-            *config += EzConfig((*acquireActionConfig.getConfig())[i]);
+            config += EzConfig((*acquireActionConfig.getConfig())[i]);
+        }
+    }
+}
+
+EzAcquireActionConfig::Data::Data(const gs2::optional<gs2::formation::AcquireActionConfig>& acquireActionConfig) :
+    name(acquireActionConfig && acquireActionConfig->getName() ? *acquireActionConfig->getName() : StringHolder())
+{
+    if (acquireActionConfig && acquireActionConfig->getConfig())
+    {
+        for (int i = 0; i < acquireActionConfig->getConfig()->getCount(); ++i)
+        {
+            config += EzConfig((*acquireActionConfig->getConfig())[i]);
         }
     }
 }
 
 EzAcquireActionConfig::EzAcquireActionConfig(gs2::formation::AcquireActionConfig acquireActionConfig) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(acquireActionConfig)
+{
+}
+
+EzAcquireActionConfig::EzAcquireActionConfig(gs2::optional<gs2::formation::AcquireActionConfig> acquireActionConfig) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(acquireActionConfig)
 {
 }

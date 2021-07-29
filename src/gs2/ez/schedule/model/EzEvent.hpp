@@ -42,38 +42,39 @@ private:
     {
     public:
         /** イベントの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** イベントの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** イベント期間の種類 */
-        gs2::optional<StringHolder> scheduleType;
+        StringHolder scheduleType;
         /** 繰り返しの種類 */
-        gs2::optional<StringHolder> repeatType;
+        StringHolder repeatType;
         /** イベントの開始日時 */
-        gs2::optional<Int64> absoluteBegin;
+        Int64 absoluteBegin;
         /** イベントの終了日時 */
-        gs2::optional<Int64> absoluteEnd;
+        Int64 absoluteEnd;
         /** イベントの繰り返し開始日 */
-        gs2::optional<Int32> repeatBeginDayOfMonth;
+        Int32 repeatBeginDayOfMonth;
         /** イベントの繰り返し終了日 */
-        gs2::optional<Int32> repeatEndDayOfMonth;
+        Int32 repeatEndDayOfMonth;
         /** イベントの繰り返し開始曜日 */
-        gs2::optional<StringHolder> repeatBeginDayOfWeek;
+        StringHolder repeatBeginDayOfWeek;
         /** イベントの繰り返し終了曜日 */
-        gs2::optional<StringHolder> repeatEndDayOfWeek;
+        StringHolder repeatEndDayOfWeek;
         /** イベントの繰り返し開始時間 */
-        gs2::optional<Int32> repeatBeginHour;
+        Int32 repeatBeginHour;
         /** イベントの繰り返し終了時間 */
-        gs2::optional<Int32> repeatEndHour;
+        Int32 repeatEndHour;
         /** イベントの開始トリガー */
-        gs2::optional<StringHolder> relativeTriggerName;
+        StringHolder relativeTriggerName;
         /** イベントの開催期間(秒) */
-        gs2::optional<Int32> relativeDuration;
+        Int32 relativeDuration;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::schedule::Event& event);
+        Data(const gs2::optional<gs2::schedule::Event>& event);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -89,6 +90,7 @@ public:
     ~EzEvent() = default;
 
     EzEvent(gs2::schedule::Event event);
+    EzEvent(gs2::optional<gs2::schedule::Event> event);
 
     EzEvent& operator=(const EzEvent& ezEvent) = default;
     EzEvent& operator=(EzEvent&& ezEvent) = default;
@@ -103,72 +105,72 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getScheduleType() const
     {
-        return *ensureData().scheduleType;
+        return ensureData().scheduleType;
     }
 
     const StringHolder& getRepeatType() const
     {
-        return *ensureData().repeatType;
+        return ensureData().repeatType;
     }
 
     Int64 getAbsoluteBegin() const
     {
-        return *ensureData().absoluteBegin;
+        return ensureData().absoluteBegin;
     }
 
     Int64 getAbsoluteEnd() const
     {
-        return *ensureData().absoluteEnd;
+        return ensureData().absoluteEnd;
     }
 
     Int32 getRepeatBeginDayOfMonth() const
     {
-        return *ensureData().repeatBeginDayOfMonth;
+        return ensureData().repeatBeginDayOfMonth;
     }
 
     Int32 getRepeatEndDayOfMonth() const
     {
-        return *ensureData().repeatEndDayOfMonth;
+        return ensureData().repeatEndDayOfMonth;
     }
 
     const StringHolder& getRepeatBeginDayOfWeek() const
     {
-        return *ensureData().repeatBeginDayOfWeek;
+        return ensureData().repeatBeginDayOfWeek;
     }
 
     const StringHolder& getRepeatEndDayOfWeek() const
     {
-        return *ensureData().repeatEndDayOfWeek;
+        return ensureData().repeatEndDayOfWeek;
     }
 
     Int32 getRepeatBeginHour() const
     {
-        return *ensureData().repeatBeginHour;
+        return ensureData().repeatBeginHour;
     }
 
     Int32 getRepeatEndHour() const
     {
-        return *ensureData().repeatEndHour;
+        return ensureData().repeatEndHour;
     }
 
     const StringHolder& getRelativeTriggerName() const
     {
-        return *ensureData().relativeTriggerName;
+        return ensureData().relativeTriggerName;
     }
 
     Int32 getRelativeDuration() const
     {
-        return *ensureData().relativeDuration;
+        return ensureData().relativeDuration;
     }
 
     // ========================================

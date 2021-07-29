@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::datastore::RestoreDataObjectResult& restoreDataObjectResult) :
-            item(*restoreDataObjectResult.getItem())
+            item(restoreDataObjectResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzRestoreDataObjectResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRestoreDataObjectResult);
-    }
-
-    static bool isConvertible(const gs2::datastore::RestoreDataObjectResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

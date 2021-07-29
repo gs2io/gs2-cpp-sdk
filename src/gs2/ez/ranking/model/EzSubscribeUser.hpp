@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 購読するユーザID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 購読されるユーザID */
-        gs2::optional<StringHolder> targetUserId;
+        StringHolder targetUserId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::ranking::SubscribeUser& subscribeUser);
+        Data(const gs2::optional<gs2::ranking::SubscribeUser>& subscribeUser);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzSubscribeUser() = default;
 
     EzSubscribeUser(gs2::ranking::SubscribeUser subscribeUser);
+    EzSubscribeUser(gs2::optional<gs2::ranking::SubscribeUser> subscribeUser);
 
     EzSubscribeUser& operator=(const EzSubscribeUser& ezSubscribeUser) = default;
     EzSubscribeUser& operator=(EzSubscribeUser&& ezSubscribeUser) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getTargetUserId() const
     {
-        return *ensureData().targetUserId;
+        return ensureData().targetUserId;
     }
 
     // ========================================

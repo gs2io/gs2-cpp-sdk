@@ -42,18 +42,19 @@ private:
     {
     public:
         /** スタンプシートで実行するアクションの種類 */
-        gs2::optional<StringHolder> action;
+        StringHolder action;
         /** リクエストモデル */
-        gs2::optional<StringHolder> request;
+        StringHolder request;
         /** 入手するリソースGRN */
-        gs2::optional<StringHolder> itemId;
+        StringHolder itemId;
         /** 入手する数量 */
-        gs2::optional<Int32> value;
+        Int32 value;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::Reward& reward);
+        Data(const gs2::optional<gs2::quest::Reward>& reward);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzReward() = default;
 
     EzReward(gs2::quest::Reward reward);
+    EzReward(gs2::optional<gs2::quest::Reward> reward);
 
     EzReward& operator=(const EzReward& ezReward) = default;
     EzReward& operator=(EzReward&& ezReward) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getAction() const
     {
-        return *ensureData().action;
+        return ensureData().action;
     }
 
     const StringHolder& getRequest() const
     {
-        return *ensureData().request;
+        return ensureData().request;
     }
 
     const StringHolder& getItemId() const
     {
-        return *ensureData().itemId;
+        return ensureData().itemId;
     }
 
     Int32 getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     // ========================================

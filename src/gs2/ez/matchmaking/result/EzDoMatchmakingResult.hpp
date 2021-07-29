@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::DoMatchmakingResult& doMatchmakingResult) :
-            item(*doMatchmakingResult.getItem()),
-            matchmakingContextToken(*doMatchmakingResult.getMatchmakingContextToken())
+            item(doMatchmakingResult.getItem()),
+            matchmakingContextToken(doMatchmakingResult.getMatchmakingContextToken() ? *doMatchmakingResult.getMatchmakingContextToken() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzDoMatchmakingResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDoMatchmakingResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::DoMatchmakingResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getMatchmakingContextToken().has_value();
     }
 
     // ========================================

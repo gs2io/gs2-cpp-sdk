@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 順位 */
-        gs2::optional<Int32> rank;
+        Int32 rank;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::GameResult& gameResult);
+        Data(const gs2::optional<gs2::matchmaking::GameResult>& gameResult);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzGameResult() = default;
 
     EzGameResult(gs2::matchmaking::GameResult gameResult);
+    EzGameResult(gs2::optional<gs2::matchmaking::GameResult> gameResult);
 
     EzGameResult& operator=(const EzGameResult& ezGameResult) = default;
     EzGameResult& operator=(EzGameResult&& ezGameResult) = default;
@@ -79,12 +81,12 @@ public:
 
     Int32 getRank() const
     {
-        return *ensureData().rank;
+        return ensureData().rank;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     // ========================================

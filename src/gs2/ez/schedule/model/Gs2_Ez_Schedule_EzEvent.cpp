@@ -40,24 +40,47 @@ EzEvent::Data::Data(const Data& data) :
 }
 
 EzEvent::Data::Data(const gs2::schedule::Event& event) :
-    name(event.getName()),
-    metadata(event.getMetadata()),
-    scheduleType(event.getScheduleType()),
-    repeatType(event.getRepeatType()),
+    name(event.getName() ? *event.getName() : StringHolder()),
+    metadata(event.getMetadata() ? *event.getMetadata() : StringHolder()),
+    scheduleType(event.getScheduleType() ? *event.getScheduleType() : StringHolder()),
+    repeatType(event.getRepeatType() ? *event.getRepeatType() : StringHolder()),
     absoluteBegin(event.getAbsoluteBegin() ? *event.getAbsoluteBegin() : 0),
     absoluteEnd(event.getAbsoluteEnd() ? *event.getAbsoluteEnd() : 0),
     repeatBeginDayOfMonth(event.getRepeatBeginDayOfMonth() ? *event.getRepeatBeginDayOfMonth() : 0),
     repeatEndDayOfMonth(event.getRepeatEndDayOfMonth() ? *event.getRepeatEndDayOfMonth() : 0),
-    repeatBeginDayOfWeek(event.getRepeatBeginDayOfWeek()),
-    repeatEndDayOfWeek(event.getRepeatEndDayOfWeek()),
+    repeatBeginDayOfWeek(event.getRepeatBeginDayOfWeek() ? *event.getRepeatBeginDayOfWeek() : StringHolder()),
+    repeatEndDayOfWeek(event.getRepeatEndDayOfWeek() ? *event.getRepeatEndDayOfWeek() : StringHolder()),
     repeatBeginHour(event.getRepeatBeginHour() ? *event.getRepeatBeginHour() : 0),
     repeatEndHour(event.getRepeatEndHour() ? *event.getRepeatEndHour() : 0),
-    relativeTriggerName(event.getRelativeTriggerName()),
+    relativeTriggerName(event.getRelativeTriggerName() ? *event.getRelativeTriggerName() : StringHolder()),
     relativeDuration(event.getRelativeDuration() ? *event.getRelativeDuration() : 0)
 {
 }
 
+EzEvent::Data::Data(const gs2::optional<gs2::schedule::Event>& event) :
+    name(event && event->getName() ? *event->getName() : StringHolder()),
+    metadata(event && event->getMetadata() ? *event->getMetadata() : StringHolder()),
+    scheduleType(event && event->getScheduleType() ? *event->getScheduleType() : StringHolder()),
+    repeatType(event && event->getRepeatType() ? *event->getRepeatType() : StringHolder()),
+    absoluteBegin(event && event->getAbsoluteBegin() ? *event->getAbsoluteBegin() : 0),
+    absoluteEnd(event && event->getAbsoluteEnd() ? *event->getAbsoluteEnd() : 0),
+    repeatBeginDayOfMonth(event && event->getRepeatBeginDayOfMonth() ? *event->getRepeatBeginDayOfMonth() : 0),
+    repeatEndDayOfMonth(event && event->getRepeatEndDayOfMonth() ? *event->getRepeatEndDayOfMonth() : 0),
+    repeatBeginDayOfWeek(event && event->getRepeatBeginDayOfWeek() ? *event->getRepeatBeginDayOfWeek() : StringHolder()),
+    repeatEndDayOfWeek(event && event->getRepeatEndDayOfWeek() ? *event->getRepeatEndDayOfWeek() : StringHolder()),
+    repeatBeginHour(event && event->getRepeatBeginHour() ? *event->getRepeatBeginHour() : 0),
+    repeatEndHour(event && event->getRepeatEndHour() ? *event->getRepeatEndHour() : 0),
+    relativeTriggerName(event && event->getRelativeTriggerName() ? *event->getRelativeTriggerName() : StringHolder()),
+    relativeDuration(event && event->getRelativeDuration() ? *event->getRelativeDuration() : 0)
+{
+}
+
 EzEvent::EzEvent(gs2::schedule::Event event) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(event)
+{
+}
+
+EzEvent::EzEvent(gs2::optional<gs2::schedule::Event> event) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(event)
 {
 }

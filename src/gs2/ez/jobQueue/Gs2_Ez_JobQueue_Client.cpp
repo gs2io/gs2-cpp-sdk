@@ -55,7 +55,7 @@ void Client::run(
                 AsyncEzRunResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunResult ezResult(*r.getResult());
                 AsyncEzRunResult asyncResult(std::move(ezResult));

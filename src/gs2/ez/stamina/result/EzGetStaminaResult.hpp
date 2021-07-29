@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::stamina::GetStaminaResult& getStaminaResult) :
-            item(*getStaminaResult.getItem()),
-            staminaModel(*getStaminaResult.getStaminaModel())
+            item(getStaminaResult.getItem()),
+            staminaModel(getStaminaResult.getStaminaModel())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzGetStaminaResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetStaminaResult);
-    }
-
-    static bool isConvertible(const gs2::stamina::GetStaminaResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStaminaModel().has_value();
     }
 
     // ========================================

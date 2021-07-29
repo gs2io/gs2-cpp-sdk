@@ -27,11 +27,21 @@ EzFollowUser::Data::Data(const Data& data) :
 }
 
 EzFollowUser::Data::Data(const gs2::friend_::FollowUser& followUser) :
-    userId(followUser.getUserId())
+    userId(followUser.getUserId() ? *followUser.getUserId() : StringHolder())
+{
+}
+
+EzFollowUser::Data::Data(const gs2::optional<gs2::friend_::FollowUser>& followUser) :
+    userId(followUser && followUser->getUserId() ? *followUser->getUserId() : StringHolder())
 {
 }
 
 EzFollowUser::EzFollowUser(gs2::friend_::FollowUser followUser) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(followUser)
+{
+}
+
+EzFollowUser::EzFollowUser(gs2::optional<gs2::friend_::FollowUser> followUser) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(followUser)
 {
 }

@@ -28,12 +28,23 @@ EzSubscribeUser::Data::Data(const Data& data) :
 }
 
 EzSubscribeUser::Data::Data(const gs2::ranking::SubscribeUser& subscribeUser) :
-    userId(subscribeUser.getUserId()),
-    targetUserId(subscribeUser.getTargetUserId())
+    userId(subscribeUser.getUserId() ? *subscribeUser.getUserId() : StringHolder()),
+    targetUserId(subscribeUser.getTargetUserId() ? *subscribeUser.getTargetUserId() : StringHolder())
+{
+}
+
+EzSubscribeUser::Data::Data(const gs2::optional<gs2::ranking::SubscribeUser>& subscribeUser) :
+    userId(subscribeUser && subscribeUser->getUserId() ? *subscribeUser->getUserId() : StringHolder()),
+    targetUserId(subscribeUser && subscribeUser->getTargetUserId() ? *subscribeUser->getTargetUserId() : StringHolder())
 {
 }
 
 EzSubscribeUser::EzSubscribeUser(gs2::ranking::SubscribeUser subscribeUser) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(subscribeUser)
+{
+}
+
+EzSubscribeUser::EzSubscribeUser(gs2::optional<gs2::ranking::SubscribeUser> subscribeUser) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(subscribeUser)
 {
 }

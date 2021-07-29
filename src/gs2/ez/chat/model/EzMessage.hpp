@@ -42,20 +42,21 @@ private:
     {
     public:
         /** ルーム名 */
-        gs2::optional<StringHolder> roomName;
+        StringHolder roomName;
         /** 発言したユーザID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** メッセージの種類を分類したい時の種類番号 */
-        gs2::optional<Int32> category;
+        Int32 category;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::chat::Message& message);
+        Data(const gs2::optional<gs2::chat::Message>& message);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzMessage() = default;
 
     EzMessage(gs2::chat::Message message);
+    EzMessage(gs2::optional<gs2::chat::Message> message);
 
     EzMessage& operator=(const EzMessage& ezMessage) = default;
     EzMessage& operator=(EzMessage&& ezMessage) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getRoomName() const
     {
-        return *ensureData().roomName;
+        return ensureData().roomName;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Int32 getCategory() const
     {
-        return *ensureData().category;
+        return ensureData().category;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     // ========================================

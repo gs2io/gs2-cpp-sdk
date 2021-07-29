@@ -42,16 +42,17 @@ private:
     {
     public:
         /** フォームの保存領域の名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 現在のキャパシティ */
-        gs2::optional<Int32> capacity;
+        Int32 capacity;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::Mold& mold);
+        Data(const gs2::optional<gs2::formation::Mold>& mold);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzMold() = default;
 
     EzMold(gs2::formation::Mold mold);
+    EzMold(gs2::optional<gs2::formation::Mold> mold);
 
     EzMold& operator=(const EzMold& ezMold) = default;
     EzMold& operator=(EzMold&& ezMold) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Int32 getCapacity() const
     {
-        return *ensureData().capacity;
+        return ensureData().capacity;
     }
 
     // ========================================

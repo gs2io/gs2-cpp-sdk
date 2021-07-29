@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::money::WithdrawResult& withdrawResult) :
-            item(*withdrawResult.getItem()),
-            price(*withdrawResult.getPrice())
+            item(withdrawResult.getItem()),
+            price(withdrawResult.getPrice() ? *withdrawResult.getPrice() : 0)
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzWithdrawResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWithdrawResult);
-    }
-
-    static bool isConvertible(const gs2::money::WithdrawResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getPrice().has_value();
     }
 
     // ========================================

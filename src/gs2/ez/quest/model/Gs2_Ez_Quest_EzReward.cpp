@@ -30,14 +30,27 @@ EzReward::Data::Data(const Data& data) :
 }
 
 EzReward::Data::Data(const gs2::quest::Reward& reward) :
-    action(reward.getAction()),
-    request(reward.getRequest()),
-    itemId(reward.getItemId()),
+    action(reward.getAction() ? *reward.getAction() : StringHolder()),
+    request(reward.getRequest() ? *reward.getRequest() : StringHolder()),
+    itemId(reward.getItemId() ? *reward.getItemId() : StringHolder()),
     value(reward.getValue() ? *reward.getValue() : 0)
 {
 }
 
+EzReward::Data::Data(const gs2::optional<gs2::quest::Reward>& reward) :
+    action(reward && reward->getAction() ? *reward->getAction() : StringHolder()),
+    request(reward && reward->getRequest() ? *reward->getRequest() : StringHolder()),
+    itemId(reward && reward->getItemId() ? *reward->getItemId() : StringHolder()),
+    value(reward && reward->getValue() ? *reward->getValue() : 0)
+{
+}
+
 EzReward::EzReward(gs2::quest::Reward reward) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(reward)
+{
+}
+
+EzReward::EzReward(gs2::optional<gs2::quest::Reward> reward) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(reward)
 {
 }

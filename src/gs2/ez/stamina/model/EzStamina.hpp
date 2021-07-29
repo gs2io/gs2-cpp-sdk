@@ -42,22 +42,23 @@ private:
     {
     public:
         /** スタミナモデルの名前 */
-        gs2::optional<StringHolder> staminaName;
+        StringHolder staminaName;
         /** 最終更新時におけるスタミナ値 */
-        gs2::optional<Int32> value;
+        Int32 value;
         /** スタミナの最大値 */
-        gs2::optional<Int32> maxValue;
+        Int32 maxValue;
         /** スタミナの回復間隔(分) */
-        gs2::optional<Int32> recoverIntervalMinutes;
+        Int32 recoverIntervalMinutes;
         /** スタミナの回復量 */
-        gs2::optional<Int32> recoverValue;
+        Int32 recoverValue;
         /** 次回スタミナが回復する時間 */
-        gs2::optional<Int64> nextRecoverAt;
+        Int64 nextRecoverAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::stamina::Stamina& stamina);
+        Data(const gs2::optional<gs2::stamina::Stamina>& stamina);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzStamina() = default;
 
     EzStamina(gs2::stamina::Stamina stamina);
+    EzStamina(gs2::optional<gs2::stamina::Stamina> stamina);
 
     EzStamina& operator=(const EzStamina& ezStamina) = default;
     EzStamina& operator=(EzStamina&& ezStamina) = default;
@@ -87,32 +89,32 @@ public:
 
     const StringHolder& getStaminaName() const
     {
-        return *ensureData().staminaName;
+        return ensureData().staminaName;
     }
 
     Int32 getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     Int32 getMaxValue() const
     {
-        return *ensureData().maxValue;
+        return ensureData().maxValue;
     }
 
     Int32 getRecoverIntervalMinutes() const
     {
-        return *ensureData().recoverIntervalMinutes;
+        return ensureData().recoverIntervalMinutes;
     }
 
     Int32 getRecoverValue() const
     {
-        return *ensureData().recoverValue;
+        return ensureData().recoverValue;
     }
 
     Int64 getNextRecoverAt() const
     {
-        return *ensureData().nextRecoverAt;
+        return ensureData().nextRecoverAt;
     }
 
     // ========================================

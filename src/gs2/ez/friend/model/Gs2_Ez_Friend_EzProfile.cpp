@@ -30,14 +30,27 @@ EzProfile::Data::Data(const Data& data) :
 }
 
 EzProfile::Data::Data(const gs2::friend_::Profile& profile) :
-    userId(profile.getUserId()),
-    publicProfile(profile.getPublicProfile()),
-    followerProfile(profile.getFollowerProfile()),
-    friendProfile(profile.getFriendProfile())
+    userId(profile.getUserId() ? *profile.getUserId() : StringHolder()),
+    publicProfile(profile.getPublicProfile() ? *profile.getPublicProfile() : StringHolder()),
+    followerProfile(profile.getFollowerProfile() ? *profile.getFollowerProfile() : StringHolder()),
+    friendProfile(profile.getFriendProfile() ? *profile.getFriendProfile() : StringHolder())
+{
+}
+
+EzProfile::Data::Data(const gs2::optional<gs2::friend_::Profile>& profile) :
+    userId(profile && profile->getUserId() ? *profile->getUserId() : StringHolder()),
+    publicProfile(profile && profile->getPublicProfile() ? *profile->getPublicProfile() : StringHolder()),
+    followerProfile(profile && profile->getFollowerProfile() ? *profile->getFollowerProfile() : StringHolder()),
+    friendProfile(profile && profile->getFriendProfile() ? *profile->getFriendProfile() : StringHolder())
 {
 }
 
 EzProfile::EzProfile(gs2::friend_::Profile profile) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(profile)
+{
+}
+
+EzProfile::EzProfile(gs2::optional<gs2::friend_::Profile> profile) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(profile)
 {
 }

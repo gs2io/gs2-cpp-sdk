@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::distributor::RunStampTaskResult& runStampTaskResult) :
-            contextStack(*runStampTaskResult.getContextStack()),
-            result(*runStampTaskResult.getResult())
+            contextStack(runStampTaskResult.getContextStack() ? *runStampTaskResult.getContextStack() : StringHolder()),
+            result(runStampTaskResult.getResult() ? *runStampTaskResult.getResult() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzRunStampTaskResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampTaskResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::RunStampTaskResult& result)
-    {
-        return
-            result.getContextStack().has_value() &&
-            result.getResult().has_value();
     }
 
     // ========================================

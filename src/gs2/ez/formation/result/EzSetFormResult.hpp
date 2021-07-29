@@ -53,10 +53,10 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::formation::SetFormWithSignatureResult& setFormWithSignatureResult) :
-            item(*setFormWithSignatureResult.getItem()),
-            mold(*setFormWithSignatureResult.getMold()),
-            moldModel(*setFormWithSignatureResult.getMoldModel()),
-            formModel(*setFormWithSignatureResult.getFormModel())
+            item(setFormWithSignatureResult.getItem()),
+            mold(setFormWithSignatureResult.getMold()),
+            moldModel(setFormWithSignatureResult.getMoldModel()),
+            formModel(setFormWithSignatureResult.getFormModel())
         {
         }
 
@@ -84,15 +84,6 @@ public:
     EzSetFormResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSetFormResult);
-    }
-
-    static bool isConvertible(const gs2::formation::SetFormWithSignatureResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getMold().has_value() &&
-            result.getMoldModel().has_value() &&
-            result.getFormModel().has_value();
     }
 
     // ========================================

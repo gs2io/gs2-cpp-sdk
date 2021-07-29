@@ -43,14 +43,15 @@ private:
     {
     public:
         /** クエストモデルのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** クエストクリア時の報酬 */
-        gs2::optional<List<EzAcquireAction>> completeAcquireActions;
+        List<EzAcquireAction> completeAcquireActions;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::Contents& contents);
+        Data(const gs2::optional<gs2::quest::Contents>& contents);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,6 +67,7 @@ public:
     ~EzContents() = default;
 
     EzContents(gs2::quest::Contents contents);
+    EzContents(gs2::optional<gs2::quest::Contents> contents);
 
     EzContents& operator=(const EzContents& ezContents) = default;
     EzContents& operator=(EzContents&& ezContents) = default;
@@ -80,12 +82,12 @@ public:
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzAcquireAction>& getCompleteAcquireActions() const
     {
-        return *ensureData().completeAcquireActions;
+        return ensureData().completeAcquireActions;
     }
 
     // ========================================

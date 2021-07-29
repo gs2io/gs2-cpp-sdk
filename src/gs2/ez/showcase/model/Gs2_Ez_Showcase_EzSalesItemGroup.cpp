@@ -25,27 +25,41 @@ EzSalesItemGroup::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata)
 {
-    if (data.salesItems)
-    {
-        salesItems = data.salesItems->deepCopy();
-    }
+    salesItems = data.salesItems.deepCopy();
 }
 
 EzSalesItemGroup::Data::Data(const gs2::showcase::SalesItemGroup& salesItemGroup) :
-    name(salesItemGroup.getName()),
-    metadata(salesItemGroup.getMetadata())
+    name(salesItemGroup.getName() ? *salesItemGroup.getName() : StringHolder()),
+    metadata(salesItemGroup.getMetadata() ? *salesItemGroup.getMetadata() : StringHolder())
 {
-    salesItems.emplace();
     if (salesItemGroup.getSalesItems())
     {
         for (int i = 0; i < salesItemGroup.getSalesItems()->getCount(); ++i)
         {
-            *salesItems += EzSalesItem((*salesItemGroup.getSalesItems())[i]);
+            salesItems += EzSalesItem((*salesItemGroup.getSalesItems())[i]);
+        }
+    }
+}
+
+EzSalesItemGroup::Data::Data(const gs2::optional<gs2::showcase::SalesItemGroup>& salesItemGroup) :
+    name(salesItemGroup && salesItemGroup->getName() ? *salesItemGroup->getName() : StringHolder()),
+    metadata(salesItemGroup && salesItemGroup->getMetadata() ? *salesItemGroup->getMetadata() : StringHolder())
+{
+    if (salesItemGroup && salesItemGroup->getSalesItems())
+    {
+        for (int i = 0; i < salesItemGroup->getSalesItems()->getCount(); ++i)
+        {
+            salesItems += EzSalesItem((*salesItemGroup->getSalesItems())[i]);
         }
     }
 }
 
 EzSalesItemGroup::EzSalesItemGroup(gs2::showcase::SalesItemGroup salesItemGroup) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(salesItemGroup)
+{
+}
+
+EzSalesItemGroup::EzSalesItemGroup(gs2::optional<gs2::showcase::SalesItemGroup> salesItemGroup) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(salesItemGroup)
 {
 }

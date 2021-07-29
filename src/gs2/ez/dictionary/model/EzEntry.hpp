@@ -42,18 +42,19 @@ private:
     {
     public:
         /** エントリー のGRN */
-        gs2::optional<StringHolder> entryId;
+        StringHolder entryId;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** エントリーの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** None */
-        gs2::optional<Int64> acquiredAt;
+        Int64 acquiredAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::dictionary::Entry& entry);
+        Data(const gs2::optional<gs2::dictionary::Entry>& entry);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzEntry() = default;
 
     EzEntry(gs2::dictionary::Entry entry);
+    EzEntry(gs2::optional<gs2::dictionary::Entry> entry);
 
     EzEntry& operator=(const EzEntry& ezEntry) = default;
     EzEntry& operator=(EzEntry&& ezEntry) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getEntryId() const
     {
-        return *ensureData().entryId;
+        return ensureData().entryId;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int64 getAcquiredAt() const
     {
-        return *ensureData().acquiredAt;
+        return ensureData().acquiredAt;
     }
 
     // ========================================

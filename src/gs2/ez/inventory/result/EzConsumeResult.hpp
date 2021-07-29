@@ -50,9 +50,10 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::inventory::ConsumeItemSetResult& consumeItemSetResult) :
-            itemModel(*consumeItemSetResult.getItemModel()),
-            inventory(*consumeItemSetResult.getInventory())
+            itemModel(consumeItemSetResult.getItemModel()),
+            inventory(consumeItemSetResult.getInventory())
         {
+            if (consumeItemSetResult.getItems())
             {
                 auto& list = *consumeItemSetResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -86,14 +87,6 @@ public:
     EzConsumeResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzConsumeResult);
-    }
-
-    static bool isConvertible(const gs2::inventory::ConsumeItemSetResult& result)
-    {
-        return
-            result.getItems().has_value() &&
-            result.getItemModel().has_value() &&
-            result.getInventory().has_value();
     }
 
     // ========================================

@@ -42,14 +42,15 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** ブラックリストのユーザーIDリスト */
-        gs2::optional<List<StringHolder>> targetUserIds;
+        List<StringHolder> targetUserIds;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::friend_::BlackList& blackList);
+        Data(const gs2::optional<gs2::friend_::BlackList>& blackList);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzBlackList() = default;
 
     EzBlackList(gs2::friend_::BlackList blackList);
+    EzBlackList(gs2::optional<gs2::friend_::BlackList> blackList);
 
     EzBlackList& operator=(const EzBlackList& ezBlackList) = default;
     EzBlackList& operator=(EzBlackList&& ezBlackList) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const List<StringHolder>& getTargetUserIds() const
     {
-        return *ensureData().targetUserIds;
+        return ensureData().targetUserIds;
     }
 
     // ========================================

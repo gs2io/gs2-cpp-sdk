@@ -29,31 +29,49 @@ EzMissionTaskModel::Data::Data(const Data& data) :
     challengePeriodEventId(data.challengePeriodEventId),
     premiseMissionTaskName(data.premiseMissionTaskName)
 {
-    if (data.completeAcquireActions)
-    {
-        completeAcquireActions = data.completeAcquireActions->deepCopy();
-    }
+    completeAcquireActions = data.completeAcquireActions.deepCopy();
 }
 
 EzMissionTaskModel::Data::Data(const gs2::mission::MissionTaskModel& missionTaskModel) :
-    name(missionTaskModel.getName()),
-    metadata(missionTaskModel.getMetadata()),
-    counterName(missionTaskModel.getCounterName()),
+    name(missionTaskModel.getName() ? *missionTaskModel.getName() : StringHolder()),
+    metadata(missionTaskModel.getMetadata() ? *missionTaskModel.getMetadata() : StringHolder()),
+    counterName(missionTaskModel.getCounterName() ? *missionTaskModel.getCounterName() : StringHolder()),
     targetValue(missionTaskModel.getTargetValue() ? *missionTaskModel.getTargetValue() : 0),
-    challengePeriodEventId(missionTaskModel.getChallengePeriodEventId()),
-    premiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName())
+    challengePeriodEventId(missionTaskModel.getChallengePeriodEventId() ? *missionTaskModel.getChallengePeriodEventId() : StringHolder()),
+    premiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName() ? *missionTaskModel.getPremiseMissionTaskName() : StringHolder())
 {
-    completeAcquireActions.emplace();
     if (missionTaskModel.getCompleteAcquireActions())
     {
         for (int i = 0; i < missionTaskModel.getCompleteAcquireActions()->getCount(); ++i)
         {
-            *completeAcquireActions += EzAcquireAction((*missionTaskModel.getCompleteAcquireActions())[i]);
+            completeAcquireActions += EzAcquireAction((*missionTaskModel.getCompleteAcquireActions())[i]);
+        }
+    }
+}
+
+EzMissionTaskModel::Data::Data(const gs2::optional<gs2::mission::MissionTaskModel>& missionTaskModel) :
+    name(missionTaskModel && missionTaskModel->getName() ? *missionTaskModel->getName() : StringHolder()),
+    metadata(missionTaskModel && missionTaskModel->getMetadata() ? *missionTaskModel->getMetadata() : StringHolder()),
+    counterName(missionTaskModel && missionTaskModel->getCounterName() ? *missionTaskModel->getCounterName() : StringHolder()),
+    targetValue(missionTaskModel && missionTaskModel->getTargetValue() ? *missionTaskModel->getTargetValue() : 0),
+    challengePeriodEventId(missionTaskModel && missionTaskModel->getChallengePeriodEventId() ? *missionTaskModel->getChallengePeriodEventId() : StringHolder()),
+    premiseMissionTaskName(missionTaskModel && missionTaskModel->getPremiseMissionTaskName() ? *missionTaskModel->getPremiseMissionTaskName() : StringHolder())
+{
+    if (missionTaskModel && missionTaskModel->getCompleteAcquireActions())
+    {
+        for (int i = 0; i < missionTaskModel->getCompleteAcquireActions()->getCount(); ++i)
+        {
+            completeAcquireActions += EzAcquireAction((*missionTaskModel->getCompleteAcquireActions())[i]);
         }
     }
 }
 
 EzMissionTaskModel::EzMissionTaskModel(gs2::mission::MissionTaskModel missionTaskModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(missionTaskModel)
+{
+}
+
+EzMissionTaskModel::EzMissionTaskModel(gs2::optional<gs2::mission::MissionTaskModel> missionTaskModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(missionTaskModel)
 {
 }

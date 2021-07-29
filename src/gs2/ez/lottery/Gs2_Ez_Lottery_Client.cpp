@@ -65,7 +65,7 @@ void Client::describeBoxes(
                 AsyncEzDescribeBoxesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDescribeBoxesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDescribeBoxesResult ezResult(*r.getResult());
                 AsyncEzDescribeBoxesResult asyncResult(std::move(ezResult));
@@ -103,7 +103,7 @@ void Client::getBox(
                 AsyncEzGetBoxResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetBoxResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetBoxResult ezResult(*r.getResult());
                 AsyncEzGetBoxResult asyncResult(std::move(ezResult));
@@ -171,7 +171,7 @@ void Client::listProbabilities(
                 AsyncEzListProbabilitiesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListProbabilitiesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListProbabilitiesResult ezResult(*r.getResult());
                 AsyncEzListProbabilitiesResult asyncResult(std::move(ezResult));

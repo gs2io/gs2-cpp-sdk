@@ -43,16 +43,17 @@ private:
     {
     public:
         /** 入手アクションのリスト */
-        gs2::optional<List<EzAcquireAction>> acquireActions;
+        List<EzAcquireAction> acquireActions;
         /** 残り数量 */
-        gs2::optional<Int32> remaining;
+        Int32 remaining;
         /** 初期数量 */
-        gs2::optional<Int32> initial;
+        Int32 initial;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lottery::BoxItem& boxItem);
+        Data(const gs2::optional<gs2::lottery::BoxItem>& boxItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzBoxItem() = default;
 
     EzBoxItem(gs2::lottery::BoxItem boxItem);
+    EzBoxItem(gs2::optional<gs2::lottery::BoxItem> boxItem);
 
     EzBoxItem& operator=(const EzBoxItem& ezBoxItem) = default;
     EzBoxItem& operator=(EzBoxItem&& ezBoxItem) = default;
@@ -82,17 +84,17 @@ public:
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *ensureData().acquireActions;
+        return ensureData().acquireActions;
     }
 
     Int32 getRemaining() const
     {
-        return *ensureData().remaining;
+        return ensureData().remaining;
     }
 
     Int32 getInitial() const
     {
-        return *ensureData().initial;
+        return ensureData().initial;
     }
 
     // ========================================

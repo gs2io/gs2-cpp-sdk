@@ -43,18 +43,19 @@ private:
     {
     public:
         /** カウンター名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** カウンターのリセットタイミング */
-        gs2::optional<List<EzCounterScopeModel>> scopes;
+        List<EzCounterScopeModel> scopes;
         /** カウントアップ可能な期間を指定するイベントマスター のGRN */
-        gs2::optional<StringHolder> challengePeriodEventId;
+        StringHolder challengePeriodEventId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::CounterModel& counterModel);
+        Data(const gs2::optional<gs2::mission::CounterModel>& counterModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,6 +71,7 @@ public:
     ~EzCounterModel() = default;
 
     EzCounterModel(gs2::mission::CounterModel counterModel);
+    EzCounterModel(gs2::optional<gs2::mission::CounterModel> counterModel);
 
     EzCounterModel& operator=(const EzCounterModel& ezCounterModel) = default;
     EzCounterModel& operator=(EzCounterModel&& ezCounterModel) = default;
@@ -84,22 +86,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzCounterScopeModel>& getScopes() const
     {
-        return *ensureData().scopes;
+        return ensureData().scopes;
     }
 
     const StringHolder& getChallengePeriodEventId() const
     {
-        return *ensureData().challengePeriodEventId;
+        return ensureData().challengePeriodEventId;
     }
 
     // ========================================

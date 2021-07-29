@@ -24,19 +24,27 @@ EzCompletedQuestList::Data::Data(const Data& data) :
     Gs2Object(data),
     questGroupName(data.questGroupName)
 {
-    if (data.completeQuestNames)
-    {
-        completeQuestNames = data.completeQuestNames->deepCopy();
-    }
+    completeQuestNames = data.completeQuestNames.deepCopy();
 }
 
 EzCompletedQuestList::Data::Data(const gs2::quest::CompletedQuestList& completedQuestList) :
-    questGroupName(completedQuestList.getQuestGroupName()),
-    completeQuestNames(completedQuestList.getCompleteQuestNames())
+    questGroupName(completedQuestList.getQuestGroupName() ? *completedQuestList.getQuestGroupName() : StringHolder()),
+    completeQuestNames(completedQuestList.getCompleteQuestNames() ? *completedQuestList.getCompleteQuestNames() : List<StringHolder>())
+{
+}
+
+EzCompletedQuestList::Data::Data(const gs2::optional<gs2::quest::CompletedQuestList>& completedQuestList) :
+    questGroupName(completedQuestList && completedQuestList->getQuestGroupName() ? *completedQuestList->getQuestGroupName() : StringHolder()),
+    completeQuestNames(completedQuestList && completedQuestList->getCompleteQuestNames() ? *completedQuestList->getCompleteQuestNames() : List<StringHolder>())
 {
 }
 
 EzCompletedQuestList::EzCompletedQuestList(gs2::quest::CompletedQuestList completedQuestList) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(completedQuestList)
+{
+}
+
+EzCompletedQuestList::EzCompletedQuestList(gs2::optional<gs2::quest::CompletedQuestList> completedQuestList) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(completedQuestList)
 {
 }

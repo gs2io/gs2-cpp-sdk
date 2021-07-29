@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::chat::CreateRoomResult& createRoomResult) :
-            item(*createRoomResult.getItem())
+            item(createRoomResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzCreateRoomResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCreateRoomResult);
-    }
-
-    static bool isConvertible(const gs2::chat::CreateRoomResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

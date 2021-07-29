@@ -42,20 +42,21 @@ private:
     {
     public:
         /** ミューテックス */
-        gs2::optional<StringHolder> mutexId;
+        StringHolder mutexId;
         /** プロパティID */
-        gs2::optional<StringHolder> propertyId;
+        StringHolder propertyId;
         /** ロックを取得したトランザクションID */
-        gs2::optional<StringHolder> transactionId;
+        StringHolder transactionId;
         /** 参照回数 */
-        gs2::optional<Int32> referenceCount;
+        Int32 referenceCount;
         /** ロックの有効期限 */
-        gs2::optional<Int64> ttlAt;
+        Int64 ttlAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lock::Mutex& mutex);
+        Data(const gs2::optional<gs2::lock::Mutex>& mutex);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzMutex() = default;
 
     EzMutex(gs2::lock::Mutex mutex);
+    EzMutex(gs2::optional<gs2::lock::Mutex> mutex);
 
     EzMutex& operator=(const EzMutex& ezMutex) = default;
     EzMutex& operator=(EzMutex&& ezMutex) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getMutexId() const
     {
-        return *ensureData().mutexId;
+        return ensureData().mutexId;
     }
 
     const StringHolder& getPropertyId() const
     {
-        return *ensureData().propertyId;
+        return ensureData().propertyId;
     }
 
     const StringHolder& getTransactionId() const
     {
-        return *ensureData().transactionId;
+        return ensureData().transactionId;
     }
 
     Int32 getReferenceCount() const
     {
-        return *ensureData().referenceCount;
+        return ensureData().referenceCount;
     }
 
     Int64 getTtlAt() const
     {
-        return *ensureData().ttlAt;
+        return ensureData().ttlAt;
     }
 
     // ========================================

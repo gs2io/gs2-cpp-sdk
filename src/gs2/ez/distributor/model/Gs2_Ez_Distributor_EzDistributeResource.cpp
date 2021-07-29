@@ -28,12 +28,23 @@ EzDistributeResource::Data::Data(const Data& data) :
 }
 
 EzDistributeResource::Data::Data(const gs2::distributor::DistributeResource& distributeResource) :
-    action(distributeResource.getAction()),
-    request(distributeResource.getRequest())
+    action(distributeResource.getAction() ? *distributeResource.getAction() : StringHolder()),
+    request(distributeResource.getRequest() ? *distributeResource.getRequest() : StringHolder())
+{
+}
+
+EzDistributeResource::Data::Data(const gs2::optional<gs2::distributor::DistributeResource>& distributeResource) :
+    action(distributeResource && distributeResource->getAction() ? *distributeResource->getAction() : StringHolder()),
+    request(distributeResource && distributeResource->getRequest() ? *distributeResource->getRequest() : StringHolder())
 {
 }
 
 EzDistributeResource::EzDistributeResource(gs2::distributor::DistributeResource distributeResource) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(distributeResource)
+{
+}
+
+EzDistributeResource::EzDistributeResource(gs2::optional<gs2::distributor::DistributeResource> distributeResource) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(distributeResource)
 {
 }

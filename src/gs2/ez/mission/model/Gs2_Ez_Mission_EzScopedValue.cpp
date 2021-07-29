@@ -28,12 +28,23 @@ EzScopedValue::Data::Data(const Data& data) :
 }
 
 EzScopedValue::Data::Data(const gs2::mission::ScopedValue& scopedValue) :
-    resetType(scopedValue.getResetType()),
+    resetType(scopedValue.getResetType() ? *scopedValue.getResetType() : StringHolder()),
     value(scopedValue.getValue() ? *scopedValue.getValue() : 0)
 {
 }
 
+EzScopedValue::Data::Data(const gs2::optional<gs2::mission::ScopedValue>& scopedValue) :
+    resetType(scopedValue && scopedValue->getResetType() ? *scopedValue->getResetType() : StringHolder()),
+    value(scopedValue && scopedValue->getValue() ? *scopedValue->getValue() : 0)
+{
+}
+
 EzScopedValue::EzScopedValue(gs2::mission::ScopedValue scopedValue) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(scopedValue)
+{
+}
+
+EzScopedValue::EzScopedValue(gs2::optional<gs2::mission::ScopedValue> scopedValue) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(scopedValue)
 {
 }

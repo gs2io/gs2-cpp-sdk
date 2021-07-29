@@ -29,13 +29,25 @@ EzFriendUser::Data::Data(const Data& data) :
 }
 
 EzFriendUser::Data::Data(const gs2::friend_::FriendUser& friendUser) :
-    userId(friendUser.getUserId()),
-    publicProfile(friendUser.getPublicProfile()),
-    friendProfile(friendUser.getFriendProfile())
+    userId(friendUser.getUserId() ? *friendUser.getUserId() : StringHolder()),
+    publicProfile(friendUser.getPublicProfile() ? *friendUser.getPublicProfile() : StringHolder()),
+    friendProfile(friendUser.getFriendProfile() ? *friendUser.getFriendProfile() : StringHolder())
+{
+}
+
+EzFriendUser::Data::Data(const gs2::optional<gs2::friend_::FriendUser>& friendUser) :
+    userId(friendUser && friendUser->getUserId() ? *friendUser->getUserId() : StringHolder()),
+    publicProfile(friendUser && friendUser->getPublicProfile() ? *friendUser->getPublicProfile() : StringHolder()),
+    friendProfile(friendUser && friendUser->getFriendProfile() ? *friendUser->getFriendProfile() : StringHolder())
 {
 }
 
 EzFriendUser::EzFriendUser(gs2::friend_::FriendUser friendUser) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(friendUser)
+{
+}
+
+EzFriendUser::EzFriendUser(gs2::optional<gs2::friend_::FriendUser> friendUser) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(friendUser)
 {
 }

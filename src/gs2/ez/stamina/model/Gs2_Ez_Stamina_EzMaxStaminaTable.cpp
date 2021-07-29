@@ -26,21 +26,31 @@ EzMaxStaminaTable::Data::Data(const Data& data) :
     metadata(data.metadata),
     experienceModelId(data.experienceModelId)
 {
-    if (data.values)
-    {
-        values = data.values->deepCopy();
-    }
+    values = data.values.deepCopy();
 }
 
 EzMaxStaminaTable::Data::Data(const gs2::stamina::MaxStaminaTable& maxStaminaTable) :
-    name(maxStaminaTable.getName()),
-    metadata(maxStaminaTable.getMetadata()),
-    experienceModelId(maxStaminaTable.getExperienceModelId()),
-    values(maxStaminaTable.getValues())
+    name(maxStaminaTable.getName() ? *maxStaminaTable.getName() : StringHolder()),
+    metadata(maxStaminaTable.getMetadata() ? *maxStaminaTable.getMetadata() : StringHolder()),
+    experienceModelId(maxStaminaTable.getExperienceModelId() ? *maxStaminaTable.getExperienceModelId() : StringHolder()),
+    values(maxStaminaTable.getValues() ? *maxStaminaTable.getValues() : List<Int32>())
+{
+}
+
+EzMaxStaminaTable::Data::Data(const gs2::optional<gs2::stamina::MaxStaminaTable>& maxStaminaTable) :
+    name(maxStaminaTable && maxStaminaTable->getName() ? *maxStaminaTable->getName() : StringHolder()),
+    metadata(maxStaminaTable && maxStaminaTable->getMetadata() ? *maxStaminaTable->getMetadata() : StringHolder()),
+    experienceModelId(maxStaminaTable && maxStaminaTable->getExperienceModelId() ? *maxStaminaTable->getExperienceModelId() : StringHolder()),
+    values(maxStaminaTable && maxStaminaTable->getValues() ? *maxStaminaTable->getValues() : List<Int32>())
 {
 }
 
 EzMaxStaminaTable::EzMaxStaminaTable(gs2::stamina::MaxStaminaTable maxStaminaTable) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(maxStaminaTable)
+{
+}
+
+EzMaxStaminaTable::EzMaxStaminaTable(gs2::optional<gs2::stamina::MaxStaminaTable> maxStaminaTable) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(maxStaminaTable)
 {
 }

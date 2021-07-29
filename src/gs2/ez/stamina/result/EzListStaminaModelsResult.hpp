@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::stamina::DescribeStaminaModelsResult& describeStaminaModelsResult)
         {
+            if (describeStaminaModelsResult.getItems())
             {
                 auto& list = *describeStaminaModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListStaminaModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListStaminaModelsResult);
-    }
-
-    static bool isConvertible(const gs2::stamina::DescribeStaminaModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

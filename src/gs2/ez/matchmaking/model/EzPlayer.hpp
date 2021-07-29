@@ -43,18 +43,19 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 属性値のリスト */
-        gs2::optional<List<EzAttribute>> attributes;
+        List<EzAttribute> attributes;
         /** ロール名 */
-        gs2::optional<StringHolder> roleName;
+        StringHolder roleName;
         /** 参加を拒否するユーザIDリスト */
-        gs2::optional<List<StringHolder>> denyUserIds;
+        List<StringHolder> denyUserIds;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::Player& player);
+        Data(const gs2::optional<gs2::matchmaking::Player>& player);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,6 +71,7 @@ public:
     ~EzPlayer() = default;
 
     EzPlayer(gs2::matchmaking::Player player);
+    EzPlayer(gs2::optional<gs2::matchmaking::Player> player);
 
     EzPlayer& operator=(const EzPlayer& ezPlayer) = default;
     EzPlayer& operator=(EzPlayer&& ezPlayer) = default;
@@ -84,22 +86,22 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const List<EzAttribute>& getAttributes() const
     {
-        return *ensureData().attributes;
+        return ensureData().attributes;
     }
 
     const StringHolder& getRoleName() const
     {
-        return *ensureData().roleName;
+        return ensureData().roleName;
     }
 
     const List<StringHolder>& getDenyUserIds() const
     {
-        return *ensureData().denyUserIds;
+        return ensureData().denyUserIds;
     }
 
     // ========================================

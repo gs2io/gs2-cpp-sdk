@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::inbox::ReadMessageResult& readMessageResult) :
-            item(*readMessageResult.getItem()),
-            stampSheet(*readMessageResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*readMessageResult.getStampSheetEncryptionKeyId())
+            item(readMessageResult.getItem()),
+            stampSheet(readMessageResult.getStampSheet() ? *readMessageResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(readMessageResult.getStampSheetEncryptionKeyId() ? *readMessageResult.getStampSheetEncryptionKeyId() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzReadResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReadResult);
-    }
-
-    static bool isConvertible(const gs2::inbox::ReadMessageResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================

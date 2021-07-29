@@ -29,13 +29,25 @@ EzSlot::Data::Data(const Data& data) :
 }
 
 EzSlot::Data::Data(const gs2::formation::Slot& slot) :
-    name(slot.getName()),
-    propertyId(slot.getPropertyId()),
-    metadata(slot.getMetadata())
+    name(slot.getName() ? *slot.getName() : StringHolder()),
+    propertyId(slot.getPropertyId() ? *slot.getPropertyId() : StringHolder()),
+    metadata(slot.getMetadata() ? *slot.getMetadata() : StringHolder())
+{
+}
+
+EzSlot::Data::Data(const gs2::optional<gs2::formation::Slot>& slot) :
+    name(slot && slot->getName() ? *slot->getName() : StringHolder()),
+    propertyId(slot && slot->getPropertyId() ? *slot->getPropertyId() : StringHolder()),
+    metadata(slot && slot->getMetadata() ? *slot->getMetadata() : StringHolder())
 {
 }
 
 EzSlot::EzSlot(gs2::formation::Slot slot) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(slot)
+{
+}
+
+EzSlot::EzSlot(gs2::optional<gs2::formation::Slot> slot) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(slot)
 {
 }

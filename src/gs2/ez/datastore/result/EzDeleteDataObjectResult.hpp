@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::datastore::DeleteDataObjectResult& deleteDataObjectResult) :
-            item(*deleteDataObjectResult.getItem())
+            item(deleteDataObjectResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzDeleteDataObjectResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteDataObjectResult);
-    }
-
-    static bool isConvertible(const gs2::datastore::DeleteDataObjectResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

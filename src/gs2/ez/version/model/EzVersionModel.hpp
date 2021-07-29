@@ -45,24 +45,25 @@ private:
     {
     public:
         /** バージョンの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** バージョンの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** バージョンアップを促すバージョン */
-        gs2::optional<EzVersion> warningVersion;
+        EzVersion warningVersion;
         /** バージョンチェックを蹴るバージョン */
-        gs2::optional<EzVersion> errorVersion;
+        EzVersion errorVersion;
         /** 判定に使用するバージョン値の種類 */
-        gs2::optional<StringHolder> scope;
+        StringHolder scope;
         /** 現在のバージョン */
-        gs2::optional<EzVersion> currentVersion;
+        EzVersion currentVersion;
         /** 判定するバージョン値に署名検証を必要とするか */
-        gs2::optional<Bool> needSignature;
+        Bool needSignature;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::version::VersionModel& versionModel);
+        Data(const gs2::optional<gs2::version::VersionModel>& versionModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,6 +79,7 @@ public:
     ~EzVersionModel() = default;
 
     EzVersionModel(gs2::version::VersionModel versionModel);
+    EzVersionModel(gs2::optional<gs2::version::VersionModel> versionModel);
 
     EzVersionModel& operator=(const EzVersionModel& ezVersionModel) = default;
     EzVersionModel& operator=(EzVersionModel&& ezVersionModel) = default;
@@ -92,37 +94,37 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const EzVersion& getWarningVersion() const
     {
-        return *ensureData().warningVersion;
+        return ensureData().warningVersion;
     }
 
     const EzVersion& getErrorVersion() const
     {
-        return *ensureData().errorVersion;
+        return ensureData().errorVersion;
     }
 
     const StringHolder& getScope() const
     {
-        return *ensureData().scope;
+        return ensureData().scope;
     }
 
     const EzVersion& getCurrentVersion() const
     {
-        return *ensureData().currentVersion;
+        return ensureData().currentVersion;
     }
 
     Bool getNeedSignature() const
     {
-        return *ensureData().needSignature;
+        return ensureData().needSignature;
     }
 
     // ========================================

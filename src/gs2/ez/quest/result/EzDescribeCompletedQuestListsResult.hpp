@@ -49,6 +49,7 @@ private:
         Data(const gs2::quest::DescribeCompletedQuestListsResult& describeCompletedQuestListsResult) :
             nextPageToken(describeCompletedQuestListsResult.getNextPageToken())
         {
+            if (describeCompletedQuestListsResult.getItems())
             {
                 auto& list = *describeCompletedQuestListsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzDescribeCompletedQuestListsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeCompletedQuestListsResult);
-    }
-
-    static bool isConvertible(const gs2::quest::DescribeCompletedQuestListsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

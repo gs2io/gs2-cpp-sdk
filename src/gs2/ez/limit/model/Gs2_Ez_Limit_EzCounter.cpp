@@ -32,16 +32,31 @@ EzCounter::Data::Data(const Data& data) :
 }
 
 EzCounter::Data::Data(const gs2::limit::Counter& counter) :
-    counterId(counter.getCounterId()),
-    limitName(counter.getLimitName()),
-    name(counter.getName()),
+    counterId(counter.getCounterId() ? *counter.getCounterId() : StringHolder()),
+    limitName(counter.getLimitName() ? *counter.getLimitName() : StringHolder()),
+    name(counter.getName() ? *counter.getName() : StringHolder()),
     count(counter.getCount() ? *counter.getCount() : 0),
     createdAt(counter.getCreatedAt() ? *counter.getCreatedAt() : 0),
     updatedAt(counter.getUpdatedAt() ? *counter.getUpdatedAt() : 0)
 {
 }
 
+EzCounter::Data::Data(const gs2::optional<gs2::limit::Counter>& counter) :
+    counterId(counter && counter->getCounterId() ? *counter->getCounterId() : StringHolder()),
+    limitName(counter && counter->getLimitName() ? *counter->getLimitName() : StringHolder()),
+    name(counter && counter->getName() ? *counter->getName() : StringHolder()),
+    count(counter && counter->getCount() ? *counter->getCount() : 0),
+    createdAt(counter && counter->getCreatedAt() ? *counter->getCreatedAt() : 0),
+    updatedAt(counter && counter->getUpdatedAt() ? *counter->getUpdatedAt() : 0)
+{
+}
+
 EzCounter::EzCounter(gs2::limit::Counter counter) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
+{
+}
+
+EzCounter::EzCounter(gs2::optional<gs2::limit::Counter> counter) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
 {
 }

@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::enhance::GetProgressResult& getProgressResult) :
-            item(*getProgressResult.getItem()),
-            rateModel(*getProgressResult.getRateModel())
+            item(getProgressResult.getItem()),
+            rateModel(getProgressResult.getRateModel())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzGetProgressResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetProgressResult);
-    }
-
-    static bool isConvertible(const gs2::enhance::GetProgressResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getRateModel().has_value();
     }
 
     // ========================================

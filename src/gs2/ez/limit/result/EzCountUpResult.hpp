@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::limit::CountUpResult& countUpResult) :
-            item(*countUpResult.getItem())
+            item(countUpResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzCountUpResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCountUpResult);
-    }
-
-    static bool isConvertible(const gs2::limit::CountUpResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

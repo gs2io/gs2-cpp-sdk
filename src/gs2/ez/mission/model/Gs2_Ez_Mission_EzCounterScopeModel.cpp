@@ -30,14 +30,27 @@ EzCounterScopeModel::Data::Data(const Data& data) :
 }
 
 EzCounterScopeModel::Data::Data(const gs2::mission::CounterScopeModel& counterScopeModel) :
-    resetType(counterScopeModel.getResetType()),
+    resetType(counterScopeModel.getResetType() ? *counterScopeModel.getResetType() : StringHolder()),
     resetDayOfMonth(counterScopeModel.getResetDayOfMonth() ? *counterScopeModel.getResetDayOfMonth() : 0),
-    resetDayOfWeek(counterScopeModel.getResetDayOfWeek()),
+    resetDayOfWeek(counterScopeModel.getResetDayOfWeek() ? *counterScopeModel.getResetDayOfWeek() : StringHolder()),
     resetHour(counterScopeModel.getResetHour() ? *counterScopeModel.getResetHour() : 0)
 {
 }
 
+EzCounterScopeModel::Data::Data(const gs2::optional<gs2::mission::CounterScopeModel>& counterScopeModel) :
+    resetType(counterScopeModel && counterScopeModel->getResetType() ? *counterScopeModel->getResetType() : StringHolder()),
+    resetDayOfMonth(counterScopeModel && counterScopeModel->getResetDayOfMonth() ? *counterScopeModel->getResetDayOfMonth() : 0),
+    resetDayOfWeek(counterScopeModel && counterScopeModel->getResetDayOfWeek() ? *counterScopeModel->getResetDayOfWeek() : StringHolder()),
+    resetHour(counterScopeModel && counterScopeModel->getResetHour() ? *counterScopeModel->getResetHour() : 0)
+{
+}
+
 EzCounterScopeModel::EzCounterScopeModel(gs2::mission::CounterScopeModel counterScopeModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(counterScopeModel)
+{
+}
+
+EzCounterScopeModel::EzCounterScopeModel(gs2::optional<gs2::mission::CounterScopeModel> counterScopeModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(counterScopeModel)
 {
 }

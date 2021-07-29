@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::GetProfileResult& getProfileResult) :
-            item(*getProfileResult.getItem())
+            item(getProfileResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetProfileResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetProfileResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::GetProfileResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

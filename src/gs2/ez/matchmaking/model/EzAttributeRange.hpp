@@ -42,16 +42,17 @@ private:
     {
     public:
         /** 属性名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** ギャザリング参加可能な属性値の最小値 */
-        gs2::optional<Int32> min;
+        Int32 min;
         /** ギャザリング参加可能な属性値の最大値 */
-        gs2::optional<Int32> max;
+        Int32 max;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::AttributeRange& attributeRange);
+        Data(const gs2::optional<gs2::matchmaking::AttributeRange>& attributeRange);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzAttributeRange() = default;
 
     EzAttributeRange(gs2::matchmaking::AttributeRange attributeRange);
+    EzAttributeRange(gs2::optional<gs2::matchmaking::AttributeRange> attributeRange);
 
     EzAttributeRange& operator=(const EzAttributeRange& ezAttributeRange) = default;
     EzAttributeRange& operator=(EzAttributeRange&& ezAttributeRange) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int32 getMin() const
     {
-        return *ensureData().min;
+        return ensureData().min;
     }
 
     Int32 getMax() const
     {
-        return *ensureData().max;
+        return ensureData().max;
     }
 
     // ========================================

@@ -31,15 +31,29 @@ EzProgress::Data::Data(const Data& data) :
 }
 
 EzProgress::Data::Data(const gs2::enhance::Progress& progress) :
-    progressId(progress.getProgressId()),
-    rateName(progress.getRateName()),
-    propertyId(progress.getPropertyId()),
+    progressId(progress.getProgressId() ? *progress.getProgressId() : StringHolder()),
+    rateName(progress.getRateName() ? *progress.getRateName() : StringHolder()),
+    propertyId(progress.getPropertyId() ? *progress.getPropertyId() : StringHolder()),
     experienceValue(progress.getExperienceValue() ? *progress.getExperienceValue() : 0),
     rate(progress.getRate() ? *progress.getRate() : 0)
 {
 }
 
+EzProgress::Data::Data(const gs2::optional<gs2::enhance::Progress>& progress) :
+    progressId(progress && progress->getProgressId() ? *progress->getProgressId() : StringHolder()),
+    rateName(progress && progress->getRateName() ? *progress->getRateName() : StringHolder()),
+    propertyId(progress && progress->getPropertyId() ? *progress->getPropertyId() : StringHolder()),
+    experienceValue(progress && progress->getExperienceValue() ? *progress->getExperienceValue() : 0),
+    rate(progress && progress->getRate() ? *progress->getRate() : 0)
+{
+}
+
 EzProgress::EzProgress(gs2::enhance::Progress progress) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
+{
+}
+
+EzProgress::EzProgress(gs2::optional<gs2::enhance::Progress> progress) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
 {
 }

@@ -28,12 +28,23 @@ EzConsumeAction::Data::Data(const Data& data) :
 }
 
 EzConsumeAction::Data::Data(const gs2::quest::ConsumeAction& consumeAction) :
-    action(consumeAction.getAction()),
-    request(consumeAction.getRequest())
+    action(consumeAction.getAction() ? *consumeAction.getAction() : StringHolder()),
+    request(consumeAction.getRequest() ? *consumeAction.getRequest() : StringHolder())
+{
+}
+
+EzConsumeAction::Data::Data(const gs2::optional<gs2::quest::ConsumeAction>& consumeAction) :
+    action(consumeAction && consumeAction->getAction() ? *consumeAction->getAction() : StringHolder()),
+    request(consumeAction && consumeAction->getRequest() ? *consumeAction->getRequest() : StringHolder())
 {
 }
 
 EzConsumeAction::EzConsumeAction(gs2::quest::ConsumeAction consumeAction) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(consumeAction)
+{
+}
+
+EzConsumeAction::EzConsumeAction(gs2::optional<gs2::quest::ConsumeAction> consumeAction) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(consumeAction)
 {
 }

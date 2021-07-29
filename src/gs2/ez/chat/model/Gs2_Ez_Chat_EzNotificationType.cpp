@@ -33,7 +33,18 @@ EzNotificationType::Data::Data(const gs2::chat::NotificationType& notificationTy
 {
 }
 
+EzNotificationType::Data::Data(const gs2::optional<gs2::chat::NotificationType>& notificationType) :
+    category(notificationType && notificationType->getCategory() ? *notificationType->getCategory() : 0),
+    enableTransferMobilePushNotification(notificationType && notificationType->getEnableTransferMobilePushNotification() ? *notificationType->getEnableTransferMobilePushNotification() : false)
+{
+}
+
 EzNotificationType::EzNotificationType(gs2::chat::NotificationType notificationType) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(notificationType)
+{
+}
+
+EzNotificationType::EzNotificationType(gs2::optional<gs2::chat::NotificationType> notificationType) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(notificationType)
 {
 }

@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::formation::DescribeMoldModelsResult& describeMoldModelsResult)
         {
+            if (describeMoldModelsResult.getItems())
             {
                 auto& list = *describeMoldModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListMoldModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListMoldModelsResult);
-    }
-
-    static bool isConvertible(const gs2::formation::DescribeMoldModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

@@ -33,17 +33,33 @@ EzItemSet::Data::Data(const Data& data) :
 }
 
 EzItemSet::Data::Data(const gs2::inventory::ItemSet& itemSet) :
-    itemSetId(itemSet.getItemSetId()),
-    name(itemSet.getName()),
-    inventoryName(itemSet.getInventoryName()),
-    itemName(itemSet.getItemName()),
+    itemSetId(itemSet.getItemSetId() ? *itemSet.getItemSetId() : StringHolder()),
+    name(itemSet.getName() ? *itemSet.getName() : StringHolder()),
+    inventoryName(itemSet.getInventoryName() ? *itemSet.getInventoryName() : StringHolder()),
+    itemName(itemSet.getItemName() ? *itemSet.getItemName() : StringHolder()),
     count(itemSet.getCount() ? *itemSet.getCount() : 0),
     sortValue(itemSet.getSortValue() ? *itemSet.getSortValue() : 0),
     expiresAt(itemSet.getExpiresAt() ? *itemSet.getExpiresAt() : 0)
 {
 }
 
+EzItemSet::Data::Data(const gs2::optional<gs2::inventory::ItemSet>& itemSet) :
+    itemSetId(itemSet && itemSet->getItemSetId() ? *itemSet->getItemSetId() : StringHolder()),
+    name(itemSet && itemSet->getName() ? *itemSet->getName() : StringHolder()),
+    inventoryName(itemSet && itemSet->getInventoryName() ? *itemSet->getInventoryName() : StringHolder()),
+    itemName(itemSet && itemSet->getItemName() ? *itemSet->getItemName() : StringHolder()),
+    count(itemSet && itemSet->getCount() ? *itemSet->getCount() : 0),
+    sortValue(itemSet && itemSet->getSortValue() ? *itemSet->getSortValue() : 0),
+    expiresAt(itemSet && itemSet->getExpiresAt() ? *itemSet->getExpiresAt() : 0)
+{
+}
+
 EzItemSet::EzItemSet(gs2::inventory::ItemSet itemSet) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(itemSet)
+{
+}
+
+EzItemSet::EzItemSet(gs2::optional<gs2::inventory::ItemSet> itemSet) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(itemSet)
 {
 }

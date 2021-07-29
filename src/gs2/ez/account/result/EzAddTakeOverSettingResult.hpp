@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::account::CreateTakeOverResult& createTakeOverResult) :
-            item(*createTakeOverResult.getItem())
+            item(createTakeOverResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzAddTakeOverSettingResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAddTakeOverSettingResult);
-    }
-
-    static bool isConvertible(const gs2::account::CreateTakeOverResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

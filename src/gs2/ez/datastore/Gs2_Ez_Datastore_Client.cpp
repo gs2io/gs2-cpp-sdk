@@ -70,7 +70,7 @@ void Client::listMyDataObjects(
                 AsyncEzListMyDataObjectsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMyDataObjectsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMyDataObjectsResult ezResult(*r.getResult());
                 AsyncEzListMyDataObjectsResult asyncResult(std::move(ezResult));
@@ -110,7 +110,7 @@ void Client::updateDataObject(
                 AsyncEzUpdateDataObjectResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUpdateDataObjectResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUpdateDataObjectResult ezResult(*r.getResult());
                 AsyncEzUpdateDataObjectResult asyncResult(std::move(ezResult));
@@ -160,7 +160,7 @@ void Client::prepareUpload(
                 AsyncEzPrepareUploadResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPrepareUploadResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPrepareUploadResult ezResult(*r.getResult());
                 AsyncEzPrepareUploadResult asyncResult(std::move(ezResult));
@@ -198,7 +198,7 @@ void Client::prepareReUpload(
                 AsyncEzPrepareReUploadResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPrepareReUploadResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPrepareReUploadResult ezResult(*r.getResult());
                 AsyncEzPrepareReUploadResult asyncResult(std::move(ezResult));
@@ -236,7 +236,7 @@ void Client::doneUpload(
                 AsyncEzDoneUploadResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDoneUploadResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDoneUploadResult ezResult(*r.getResult());
                 AsyncEzDoneUploadResult asyncResult(std::move(ezResult));
@@ -274,7 +274,7 @@ void Client::prepareDownload(
                 AsyncEzPrepareDownloadResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPrepareDownloadResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPrepareDownloadResult ezResult(*r.getResult());
                 AsyncEzPrepareDownloadResult asyncResult(std::move(ezResult));
@@ -312,7 +312,7 @@ void Client::prepareDownloadOwnData(
                 AsyncEzPrepareDownloadOwnDataResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPrepareDownloadOwnDataResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPrepareDownloadOwnDataResult ezResult(*r.getResult());
                 AsyncEzPrepareDownloadOwnDataResult asyncResult(std::move(ezResult));
@@ -350,7 +350,7 @@ void Client::prepareDownloadByUserIdAndDataObjectName(
                 AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPrepareDownloadByUserIdAndDataObjectNameResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPrepareDownloadByUserIdAndDataObjectNameResult ezResult(*r.getResult());
                 AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult asyncResult(std::move(ezResult));
@@ -388,7 +388,7 @@ void Client::deleteDataObject(
                 AsyncEzDeleteDataObjectResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDeleteDataObjectResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDeleteDataObjectResult ezResult(*r.getResult());
                 AsyncEzDeleteDataObjectResult asyncResult(std::move(ezResult));
@@ -424,7 +424,7 @@ void Client::restoreDataObject(
                 AsyncEzRestoreDataObjectResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRestoreDataObjectResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRestoreDataObjectResult ezResult(*r.getResult());
                 AsyncEzRestoreDataObjectResult asyncResult(std::move(ezResult));
@@ -472,7 +472,7 @@ void Client::listDataObhectHistories(
                 AsyncEzListDataObhectHistoriesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListDataObhectHistoriesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListDataObhectHistoriesResult ezResult(*r.getResult());
                 AsyncEzListDataObhectHistoriesResult asyncResult(std::move(ezResult));

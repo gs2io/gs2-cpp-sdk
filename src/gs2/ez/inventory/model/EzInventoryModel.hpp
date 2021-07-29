@@ -42,18 +42,19 @@ private:
     {
     public:
         /** インベントリの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** インベントリの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** インベントリの初期サイズ */
-        gs2::optional<Int32> initialCapacity;
+        Int32 initialCapacity;
         /** インベントリの最大サイズ */
-        gs2::optional<Int32> maxCapacity;
+        Int32 maxCapacity;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inventory::InventoryModel& inventoryModel);
+        Data(const gs2::optional<gs2::inventory::InventoryModel>& inventoryModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzInventoryModel() = default;
 
     EzInventoryModel(gs2::inventory::InventoryModel inventoryModel);
+    EzInventoryModel(gs2::optional<gs2::inventory::InventoryModel> inventoryModel);
 
     EzInventoryModel& operator=(const EzInventoryModel& ezInventoryModel) = default;
     EzInventoryModel& operator=(EzInventoryModel&& ezInventoryModel) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int32 getInitialCapacity() const
     {
-        return *ensureData().initialCapacity;
+        return ensureData().initialCapacity;
     }
 
     Int32 getMaxCapacity() const
     {
-        return *ensureData().maxCapacity;
+        return ensureData().maxCapacity;
     }
 
     // ========================================

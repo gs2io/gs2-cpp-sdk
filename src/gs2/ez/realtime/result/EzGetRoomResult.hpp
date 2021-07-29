@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::realtime::GetRoomResult& getRoomResult) :
-            item(*getRoomResult.getItem())
+            item(getRoomResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetRoomResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetRoomResult);
-    }
-
-    static bool isConvertible(const gs2::realtime::GetRoomResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -28,12 +28,23 @@ EzSetCookieRequestEntry::Data::Data(const Data& data) :
 }
 
 EzSetCookieRequestEntry::Data::Data(const gs2::news::SetCookieRequestEntry& setCookieRequestEntry) :
-    key(setCookieRequestEntry.getKey()),
-    value(setCookieRequestEntry.getValue())
+    key(setCookieRequestEntry.getKey() ? *setCookieRequestEntry.getKey() : StringHolder()),
+    value(setCookieRequestEntry.getValue() ? *setCookieRequestEntry.getValue() : StringHolder())
+{
+}
+
+EzSetCookieRequestEntry::Data::Data(const gs2::optional<gs2::news::SetCookieRequestEntry>& setCookieRequestEntry) :
+    key(setCookieRequestEntry && setCookieRequestEntry->getKey() ? *setCookieRequestEntry->getKey() : StringHolder()),
+    value(setCookieRequestEntry && setCookieRequestEntry->getValue() ? *setCookieRequestEntry->getValue() : StringHolder())
 {
 }
 
 EzSetCookieRequestEntry::EzSetCookieRequestEntry(gs2::news::SetCookieRequestEntry setCookieRequestEntry) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(setCookieRequestEntry)
+{
+}
+
+EzSetCookieRequestEntry::EzSetCookieRequestEntry(gs2::optional<gs2::news::SetCookieRequestEntry> setCookieRequestEntry) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(setCookieRequestEntry)
 {
 }

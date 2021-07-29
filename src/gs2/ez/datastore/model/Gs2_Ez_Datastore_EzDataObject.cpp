@@ -31,26 +31,41 @@ EzDataObject::Data::Data(const Data& data) :
     createdAt(data.createdAt),
     updatedAt(data.updatedAt)
 {
-    if (data.allowUserIds)
-    {
-        allowUserIds = data.allowUserIds->deepCopy();
-    }
+    allowUserIds = data.allowUserIds.deepCopy();
 }
 
 EzDataObject::Data::Data(const gs2::datastore::DataObject& dataObject) :
-    dataObjectId(dataObject.getDataObjectId()),
-    name(dataObject.getName()),
-    userId(dataObject.getUserId()),
-    scope(dataObject.getScope()),
-    allowUserIds(dataObject.getAllowUserIds()),
-    status(dataObject.getStatus()),
-    generation(dataObject.getGeneration()),
+    dataObjectId(dataObject.getDataObjectId() ? *dataObject.getDataObjectId() : StringHolder()),
+    name(dataObject.getName() ? *dataObject.getName() : StringHolder()),
+    userId(dataObject.getUserId() ? *dataObject.getUserId() : StringHolder()),
+    scope(dataObject.getScope() ? *dataObject.getScope() : StringHolder()),
+    allowUserIds(dataObject.getAllowUserIds() ? *dataObject.getAllowUserIds() : List<StringHolder>()),
+    status(dataObject.getStatus() ? *dataObject.getStatus() : StringHolder()),
+    generation(dataObject.getGeneration() ? *dataObject.getGeneration() : StringHolder()),
     createdAt(dataObject.getCreatedAt() ? *dataObject.getCreatedAt() : 0),
     updatedAt(dataObject.getUpdatedAt() ? *dataObject.getUpdatedAt() : 0)
 {
 }
 
+EzDataObject::Data::Data(const gs2::optional<gs2::datastore::DataObject>& dataObject) :
+    dataObjectId(dataObject && dataObject->getDataObjectId() ? *dataObject->getDataObjectId() : StringHolder()),
+    name(dataObject && dataObject->getName() ? *dataObject->getName() : StringHolder()),
+    userId(dataObject && dataObject->getUserId() ? *dataObject->getUserId() : StringHolder()),
+    scope(dataObject && dataObject->getScope() ? *dataObject->getScope() : StringHolder()),
+    allowUserIds(dataObject && dataObject->getAllowUserIds() ? *dataObject->getAllowUserIds() : List<StringHolder>()),
+    status(dataObject && dataObject->getStatus() ? *dataObject->getStatus() : StringHolder()),
+    generation(dataObject && dataObject->getGeneration() ? *dataObject->getGeneration() : StringHolder()),
+    createdAt(dataObject && dataObject->getCreatedAt() ? *dataObject->getCreatedAt() : 0),
+    updatedAt(dataObject && dataObject->getUpdatedAt() ? *dataObject->getUpdatedAt() : 0)
+{
+}
+
 EzDataObject::EzDataObject(gs2::datastore::DataObject dataObject) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(dataObject)
+{
+}
+
+EzDataObject::EzDataObject(gs2::optional<gs2::datastore::DataObject> dataObject) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(dataObject)
 {
 }

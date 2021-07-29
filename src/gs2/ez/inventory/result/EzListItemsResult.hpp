@@ -49,6 +49,7 @@ private:
         Data(const gs2::inventory::DescribeItemSetsResult& describeItemSetsResult) :
             nextPageToken(describeItemSetsResult.getNextPageToken())
         {
+            if (describeItemSetsResult.getItems())
             {
                 auto& list = *describeItemSetsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListItemsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListItemsResult);
-    }
-
-    static bool isConvertible(const gs2::inventory::DescribeItemSetsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

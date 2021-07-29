@@ -26,21 +26,31 @@ EzTargetVersion::Data::Data(const Data& data) :
     body(data.body),
     signature(data.signature)
 {
-    if (data.version)
-    {
-        version = data.version->deepCopy();
-    }
+    version = data.version.deepCopy();
 }
 
 EzTargetVersion::Data::Data(const gs2::version::TargetVersion& targetVersion) :
-    versionName(targetVersion.getVersionName()),
-    version(*targetVersion.getVersion()),
-    body(targetVersion.getBody()),
-    signature(targetVersion.getSignature())
+    versionName(targetVersion.getVersionName() ? *targetVersion.getVersionName() : StringHolder()),
+    version(targetVersion.getVersion()),
+    body(targetVersion.getBody() ? *targetVersion.getBody() : StringHolder()),
+    signature(targetVersion.getSignature() ? *targetVersion.getSignature() : StringHolder())
+{
+}
+
+EzTargetVersion::Data::Data(const gs2::optional<gs2::version::TargetVersion>& targetVersion) :
+    versionName(targetVersion && targetVersion->getVersionName() ? *targetVersion->getVersionName() : StringHolder()),
+    version(targetVersion ? targetVersion->getVersion() : gs2::optional<gs2::version::Version>()),
+    body(targetVersion && targetVersion->getBody() ? *targetVersion->getBody() : StringHolder()),
+    signature(targetVersion && targetVersion->getSignature() ? *targetVersion->getSignature() : StringHolder())
 {
 }
 
 EzTargetVersion::EzTargetVersion(gs2::version::TargetVersion targetVersion) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(targetVersion)
+{
+}
+
+EzTargetVersion::EzTargetVersion(gs2::optional<gs2::version::TargetVersion> targetVersion) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(targetVersion)
 {
 }

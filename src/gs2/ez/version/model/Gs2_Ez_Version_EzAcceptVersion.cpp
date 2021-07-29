@@ -25,20 +25,29 @@ EzAcceptVersion::Data::Data(const Data& data) :
     versionName(data.versionName),
     userId(data.userId)
 {
-    if (data.version)
-    {
-        version = data.version->deepCopy();
-    }
+    version = data.version.deepCopy();
 }
 
 EzAcceptVersion::Data::Data(const gs2::version::AcceptVersion& acceptVersion) :
-    versionName(acceptVersion.getVersionName()),
-    userId(acceptVersion.getUserId()),
-    version(*acceptVersion.getVersion())
+    versionName(acceptVersion.getVersionName() ? *acceptVersion.getVersionName() : StringHolder()),
+    userId(acceptVersion.getUserId() ? *acceptVersion.getUserId() : StringHolder()),
+    version(acceptVersion.getVersion())
+{
+}
+
+EzAcceptVersion::Data::Data(const gs2::optional<gs2::version::AcceptVersion>& acceptVersion) :
+    versionName(acceptVersion && acceptVersion->getVersionName() ? *acceptVersion->getVersionName() : StringHolder()),
+    userId(acceptVersion && acceptVersion->getUserId() ? *acceptVersion->getUserId() : StringHolder()),
+    version(acceptVersion ? acceptVersion->getVersion() : gs2::optional<gs2::version::Version>())
 {
 }
 
 EzAcceptVersion::EzAcceptVersion(gs2::version::AcceptVersion acceptVersion) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(acceptVersion)
+{
+}
+
+EzAcceptVersion::EzAcceptVersion(gs2::optional<gs2::version::AcceptVersion> acceptVersion) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(acceptVersion)
 {
 }

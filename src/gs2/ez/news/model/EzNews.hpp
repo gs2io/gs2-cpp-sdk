@@ -42,22 +42,23 @@ private:
     {
     public:
         /** セクション名 */
-        gs2::optional<StringHolder> section;
+        StringHolder section;
         /** コンテンツ名 */
-        gs2::optional<StringHolder> content;
+        StringHolder content;
         /** 記事見出し */
-        gs2::optional<StringHolder> title;
+        StringHolder title;
         /** 配信期間を決定する GS2-Schedule のイベントID */
-        gs2::optional<StringHolder> scheduleEventId;
+        StringHolder scheduleEventId;
         /** タイムスタンプ */
-        gs2::optional<Int64> timestamp;
+        Int64 timestamp;
         /** Front Matter */
-        gs2::optional<StringHolder> frontMatter;
+        StringHolder frontMatter;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::news::News& news);
+        Data(const gs2::optional<gs2::news::News>& news);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzNews() = default;
 
     EzNews(gs2::news::News news);
+    EzNews(gs2::optional<gs2::news::News> news);
 
     EzNews& operator=(const EzNews& ezNews) = default;
     EzNews& operator=(EzNews&& ezNews) = default;
@@ -87,32 +89,32 @@ public:
 
     const StringHolder& getSection() const
     {
-        return *ensureData().section;
+        return ensureData().section;
     }
 
     const StringHolder& getContent() const
     {
-        return *ensureData().content;
+        return ensureData().content;
     }
 
     const StringHolder& getTitle() const
     {
-        return *ensureData().title;
+        return ensureData().title;
     }
 
     const StringHolder& getScheduleEventId() const
     {
-        return *ensureData().scheduleEventId;
+        return ensureData().scheduleEventId;
     }
 
     Int64 getTimestamp() const
     {
-        return *ensureData().timestamp;
+        return ensureData().timestamp;
     }
 
     const StringHolder& getFrontMatter() const
     {
-        return *ensureData().frontMatter;
+        return ensureData().frontMatter;
     }
 
     // ========================================

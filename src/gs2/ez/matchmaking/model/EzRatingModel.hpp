@@ -42,16 +42,17 @@ private:
     {
     public:
         /** レーティングの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** レーティングの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** レート値の変動の大きさ */
-        gs2::optional<Int32> volatility;
+        Int32 volatility;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::matchmaking::RatingModel& ratingModel);
+        Data(const gs2::optional<gs2::matchmaking::RatingModel>& ratingModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzRatingModel() = default;
 
     EzRatingModel(gs2::matchmaking::RatingModel ratingModel);
+    EzRatingModel(gs2::optional<gs2::matchmaking::RatingModel> ratingModel);
 
     EzRatingModel& operator=(const EzRatingModel& ezRatingModel) = default;
     EzRatingModel& operator=(EzRatingModel&& ezRatingModel) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int32 getVolatility() const
     {
-        return *ensureData().volatility;
+        return ensureData().volatility;
     }
 
     // ========================================

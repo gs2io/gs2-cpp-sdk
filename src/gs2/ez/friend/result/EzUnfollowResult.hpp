@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::UnfollowResult& unfollowResult) :
-            item(*unfollowResult.getItem())
+            item(unfollowResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzUnfollowResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUnfollowResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::UnfollowResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

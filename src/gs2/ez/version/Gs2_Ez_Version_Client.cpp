@@ -53,7 +53,7 @@ void Client::listVersionModels(
                 AsyncEzListVersionModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListVersionModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListVersionModelsResult ezResult(*r.getResult());
                 AsyncEzListVersionModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getVersionModel(
                 AsyncEzGetVersionModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetVersionModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetVersionModelResult ezResult(*r.getResult());
                 AsyncEzGetVersionModelResult asyncResult(std::move(ezResult));
@@ -135,7 +135,7 @@ void Client::list(
                 AsyncEzListResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListResult ezResult(*r.getResult());
                 AsyncEzListResult asyncResult(std::move(ezResult));
@@ -173,7 +173,7 @@ void Client::accept(
                 AsyncEzAcceptResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzAcceptResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzAcceptResult ezResult(*r.getResult());
                 AsyncEzAcceptResult asyncResult(std::move(ezResult));
@@ -249,7 +249,7 @@ void Client::checkVersion(
                 AsyncEzCheckVersionResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCheckVersionResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCheckVersionResult ezResult(*r.getResult());
                 AsyncEzCheckVersionResult asyncResult(std::move(ezResult));

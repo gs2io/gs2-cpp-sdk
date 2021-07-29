@@ -28,12 +28,23 @@ EzMaterial::Data::Data(const Data& data) :
 }
 
 EzMaterial::Data::Data(const gs2::enhance::Material& material) :
-    materialItemSetId(material.getMaterialItemSetId()),
+    materialItemSetId(material.getMaterialItemSetId() ? *material.getMaterialItemSetId() : StringHolder()),
     count(material.getCount() ? *material.getCount() : 0)
 {
 }
 
+EzMaterial::Data::Data(const gs2::optional<gs2::enhance::Material>& material) :
+    materialItemSetId(material && material->getMaterialItemSetId() ? *material->getMaterialItemSetId() : StringHolder()),
+    count(material && material->getCount() ? *material->getCount() : 0)
+{
+}
+
 EzMaterial::EzMaterial(gs2::enhance::Material material) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(material)
+{
+}
+
+EzMaterial::EzMaterial(gs2::optional<gs2::enhance::Material> material) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(material)
 {
 }

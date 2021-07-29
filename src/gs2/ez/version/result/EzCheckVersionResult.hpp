@@ -50,8 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::version::CheckVersionResult& checkVersionResult) :
-            projectToken(*checkVersionResult.getProjectToken())
+            projectToken(checkVersionResult.getProjectToken() ? *checkVersionResult.getProjectToken() : StringHolder())
         {
+            if (checkVersionResult.getWarnings())
             {
                 auto& list = *checkVersionResult.getWarnings();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -59,6 +60,7 @@ private:
                     warnings += EzStatus(list[i]);
                 }
             }
+            if (checkVersionResult.getErrors())
             {
                 auto& list = *checkVersionResult.getErrors();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -92,14 +94,6 @@ public:
     EzCheckVersionResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCheckVersionResult);
-    }
-
-    static bool isConvertible(const gs2::version::CheckVersionResult& result)
-    {
-        return
-            result.getProjectToken().has_value() &&
-            result.getWarnings().has_value() &&
-            result.getErrors().has_value();
     }
 
     // ========================================

@@ -42,18 +42,19 @@ private:
     {
     public:
         /** リセットタイミング */
-        gs2::optional<StringHolder> resetType;
+        StringHolder resetType;
         /** リセットをする日にち */
-        gs2::optional<Int32> resetDayOfMonth;
+        Int32 resetDayOfMonth;
         /** リセットする曜日 */
-        gs2::optional<StringHolder> resetDayOfWeek;
+        StringHolder resetDayOfWeek;
         /** リセット時刻 */
-        gs2::optional<Int32> resetHour;
+        Int32 resetHour;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::CounterScopeModel& counterScopeModel);
+        Data(const gs2::optional<gs2::mission::CounterScopeModel>& counterScopeModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzCounterScopeModel() = default;
 
     EzCounterScopeModel(gs2::mission::CounterScopeModel counterScopeModel);
+    EzCounterScopeModel(gs2::optional<gs2::mission::CounterScopeModel> counterScopeModel);
 
     EzCounterScopeModel& operator=(const EzCounterScopeModel& ezCounterScopeModel) = default;
     EzCounterScopeModel& operator=(EzCounterScopeModel&& ezCounterScopeModel) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getResetType() const
     {
-        return *ensureData().resetType;
+        return ensureData().resetType;
     }
 
     Int32 getResetDayOfMonth() const
     {
-        return *ensureData().resetDayOfMonth;
+        return ensureData().resetDayOfMonth;
     }
 
     const StringHolder& getResetDayOfWeek() const
     {
-        return *ensureData().resetDayOfWeek;
+        return ensureData().resetDayOfWeek;
     }
 
     Int32 getResetHour() const
     {
-        return *ensureData().resetHour;
+        return ensureData().resetHour;
     }
 
     // ========================================

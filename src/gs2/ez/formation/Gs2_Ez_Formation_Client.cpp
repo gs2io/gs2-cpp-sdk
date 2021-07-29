@@ -53,7 +53,7 @@ void Client::listMoldModels(
                 AsyncEzListMoldModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMoldModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMoldModelsResult ezResult(*r.getResult());
                 AsyncEzListMoldModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getMoldModel(
                 AsyncEzGetMoldModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetMoldModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetMoldModelResult ezResult(*r.getResult());
                 AsyncEzGetMoldModelResult asyncResult(std::move(ezResult));
@@ -135,7 +135,7 @@ void Client::listMolds(
                 AsyncEzListMoldsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMoldsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMoldsResult ezResult(*r.getResult());
                 AsyncEzListMoldsResult asyncResult(std::move(ezResult));
@@ -173,7 +173,7 @@ void Client::getMold(
                 AsyncEzGetMoldResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetMoldResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetMoldResult ezResult(*r.getResult());
                 AsyncEzGetMoldResult asyncResult(std::move(ezResult));
@@ -224,7 +224,7 @@ void Client::listForms(
                 AsyncEzListFormsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListFormsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListFormsResult ezResult(*r.getResult());
                 AsyncEzListFormsResult asyncResult(std::move(ezResult));
@@ -264,7 +264,7 @@ void Client::getForm(
                 AsyncEzGetFormResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetFormResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetFormResult ezResult(*r.getResult());
                 AsyncEzGetFormResult asyncResult(std::move(ezResult));
@@ -306,7 +306,7 @@ void Client::getFormWithSignature(
                 AsyncEzGetFormWithSignatureResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetFormWithSignatureResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetFormWithSignatureResult ezResult(*r.getResult());
                 AsyncEzGetFormWithSignatureResult asyncResult(std::move(ezResult));
@@ -357,7 +357,7 @@ void Client::setForm(
                 AsyncEzSetFormResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzSetFormResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzSetFormResult ezResult(*r.getResult());
                 AsyncEzSetFormResult asyncResult(std::move(ezResult));

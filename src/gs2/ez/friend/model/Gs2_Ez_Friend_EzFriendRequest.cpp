@@ -28,12 +28,23 @@ EzFriendRequest::Data::Data(const Data& data) :
 }
 
 EzFriendRequest::Data::Data(const gs2::friend_::FriendRequest& friendRequest) :
-    userId(friendRequest.getUserId()),
-    targetUserId(friendRequest.getTargetUserId())
+    userId(friendRequest.getUserId() ? *friendRequest.getUserId() : StringHolder()),
+    targetUserId(friendRequest.getTargetUserId() ? *friendRequest.getTargetUserId() : StringHolder())
+{
+}
+
+EzFriendRequest::Data::Data(const gs2::optional<gs2::friend_::FriendRequest>& friendRequest) :
+    userId(friendRequest && friendRequest->getUserId() ? *friendRequest->getUserId() : StringHolder()),
+    targetUserId(friendRequest && friendRequest->getTargetUserId() ? *friendRequest->getTargetUserId() : StringHolder())
 {
 }
 
 EzFriendRequest::EzFriendRequest(gs2::friend_::FriendRequest friendRequest) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(friendRequest)
+{
+}
+
+EzFriendRequest::EzFriendRequest(gs2::optional<gs2::friend_::FriendRequest> friendRequest) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(friendRequest)
 {
 }

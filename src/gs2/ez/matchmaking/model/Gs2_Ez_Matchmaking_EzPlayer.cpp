@@ -25,32 +25,44 @@ EzPlayer::Data::Data(const Data& data) :
     userId(data.userId),
     roleName(data.roleName)
 {
-    if (data.attributes)
-    {
-        attributes = data.attributes->deepCopy();
-    }
-    if (data.denyUserIds)
-    {
-        denyUserIds = data.denyUserIds->deepCopy();
-    }
+    attributes = data.attributes.deepCopy();
+    denyUserIds = data.denyUserIds.deepCopy();
 }
 
 EzPlayer::Data::Data(const gs2::matchmaking::Player& player) :
-    userId(player.getUserId()),
-    roleName(player.getRoleName()),
-    denyUserIds(player.getDenyUserIds())
+    userId(player.getUserId() ? *player.getUserId() : StringHolder()),
+    roleName(player.getRoleName() ? *player.getRoleName() : StringHolder()),
+    denyUserIds(player.getDenyUserIds() ? *player.getDenyUserIds() : List<StringHolder>())
 {
-    attributes.emplace();
     if (player.getAttributes())
     {
         for (int i = 0; i < player.getAttributes()->getCount(); ++i)
         {
-            *attributes += EzAttribute((*player.getAttributes())[i]);
+            attributes += EzAttribute((*player.getAttributes())[i]);
+        }
+    }
+}
+
+EzPlayer::Data::Data(const gs2::optional<gs2::matchmaking::Player>& player) :
+    userId(player && player->getUserId() ? *player->getUserId() : StringHolder()),
+    roleName(player && player->getRoleName() ? *player->getRoleName() : StringHolder()),
+    denyUserIds(player && player->getDenyUserIds() ? *player->getDenyUserIds() : List<StringHolder>())
+{
+    if (player && player->getAttributes())
+    {
+        for (int i = 0; i < player->getAttributes()->getCount(); ++i)
+        {
+            attributes += EzAttribute((*player->getAttributes())[i]);
         }
     }
 }
 
 EzPlayer::EzPlayer(gs2::matchmaking::Player player) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(player)
+{
+}
+
+EzPlayer::EzPlayer(gs2::optional<gs2::matchmaking::Player> player) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(player)
 {
 }

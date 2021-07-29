@@ -43,14 +43,15 @@ private:
     {
     public:
         /** 景品の種類 */
-        gs2::optional<EzDrawnPrize> prize;
+        EzDrawnPrize prize;
         /** 排出確率(0.0〜1.0) */
-        gs2::optional<Float> rate;
+        Float rate;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lottery::Probability& probability);
+        Data(const gs2::optional<gs2::lottery::Probability>& probability);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,6 +67,7 @@ public:
     ~EzProbability() = default;
 
     EzProbability(gs2::lottery::Probability probability);
+    EzProbability(gs2::optional<gs2::lottery::Probability> probability);
 
     EzProbability& operator=(const EzProbability& ezProbability) = default;
     EzProbability& operator=(EzProbability&& ezProbability) = default;
@@ -80,12 +82,12 @@ public:
 
     const EzDrawnPrize& getPrize() const
     {
-        return *ensureData().prize;
+        return ensureData().prize;
     }
 
     Float getRate() const
     {
-        return *ensureData().rate;
+        return ensureData().rate;
     }
 
     // ========================================

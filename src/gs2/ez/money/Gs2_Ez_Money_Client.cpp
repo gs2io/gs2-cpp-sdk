@@ -57,7 +57,7 @@ void Client::get(
                 AsyncEzGetResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetResult ezResult(*r.getResult());
                 AsyncEzGetResult asyncResult(std::move(ezResult));
@@ -99,7 +99,7 @@ void Client::withdraw(
                 AsyncEzWithdrawResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzWithdrawResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzWithdrawResult ezResult(*r.getResult());
                 AsyncEzWithdrawResult asyncResult(std::move(ezResult));

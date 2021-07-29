@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::quest::GetQuestGroupModelResult& getQuestGroupModelResult) :
-            item(*getQuestGroupModelResult.getItem())
+            item(getQuestGroupModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetQuestGroupResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetQuestGroupResult);
-    }
-
-    static bool isConvertible(const gs2::quest::GetQuestGroupModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

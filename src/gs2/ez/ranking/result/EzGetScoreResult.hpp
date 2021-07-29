@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::ranking::GetScoreResult& getScoreResult) :
-            item(*getScoreResult.getItem())
+            item(getScoreResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetScoreResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetScoreResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::GetScoreResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

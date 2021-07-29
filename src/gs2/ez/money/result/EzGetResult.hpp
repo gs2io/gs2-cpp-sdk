@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::money::GetWalletResult& getWalletResult) :
-            item(*getWalletResult.getItem())
+            item(getWalletResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetResult);
-    }
-
-    static bool isConvertible(const gs2::money::GetWalletResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

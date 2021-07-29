@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::schedule::GetEventResult& getEventResult) :
-            item(*getEventResult.getItem())
+            item(getEventResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetEventResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetEventResult);
-    }
-
-    static bool isConvertible(const gs2::schedule::GetEventResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

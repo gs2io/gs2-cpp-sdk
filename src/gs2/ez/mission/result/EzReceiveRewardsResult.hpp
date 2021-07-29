@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::mission::CompleteResult& completeResult) :
-            stampSheet(*completeResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*completeResult.getStampSheetEncryptionKeyId())
+            stampSheet(completeResult.getStampSheet() ? *completeResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(completeResult.getStampSheetEncryptionKeyId() ? *completeResult.getStampSheetEncryptionKeyId() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzReceiveRewardsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReceiveRewardsResult);
-    }
-
-    static bool isConvertible(const gs2::mission::CompleteResult& result)
-    {
-        return
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================

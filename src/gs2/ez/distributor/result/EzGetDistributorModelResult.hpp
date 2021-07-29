@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::distributor::GetDistributorModelResult& getDistributorModelResult) :
-            item(*getDistributorModelResult.getItem())
+            item(getDistributorModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetDistributorModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetDistributorModelResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::GetDistributorModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

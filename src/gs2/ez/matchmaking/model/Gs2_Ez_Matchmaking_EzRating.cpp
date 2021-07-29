@@ -32,16 +32,31 @@ EzRating::Data::Data(const Data& data) :
 }
 
 EzRating::Data::Data(const gs2::matchmaking::Rating& rating) :
-    ratingId(rating.getRatingId()),
-    name(rating.getName()),
-    userId(rating.getUserId()),
+    ratingId(rating.getRatingId() ? *rating.getRatingId() : StringHolder()),
+    name(rating.getName() ? *rating.getName() : StringHolder()),
+    userId(rating.getUserId() ? *rating.getUserId() : StringHolder()),
     rateValue(rating.getRateValue() ? *rating.getRateValue() : 0),
     createdAt(rating.getCreatedAt() ? *rating.getCreatedAt() : 0),
     updatedAt(rating.getUpdatedAt() ? *rating.getUpdatedAt() : 0)
 {
 }
 
+EzRating::Data::Data(const gs2::optional<gs2::matchmaking::Rating>& rating) :
+    ratingId(rating && rating->getRatingId() ? *rating->getRatingId() : StringHolder()),
+    name(rating && rating->getName() ? *rating->getName() : StringHolder()),
+    userId(rating && rating->getUserId() ? *rating->getUserId() : StringHolder()),
+    rateValue(rating && rating->getRateValue() ? *rating->getRateValue() : 0),
+    createdAt(rating && rating->getCreatedAt() ? *rating->getCreatedAt() : 0),
+    updatedAt(rating && rating->getUpdatedAt() ? *rating->getUpdatedAt() : 0)
+{
+}
+
 EzRating::EzRating(gs2::matchmaking::Rating rating) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(rating)
+{
+}
+
+EzRating::EzRating(gs2::optional<gs2::matchmaking::Rating> rating) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(rating)
 {
 }

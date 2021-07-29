@@ -49,6 +49,7 @@ private:
         Data(const gs2::experience::DescribeStatusesResult& describeStatusesResult) :
             nextPageToken(describeStatusesResult.getNextPageToken())
         {
+            if (describeStatusesResult.getItems())
             {
                 auto& list = *describeStatusesResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListStatusesResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListStatusesResult);
-    }
-
-    static bool isConvertible(const gs2::experience::DescribeStatusesResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

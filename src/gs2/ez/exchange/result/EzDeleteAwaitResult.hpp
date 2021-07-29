@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::exchange::DeleteAwaitResult& deleteAwaitResult) :
-            item(*deleteAwaitResult.getItem())
+            item(deleteAwaitResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzDeleteAwaitResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteAwaitResult);
-    }
-
-    static bool isConvertible(const gs2::exchange::DeleteAwaitResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -42,18 +42,19 @@ private:
     {
     public:
         /** インベントリ */
-        gs2::optional<StringHolder> inventoryId;
+        StringHolder inventoryId;
         /** インベントリモデル名 */
-        gs2::optional<StringHolder> inventoryName;
+        StringHolder inventoryName;
         /** 現在のインベントリのキャパシティ使用量 */
-        gs2::optional<Int32> currentInventoryCapacityUsage;
+        Int32 currentInventoryCapacityUsage;
         /** 現在のインベントリの最大キャパシティ */
-        gs2::optional<Int32> currentInventoryMaxCapacity;
+        Int32 currentInventoryMaxCapacity;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inventory::Inventory& inventory);
+        Data(const gs2::optional<gs2::inventory::Inventory>& inventory);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzInventory() = default;
 
     EzInventory(gs2::inventory::Inventory inventory);
+    EzInventory(gs2::optional<gs2::inventory::Inventory> inventory);
 
     EzInventory& operator=(const EzInventory& ezInventory) = default;
     EzInventory& operator=(EzInventory&& ezInventory) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getInventoryId() const
     {
-        return *ensureData().inventoryId;
+        return ensureData().inventoryId;
     }
 
     const StringHolder& getInventoryName() const
     {
-        return *ensureData().inventoryName;
+        return ensureData().inventoryName;
     }
 
     Int32 getCurrentInventoryCapacityUsage() const
     {
-        return *ensureData().currentInventoryCapacityUsage;
+        return ensureData().currentInventoryCapacityUsage;
     }
 
     Int32 getCurrentInventoryMaxCapacity() const
     {
-        return *ensureData().currentInventoryMaxCapacity;
+        return ensureData().currentInventoryMaxCapacity;
     }
 
     // ========================================

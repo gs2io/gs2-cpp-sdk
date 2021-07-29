@@ -43,16 +43,17 @@ private:
     {
     public:
         /** 購読するユーザID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 購読するルーム名 */
-        gs2::optional<StringHolder> roomName;
+        StringHolder roomName;
         /** 新着メッセージ通知を受け取るカテゴリリスト */
-        gs2::optional<List<EzNotificationType>> notificationTypes;
+        List<EzNotificationType> notificationTypes;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::chat::Subscribe& subscribe);
+        Data(const gs2::optional<gs2::chat::Subscribe>& subscribe);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzSubscribe() = default;
 
     EzSubscribe(gs2::chat::Subscribe subscribe);
+    EzSubscribe(gs2::optional<gs2::chat::Subscribe> subscribe);
 
     EzSubscribe& operator=(const EzSubscribe& ezSubscribe) = default;
     EzSubscribe& operator=(EzSubscribe&& ezSubscribe) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getRoomName() const
     {
-        return *ensureData().roomName;
+        return ensureData().roomName;
     }
 
     const List<EzNotificationType>& getNotificationTypes() const
     {
-        return *ensureData().notificationTypes;
+        return ensureData().notificationTypes;
     }
 
     // ========================================

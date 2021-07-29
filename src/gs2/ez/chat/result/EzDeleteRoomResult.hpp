@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::chat::DeleteRoomResult& deleteRoomResult) :
-            item(*deleteRoomResult.getItem())
+            item(deleteRoomResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzDeleteRoomResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteRoomResult);
-    }
-
-    static bool isConvertible(const gs2::chat::DeleteRoomResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

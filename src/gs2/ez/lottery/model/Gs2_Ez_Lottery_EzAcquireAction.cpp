@@ -28,12 +28,23 @@ EzAcquireAction::Data::Data(const Data& data) :
 }
 
 EzAcquireAction::Data::Data(const gs2::lottery::AcquireAction& acquireAction) :
-    action(acquireAction.getAction()),
-    request(acquireAction.getRequest())
+    action(acquireAction.getAction() ? *acquireAction.getAction() : StringHolder()),
+    request(acquireAction.getRequest() ? *acquireAction.getRequest() : StringHolder())
+{
+}
+
+EzAcquireAction::Data::Data(const gs2::optional<gs2::lottery::AcquireAction>& acquireAction) :
+    action(acquireAction && acquireAction->getAction() ? *acquireAction->getAction() : StringHolder()),
+    request(acquireAction && acquireAction->getRequest() ? *acquireAction->getRequest() : StringHolder())
 {
 }
 
 EzAcquireAction::EzAcquireAction(gs2::lottery::AcquireAction acquireAction) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(acquireAction)
+{
+}
+
+EzAcquireAction::EzAcquireAction(gs2::optional<gs2::lottery::AcquireAction> acquireAction) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(acquireAction)
 {
 }

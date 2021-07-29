@@ -53,7 +53,7 @@ void Client::listDistributorModels(
                 AsyncEzListDistributorModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListDistributorModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListDistributorModelsResult ezResult(*r.getResult());
                 AsyncEzListDistributorModelsResult asyncResult(std::move(ezResult));
@@ -89,7 +89,7 @@ void Client::getDistributorModel(
                 AsyncEzGetDistributorModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetDistributorModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetDistributorModelResult ezResult(*r.getResult());
                 AsyncEzGetDistributorModelResult asyncResult(std::move(ezResult));
@@ -132,7 +132,7 @@ void Client::runStampTask(
                 AsyncEzRunStampTaskResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampTaskResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampTaskResult ezResult(*r.getResult());
                 AsyncEzRunStampTaskResult asyncResult(std::move(ezResult));
@@ -175,7 +175,7 @@ void Client::runStampSheet(
                 AsyncEzRunStampSheetResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampSheetResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampSheetResult ezResult(*r.getResult());
                 AsyncEzRunStampSheetResult asyncResult(std::move(ezResult));
@@ -213,7 +213,7 @@ void Client::runStampSheetExpress(
                 AsyncEzRunStampSheetExpressResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampSheetExpressResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampSheetExpressResult ezResult(*r.getResult());
                 AsyncEzRunStampSheetExpressResult asyncResult(std::move(ezResult));
@@ -254,7 +254,7 @@ void Client::runStampTaskWithoutNamespace(
                 AsyncEzRunStampTaskWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampTaskWithoutNamespaceResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampTaskWithoutNamespaceResult ezResult(*r.getResult());
                 AsyncEzRunStampTaskWithoutNamespaceResult asyncResult(std::move(ezResult));
@@ -295,7 +295,7 @@ void Client::runStampSheetWithoutNamespace(
                 AsyncEzRunStampSheetWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampSheetWithoutNamespaceResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampSheetWithoutNamespaceResult ezResult(*r.getResult());
                 AsyncEzRunStampSheetWithoutNamespaceResult asyncResult(std::move(ezResult));
@@ -331,7 +331,7 @@ void Client::runStampSheetExpressWithoutNamespace(
                 AsyncEzRunStampSheetExpressWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRunStampSheetExpressWithoutNamespaceResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRunStampSheetExpressWithoutNamespaceResult ezResult(*r.getResult());
                 AsyncEzRunStampSheetExpressWithoutNamespaceResult asyncResult(std::move(ezResult));

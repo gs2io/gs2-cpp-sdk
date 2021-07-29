@@ -42,28 +42,29 @@ private:
     {
     public:
         /** データオブジェクト */
-        gs2::optional<StringHolder> dataObjectId;
+        StringHolder dataObjectId;
         /** データの名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** ファイルのアクセス権 */
-        gs2::optional<StringHolder> scope;
+        StringHolder scope;
         /** 公開するユーザIDリスト */
-        gs2::optional<List<StringHolder>> allowUserIds;
+        List<StringHolder> allowUserIds;
         /** 状態 */
-        gs2::optional<StringHolder> status;
+        StringHolder status;
         /** データの世代 */
-        gs2::optional<StringHolder> generation;
+        StringHolder generation;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
         /** 最終更新日時 */
-        gs2::optional<Int64> updatedAt;
+        Int64 updatedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::datastore::DataObject& dataObject);
+        Data(const gs2::optional<gs2::datastore::DataObject>& dataObject);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -79,6 +80,7 @@ public:
     ~EzDataObject() = default;
 
     EzDataObject(gs2::datastore::DataObject dataObject);
+    EzDataObject(gs2::optional<gs2::datastore::DataObject> dataObject);
 
     EzDataObject& operator=(const EzDataObject& ezDataObject) = default;
     EzDataObject& operator=(EzDataObject&& ezDataObject) = default;
@@ -93,47 +95,47 @@ public:
 
     const StringHolder& getDataObjectId() const
     {
-        return *ensureData().dataObjectId;
+        return ensureData().dataObjectId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getScope() const
     {
-        return *ensureData().scope;
+        return ensureData().scope;
     }
 
     const List<StringHolder>& getAllowUserIds() const
     {
-        return *ensureData().allowUserIds;
+        return ensureData().allowUserIds;
     }
 
     const StringHolder& getStatus() const
     {
-        return *ensureData().status;
+        return ensureData().status;
     }
 
     const StringHolder& getGeneration() const
     {
-        return *ensureData().generation;
+        return ensureData().generation;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *ensureData().updatedAt;
+        return ensureData().updatedAt;
     }
 
     // ========================================

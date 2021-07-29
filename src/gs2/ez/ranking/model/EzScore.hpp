@@ -42,20 +42,21 @@ private:
     {
     public:
         /** カテゴリ名 */
-        gs2::optional<StringHolder> categoryName;
+        StringHolder categoryName;
         /** ユーザID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** スコアを獲得したユーザID */
-        gs2::optional<StringHolder> scorerUserId;
+        StringHolder scorerUserId;
         /** スコア */
-        gs2::optional<Int64> score;
+        Int64 score;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::ranking::Score& score);
+        Data(const gs2::optional<gs2::ranking::Score>& score);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzScore() = default;
 
     EzScore(gs2::ranking::Score score);
+    EzScore(gs2::optional<gs2::ranking::Score> score);
 
     EzScore& operator=(const EzScore& ezScore) = default;
     EzScore& operator=(EzScore&& ezScore) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getCategoryName() const
     {
-        return *ensureData().categoryName;
+        return ensureData().categoryName;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getScorerUserId() const
     {
-        return *ensureData().scorerUserId;
+        return ensureData().scorerUserId;
     }
 
     Int64 getScore() const
     {
-        return *ensureData().score;
+        return ensureData().score;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     // ========================================

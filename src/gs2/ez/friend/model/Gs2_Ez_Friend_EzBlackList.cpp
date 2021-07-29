@@ -24,19 +24,27 @@ EzBlackList::Data::Data(const Data& data) :
     Gs2Object(data),
     userId(data.userId)
 {
-    if (data.targetUserIds)
-    {
-        targetUserIds = data.targetUserIds->deepCopy();
-    }
+    targetUserIds = data.targetUserIds.deepCopy();
 }
 
 EzBlackList::Data::Data(const gs2::friend_::BlackList& blackList) :
-    userId(blackList.getUserId()),
-    targetUserIds(blackList.getTargetUserIds())
+    userId(blackList.getUserId() ? *blackList.getUserId() : StringHolder()),
+    targetUserIds(blackList.getTargetUserIds() ? *blackList.getTargetUserIds() : List<StringHolder>())
+{
+}
+
+EzBlackList::Data::Data(const gs2::optional<gs2::friend_::BlackList>& blackList) :
+    userId(blackList && blackList->getUserId() ? *blackList->getUserId() : StringHolder()),
+    targetUserIds(blackList && blackList->getTargetUserIds() ? *blackList->getTargetUserIds() : List<StringHolder>())
 {
 }
 
 EzBlackList::EzBlackList(gs2::friend_::BlackList blackList) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(blackList)
+{
+}
+
+EzBlackList::EzBlackList(gs2::optional<gs2::friend_::BlackList> blackList) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(blackList)
 {
 }

@@ -43,22 +43,23 @@ private:
     {
     public:
         /** 経験値の種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 経験値の種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 経験値の初期値 */
-        gs2::optional<Int64> defaultExperience;
+        Int64 defaultExperience;
         /** ランクキャップの初期値 */
-        gs2::optional<Int64> defaultRankCap;
+        Int64 defaultRankCap;
         /** ランクキャップの最大値 */
-        gs2::optional<Int64> maxRankCap;
+        Int64 maxRankCap;
         /** ランクアップ閾値 */
-        gs2::optional<EzThreshold> rankThreshold;
+        EzThreshold rankThreshold;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::experience::ExperienceModel& experienceModel);
+        Data(const gs2::optional<gs2::experience::ExperienceModel>& experienceModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,6 +75,7 @@ public:
     ~EzExperienceModel() = default;
 
     EzExperienceModel(gs2::experience::ExperienceModel experienceModel);
+    EzExperienceModel(gs2::optional<gs2::experience::ExperienceModel> experienceModel);
 
     EzExperienceModel& operator=(const EzExperienceModel& ezExperienceModel) = default;
     EzExperienceModel& operator=(EzExperienceModel&& ezExperienceModel) = default;
@@ -88,32 +90,32 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int64 getDefaultExperience() const
     {
-        return *ensureData().defaultExperience;
+        return ensureData().defaultExperience;
     }
 
     Int64 getDefaultRankCap() const
     {
-        return *ensureData().defaultRankCap;
+        return ensureData().defaultRankCap;
     }
 
     Int64 getMaxRankCap() const
     {
-        return *ensureData().maxRankCap;
+        return ensureData().maxRankCap;
     }
 
     const EzThreshold& getRankThreshold() const
     {
-        return *ensureData().rankThreshold;
+        return ensureData().rankThreshold;
     }
 
     // ========================================

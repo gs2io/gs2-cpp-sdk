@@ -30,32 +30,51 @@ EzMissionGroupModel::Data::Data(const Data& data) :
     resetHour(data.resetHour),
     completeNotificationNamespaceId(data.completeNotificationNamespaceId)
 {
-    if (data.tasks)
-    {
-        tasks = data.tasks->deepCopy();
-    }
+    tasks = data.tasks.deepCopy();
 }
 
 EzMissionGroupModel::Data::Data(const gs2::mission::MissionGroupModel& missionGroupModel) :
-    name(missionGroupModel.getName()),
-    metadata(missionGroupModel.getMetadata()),
-    resetType(missionGroupModel.getResetType()),
+    name(missionGroupModel.getName() ? *missionGroupModel.getName() : StringHolder()),
+    metadata(missionGroupModel.getMetadata() ? *missionGroupModel.getMetadata() : StringHolder()),
+    resetType(missionGroupModel.getResetType() ? *missionGroupModel.getResetType() : StringHolder()),
     resetDayOfMonth(missionGroupModel.getResetDayOfMonth() ? *missionGroupModel.getResetDayOfMonth() : 0),
-    resetDayOfWeek(missionGroupModel.getResetDayOfWeek()),
+    resetDayOfWeek(missionGroupModel.getResetDayOfWeek() ? *missionGroupModel.getResetDayOfWeek() : StringHolder()),
     resetHour(missionGroupModel.getResetHour() ? *missionGroupModel.getResetHour() : 0),
-    completeNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId())
+    completeNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId() ? *missionGroupModel.getCompleteNotificationNamespaceId() : StringHolder())
 {
-    tasks.emplace();
     if (missionGroupModel.getTasks())
     {
         for (int i = 0; i < missionGroupModel.getTasks()->getCount(); ++i)
         {
-            *tasks += EzMissionTaskModel((*missionGroupModel.getTasks())[i]);
+            tasks += EzMissionTaskModel((*missionGroupModel.getTasks())[i]);
+        }
+    }
+}
+
+EzMissionGroupModel::Data::Data(const gs2::optional<gs2::mission::MissionGroupModel>& missionGroupModel) :
+    name(missionGroupModel && missionGroupModel->getName() ? *missionGroupModel->getName() : StringHolder()),
+    metadata(missionGroupModel && missionGroupModel->getMetadata() ? *missionGroupModel->getMetadata() : StringHolder()),
+    resetType(missionGroupModel && missionGroupModel->getResetType() ? *missionGroupModel->getResetType() : StringHolder()),
+    resetDayOfMonth(missionGroupModel && missionGroupModel->getResetDayOfMonth() ? *missionGroupModel->getResetDayOfMonth() : 0),
+    resetDayOfWeek(missionGroupModel && missionGroupModel->getResetDayOfWeek() ? *missionGroupModel->getResetDayOfWeek() : StringHolder()),
+    resetHour(missionGroupModel && missionGroupModel->getResetHour() ? *missionGroupModel->getResetHour() : 0),
+    completeNotificationNamespaceId(missionGroupModel && missionGroupModel->getCompleteNotificationNamespaceId() ? *missionGroupModel->getCompleteNotificationNamespaceId() : StringHolder())
+{
+    if (missionGroupModel && missionGroupModel->getTasks())
+    {
+        for (int i = 0; i < missionGroupModel->getTasks()->getCount(); ++i)
+        {
+            tasks += EzMissionTaskModel((*missionGroupModel->getTasks())[i]);
         }
     }
 }
 
 EzMissionGroupModel::EzMissionGroupModel(gs2::mission::MissionGroupModel missionGroupModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(missionGroupModel)
+{
+}
+
+EzMissionGroupModel::EzMissionGroupModel(gs2::optional<gs2::mission::MissionGroupModel> missionGroupModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(missionGroupModel)
 {
 }

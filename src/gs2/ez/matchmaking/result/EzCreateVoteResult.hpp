@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::GetBallotResult& getBallotResult) :
-            item(*getBallotResult.getItem()),
-            body(*getBallotResult.getBody()),
-            signature(*getBallotResult.getSignature())
+            item(getBallotResult.getItem()),
+            body(getBallotResult.getBody() ? *getBallotResult.getBody() : StringHolder()),
+            signature(getBallotResult.getSignature() ? *getBallotResult.getSignature() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzCreateVoteResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCreateVoteResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::GetBallotResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getBody().has_value() &&
-            result.getSignature().has_value();
     }
 
     // ========================================

@@ -43,20 +43,21 @@ private:
     {
     public:
         /** フォームの保存領域名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** None */
-        gs2::optional<EzFormModel> formModel;
+        EzFormModel formModel;
         /** フォームを保存できる初期キャパシティ */
-        gs2::optional<Int32> initialMaxCapacity;
+        Int32 initialMaxCapacity;
         /** フォームを保存できるキャパシティ */
-        gs2::optional<Int32> maxCapacity;
+        Int32 maxCapacity;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::formation::MoldModel& moldModel);
+        Data(const gs2::optional<gs2::formation::MoldModel>& moldModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -72,6 +73,7 @@ public:
     ~EzMoldModel() = default;
 
     EzMoldModel(gs2::formation::MoldModel moldModel);
+    EzMoldModel(gs2::optional<gs2::formation::MoldModel> moldModel);
 
     EzMoldModel& operator=(const EzMoldModel& ezMoldModel) = default;
     EzMoldModel& operator=(EzMoldModel&& ezMoldModel) = default;
@@ -86,27 +88,27 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const EzFormModel& getFormModel() const
     {
-        return *ensureData().formModel;
+        return ensureData().formModel;
     }
 
     Int32 getInitialMaxCapacity() const
     {
-        return *ensureData().initialMaxCapacity;
+        return ensureData().initialMaxCapacity;
     }
 
     Int32 getMaxCapacity() const
     {
-        return *ensureData().maxCapacity;
+        return ensureData().maxCapacity;
     }
 
     // ========================================

@@ -75,7 +75,7 @@ void Client::createRoom(
                 AsyncEzCreateRoomResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCreateRoomResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCreateRoomResult ezResult(*r.getResult());
                 AsyncEzCreateRoomResult asyncResult(std::move(ezResult));
@@ -111,7 +111,7 @@ void Client::getRoom(
                 AsyncEzGetRoomResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetRoomResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetRoomResult ezResult(*r.getResult());
                 AsyncEzGetRoomResult asyncResult(std::move(ezResult));
@@ -149,7 +149,7 @@ void Client::deleteRoom(
                 AsyncEzDeleteRoomResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDeleteRoomResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDeleteRoomResult ezResult(*r.getResult());
                 AsyncEzDeleteRoomResult asyncResult(std::move(ezResult));
@@ -196,7 +196,7 @@ void Client::post(
                 AsyncEzPostResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzPostResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzPostResult ezResult(*r.getResult());
                 AsyncEzPostResult asyncResult(std::move(ezResult));
@@ -247,7 +247,7 @@ void Client::listMessages(
                 AsyncEzListMessagesResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListMessagesResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListMessagesResult ezResult(*r.getResult());
                 AsyncEzListMessagesResult asyncResult(std::move(ezResult));
@@ -293,7 +293,7 @@ void Client::listSubscribeRooms(
                 AsyncEzListSubscribeRoomsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListSubscribeRoomsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListSubscribeRoomsResult ezResult(*r.getResult());
                 AsyncEzListSubscribeRoomsResult asyncResult(std::move(ezResult));
@@ -341,7 +341,7 @@ void Client::subscribe(
                 AsyncEzSubscribeResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzSubscribeResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzSubscribeResult ezResult(*r.getResult());
                 AsyncEzSubscribeResult asyncResult(std::move(ezResult));
@@ -389,7 +389,7 @@ void Client::updateSubscribeSetting(
                 AsyncEzUpdateSubscribeSettingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUpdateSubscribeSettingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUpdateSubscribeSettingResult ezResult(*r.getResult());
                 AsyncEzUpdateSubscribeSettingResult asyncResult(std::move(ezResult));
@@ -427,7 +427,7 @@ void Client::unsubscribe(
                 AsyncEzUnsubscribeResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUnsubscribeResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUnsubscribeResult ezResult(*r.getResult());
                 AsyncEzUnsubscribeResult asyncResult(std::move(ezResult));

@@ -27,22 +27,33 @@ EzMoldModel::Data::Data(const Data& data) :
     initialMaxCapacity(data.initialMaxCapacity),
     maxCapacity(data.maxCapacity)
 {
-    if (data.formModel)
-    {
-        formModel = data.formModel->deepCopy();
-    }
+    formModel = data.formModel.deepCopy();
 }
 
 EzMoldModel::Data::Data(const gs2::formation::MoldModel& moldModel) :
-    name(moldModel.getName()),
-    metadata(moldModel.getMetadata()),
-    formModel(*moldModel.getFormModel()),
+    name(moldModel.getName() ? *moldModel.getName() : StringHolder()),
+    metadata(moldModel.getMetadata() ? *moldModel.getMetadata() : StringHolder()),
+    formModel(moldModel.getFormModel()),
     initialMaxCapacity(moldModel.getInitialMaxCapacity() ? *moldModel.getInitialMaxCapacity() : 0),
     maxCapacity(moldModel.getMaxCapacity() ? *moldModel.getMaxCapacity() : 0)
 {
 }
 
+EzMoldModel::Data::Data(const gs2::optional<gs2::formation::MoldModel>& moldModel) :
+    name(moldModel && moldModel->getName() ? *moldModel->getName() : StringHolder()),
+    metadata(moldModel && moldModel->getMetadata() ? *moldModel->getMetadata() : StringHolder()),
+    formModel(moldModel ? moldModel->getFormModel() : gs2::optional<gs2::formation::FormModel>()),
+    initialMaxCapacity(moldModel && moldModel->getInitialMaxCapacity() ? *moldModel->getInitialMaxCapacity() : 0),
+    maxCapacity(moldModel && moldModel->getMaxCapacity() ? *moldModel->getMaxCapacity() : 0)
+{
+}
+
 EzMoldModel::EzMoldModel(gs2::formation::MoldModel moldModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(moldModel)
+{
+}
+
+EzMoldModel::EzMoldModel(gs2::optional<gs2::formation::MoldModel> moldModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(moldModel)
 {
 }

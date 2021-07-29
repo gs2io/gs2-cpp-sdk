@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 強化対象の GS2-Inventory アイテムセットGRN */
-        gs2::optional<StringHolder> materialItemSetId;
+        StringHolder materialItemSetId;
         /** 消費数量 */
-        gs2::optional<Int32> count;
+        Int32 count;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::enhance::Material& material);
+        Data(const gs2::optional<gs2::enhance::Material>& material);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzMaterial() = default;
 
     EzMaterial(gs2::enhance::Material material);
+    EzMaterial(gs2::optional<gs2::enhance::Material> material);
 
     EzMaterial& operator=(const EzMaterial& ezMaterial) = default;
     EzMaterial& operator=(EzMaterial&& ezMaterial) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getMaterialItemSetId() const
     {
-        return *ensureData().materialItemSetId;
+        return ensureData().materialItemSetId;
     }
 
     Int32 getCount() const
     {
-        return *ensureData().count;
+        return ensureData().count;
     }
 
     // ========================================

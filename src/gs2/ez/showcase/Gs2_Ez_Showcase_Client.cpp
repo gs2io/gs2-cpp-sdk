@@ -57,7 +57,7 @@ void Client::getShowcase(
                 AsyncEzGetShowcaseResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetShowcaseResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetShowcaseResult ezResult(*r.getResult());
                 AsyncEzGetShowcaseResult asyncResult(std::move(ezResult));
@@ -107,7 +107,7 @@ void Client::buy(
                 AsyncEzBuyResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzBuyResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzBuyResult ezResult(*r.getResult());
                 AsyncEzBuyResult asyncResult(std::move(ezResult));

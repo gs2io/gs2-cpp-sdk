@@ -29,11 +29,22 @@ EzGameResult::Data::Data(const Data& data) :
 
 EzGameResult::Data::Data(const gs2::matchmaking::GameResult& gameResult) :
     rank(gameResult.getRank() ? *gameResult.getRank() : 0),
-    userId(gameResult.getUserId())
+    userId(gameResult.getUserId() ? *gameResult.getUserId() : StringHolder())
+{
+}
+
+EzGameResult::Data::Data(const gs2::optional<gs2::matchmaking::GameResult>& gameResult) :
+    rank(gameResult && gameResult->getRank() ? *gameResult->getRank() : 0),
+    userId(gameResult && gameResult->getUserId() ? *gameResult->getUserId() : StringHolder())
 {
 }
 
 EzGameResult::EzGameResult(gs2::matchmaking::GameResult gameResult) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(gameResult)
+{
+}
+
+EzGameResult::EzGameResult(gs2::optional<gs2::matchmaking::GameResult> gameResult) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(gameResult)
 {
 }

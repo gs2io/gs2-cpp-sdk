@@ -30,14 +30,27 @@ EzBallot::Data::Data(const Data& data) :
 }
 
 EzBallot::Data::Data(const gs2::matchmaking::Ballot& ballot) :
-    userId(ballot.getUserId()),
-    ratingName(ballot.getRatingName()),
-    gatheringName(ballot.getGatheringName()),
+    userId(ballot.getUserId() ? *ballot.getUserId() : StringHolder()),
+    ratingName(ballot.getRatingName() ? *ballot.getRatingName() : StringHolder()),
+    gatheringName(ballot.getGatheringName() ? *ballot.getGatheringName() : StringHolder()),
     numberOfPlayer(ballot.getNumberOfPlayer() ? *ballot.getNumberOfPlayer() : 0)
 {
 }
 
+EzBallot::Data::Data(const gs2::optional<gs2::matchmaking::Ballot>& ballot) :
+    userId(ballot && ballot->getUserId() ? *ballot->getUserId() : StringHolder()),
+    ratingName(ballot && ballot->getRatingName() ? *ballot->getRatingName() : StringHolder()),
+    gatheringName(ballot && ballot->getGatheringName() ? *ballot->getGatheringName() : StringHolder()),
+    numberOfPlayer(ballot && ballot->getNumberOfPlayer() ? *ballot->getNumberOfPlayer() : 0)
+{
+}
+
 EzBallot::EzBallot(gs2::matchmaking::Ballot ballot) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(ballot)
+{
+}
+
+EzBallot::EzBallot(gs2::optional<gs2::matchmaking::Ballot> ballot) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(ballot)
 {
 }

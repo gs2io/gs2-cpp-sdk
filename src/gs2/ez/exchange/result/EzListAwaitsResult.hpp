@@ -49,6 +49,7 @@ private:
         Data(const gs2::exchange::DescribeAwaitsResult& describeAwaitsResult) :
             nextPageToken(describeAwaitsResult.getNextPageToken())
         {
+            if (describeAwaitsResult.getItems())
             {
                 auto& list = *describeAwaitsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListAwaitsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListAwaitsResult);
-    }
-
-    static bool isConvertible(const gs2::exchange::DescribeAwaitsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

@@ -56,11 +56,12 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::inventory::GetItemWithSignatureResult& getItemWithSignatureResult) :
-            itemModel(*getItemWithSignatureResult.getItemModel()),
-            inventory(*getItemWithSignatureResult.getInventory()),
-            body(*getItemWithSignatureResult.getBody()),
-            signature(*getItemWithSignatureResult.getSignature())
+            itemModel(getItemWithSignatureResult.getItemModel()),
+            inventory(getItemWithSignatureResult.getInventory()),
+            body(getItemWithSignatureResult.getBody() ? *getItemWithSignatureResult.getBody() : StringHolder()),
+            signature(getItemWithSignatureResult.getSignature() ? *getItemWithSignatureResult.getSignature() : StringHolder())
         {
+            if (getItemWithSignatureResult.getItems())
             {
                 auto& list = *getItemWithSignatureResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -94,16 +95,6 @@ public:
     EzGetItemWithSignatureResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetItemWithSignatureResult);
-    }
-
-    static bool isConvertible(const gs2::inventory::GetItemWithSignatureResult& result)
-    {
-        return
-            result.getItems().has_value() &&
-            result.getItemModel().has_value() &&
-            result.getInventory().has_value() &&
-            result.getBody().has_value() &&
-            result.getSignature().has_value();
     }
 
     // ========================================

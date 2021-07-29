@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::quest::EndResult& endResult) :
-            item(*endResult.getItem()),
-            stampSheet(*endResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*endResult.getStampSheetEncryptionKeyId())
+            item(endResult.getItem()),
+            stampSheet(endResult.getStampSheet() ? *endResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(endResult.getStampSheetEncryptionKeyId() ? *endResult.getStampSheetEncryptionKeyId() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzEndResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzEndResult);
-    }
-
-    static bool isConvertible(const gs2::quest::EndResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================

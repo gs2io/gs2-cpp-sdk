@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::FollowResult& followResult) :
-            item(*followResult.getItem())
+            item(followResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzFollowResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzFollowResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::FollowResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

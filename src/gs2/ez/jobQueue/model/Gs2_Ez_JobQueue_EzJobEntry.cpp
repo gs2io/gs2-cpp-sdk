@@ -29,13 +29,25 @@ EzJobEntry::Data::Data(const Data& data) :
 }
 
 EzJobEntry::Data::Data(const gs2::jobQueue::JobEntry& jobEntry) :
-    scriptId(jobEntry.getScriptId()),
-    args(jobEntry.getArgs()),
+    scriptId(jobEntry.getScriptId() ? *jobEntry.getScriptId() : StringHolder()),
+    args(jobEntry.getArgs() ? *jobEntry.getArgs() : StringHolder()),
     maxTryCount(jobEntry.getMaxTryCount() ? *jobEntry.getMaxTryCount() : 0)
 {
 }
 
+EzJobEntry::Data::Data(const gs2::optional<gs2::jobQueue::JobEntry>& jobEntry) :
+    scriptId(jobEntry && jobEntry->getScriptId() ? *jobEntry->getScriptId() : StringHolder()),
+    args(jobEntry && jobEntry->getArgs() ? *jobEntry->getArgs() : StringHolder()),
+    maxTryCount(jobEntry && jobEntry->getMaxTryCount() ? *jobEntry->getMaxTryCount() : 0)
+{
+}
+
 EzJobEntry::EzJobEntry(gs2::jobQueue::JobEntry jobEntry) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(jobEntry)
+{
+}
+
+EzJobEntry::EzJobEntry(gs2::optional<gs2::jobQueue::JobEntry> jobEntry) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(jobEntry)
 {
 }

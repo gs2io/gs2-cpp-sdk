@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::UpdateGatheringResult& updateGatheringResult) :
-            item(*updateGatheringResult.getItem())
+            item(updateGatheringResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzUpdateGatheringResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUpdateGatheringResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::UpdateGatheringResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

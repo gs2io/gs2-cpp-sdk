@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::experience::DescribeExperienceModelsResult& describeExperienceModelsResult)
         {
+            if (describeExperienceModelsResult.getItems())
             {
                 auto& list = *describeExperienceModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListExperienceModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListExperienceModelsResult);
-    }
-
-    static bool isConvertible(const gs2::experience::DescribeExperienceModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

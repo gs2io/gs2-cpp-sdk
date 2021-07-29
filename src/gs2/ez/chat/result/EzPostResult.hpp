@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::chat::PostResult& postResult) :
-            item(*postResult.getItem())
+            item(postResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzPostResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPostResult);
-    }
-
-    static bool isConvertible(const gs2::chat::PostResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

@@ -26,28 +26,43 @@ EzCounterModel::Data::Data(const Data& data) :
     metadata(data.metadata),
     challengePeriodEventId(data.challengePeriodEventId)
 {
-    if (data.scopes)
-    {
-        scopes = data.scopes->deepCopy();
-    }
+    scopes = data.scopes.deepCopy();
 }
 
 EzCounterModel::Data::Data(const gs2::mission::CounterModel& counterModel) :
-    name(counterModel.getName()),
-    metadata(counterModel.getMetadata()),
-    challengePeriodEventId(counterModel.getChallengePeriodEventId())
+    name(counterModel.getName() ? *counterModel.getName() : StringHolder()),
+    metadata(counterModel.getMetadata() ? *counterModel.getMetadata() : StringHolder()),
+    challengePeriodEventId(counterModel.getChallengePeriodEventId() ? *counterModel.getChallengePeriodEventId() : StringHolder())
 {
-    scopes.emplace();
     if (counterModel.getScopes())
     {
         for (int i = 0; i < counterModel.getScopes()->getCount(); ++i)
         {
-            *scopes += EzCounterScopeModel((*counterModel.getScopes())[i]);
+            scopes += EzCounterScopeModel((*counterModel.getScopes())[i]);
+        }
+    }
+}
+
+EzCounterModel::Data::Data(const gs2::optional<gs2::mission::CounterModel>& counterModel) :
+    name(counterModel && counterModel->getName() ? *counterModel->getName() : StringHolder()),
+    metadata(counterModel && counterModel->getMetadata() ? *counterModel->getMetadata() : StringHolder()),
+    challengePeriodEventId(counterModel && counterModel->getChallengePeriodEventId() ? *counterModel->getChallengePeriodEventId() : StringHolder())
+{
+    if (counterModel && counterModel->getScopes())
+    {
+        for (int i = 0; i < counterModel->getScopes()->getCount(); ++i)
+        {
+            scopes += EzCounterScopeModel((*counterModel->getScopes())[i]);
         }
     }
 }
 
 EzCounterModel::EzCounterModel(gs2::mission::CounterModel counterModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(counterModel)
+{
+}
+
+EzCounterModel::EzCounterModel(gs2::optional<gs2::mission::CounterModel> counterModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(counterModel)
 {
 }

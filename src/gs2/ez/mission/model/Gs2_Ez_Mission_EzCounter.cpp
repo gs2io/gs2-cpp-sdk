@@ -24,26 +24,39 @@ EzCounter::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name)
 {
-    if (data.values)
-    {
-        values = data.values->deepCopy();
-    }
+    values = data.values.deepCopy();
 }
 
 EzCounter::Data::Data(const gs2::mission::Counter& counter) :
-    name(counter.getName())
+    name(counter.getName() ? *counter.getName() : StringHolder())
 {
-    values.emplace();
     if (counter.getValues())
     {
         for (int i = 0; i < counter.getValues()->getCount(); ++i)
         {
-            *values += EzScopedValue((*counter.getValues())[i]);
+            values += EzScopedValue((*counter.getValues())[i]);
+        }
+    }
+}
+
+EzCounter::Data::Data(const gs2::optional<gs2::mission::Counter>& counter) :
+    name(counter && counter->getName() ? *counter->getName() : StringHolder())
+{
+    if (counter && counter->getValues())
+    {
+        for (int i = 0; i < counter->getValues()->getCount(); ++i)
+        {
+            values += EzScopedValue((*counter->getValues())[i]);
         }
     }
 }
 
 EzCounter::EzCounter(gs2::mission::Counter counter) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
+{
+}
+
+EzCounter::EzCounter(gs2::optional<gs2::mission::Counter> counter) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
 {
 }

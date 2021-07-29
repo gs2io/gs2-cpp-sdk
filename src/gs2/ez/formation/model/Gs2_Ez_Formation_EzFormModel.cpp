@@ -25,27 +25,41 @@ EzFormModel::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata)
 {
-    if (data.slots)
-    {
-        slots = data.slots->deepCopy();
-    }
+    slots = data.slots.deepCopy();
 }
 
 EzFormModel::Data::Data(const gs2::formation::FormModel& formModel) :
-    name(formModel.getName()),
-    metadata(formModel.getMetadata())
+    name(formModel.getName() ? *formModel.getName() : StringHolder()),
+    metadata(formModel.getMetadata() ? *formModel.getMetadata() : StringHolder())
 {
-    slots.emplace();
     if (formModel.getSlots())
     {
         for (int i = 0; i < formModel.getSlots()->getCount(); ++i)
         {
-            *slots += EzSlotModel((*formModel.getSlots())[i]);
+            slots += EzSlotModel((*formModel.getSlots())[i]);
+        }
+    }
+}
+
+EzFormModel::Data::Data(const gs2::optional<gs2::formation::FormModel>& formModel) :
+    name(formModel && formModel->getName() ? *formModel->getName() : StringHolder()),
+    metadata(formModel && formModel->getMetadata() ? *formModel->getMetadata() : StringHolder())
+{
+    if (formModel && formModel->getSlots())
+    {
+        for (int i = 0; i < formModel->getSlots()->getCount(); ++i)
+        {
+            slots += EzSlotModel((*formModel->getSlots())[i]);
         }
     }
 }
 
 EzFormModel::EzFormModel(gs2::formation::FormModel formModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(formModel)
+{
+}
+
+EzFormModel::EzFormModel(gs2::optional<gs2::formation::FormModel> formModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(formModel)
 {
 }

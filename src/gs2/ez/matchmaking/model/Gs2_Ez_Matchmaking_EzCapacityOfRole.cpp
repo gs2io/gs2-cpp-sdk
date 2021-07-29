@@ -25,32 +25,44 @@ EzCapacityOfRole::Data::Data(const Data& data) :
     roleName(data.roleName),
     capacity(data.capacity)
 {
-    if (data.roleAliases)
-    {
-        roleAliases = data.roleAliases->deepCopy();
-    }
-    if (data.participants)
-    {
-        participants = data.participants->deepCopy();
-    }
+    roleAliases = data.roleAliases.deepCopy();
+    participants = data.participants.deepCopy();
 }
 
 EzCapacityOfRole::Data::Data(const gs2::matchmaking::CapacityOfRole& capacityOfRole) :
-    roleName(capacityOfRole.getRoleName()),
-    roleAliases(capacityOfRole.getRoleAliases()),
+    roleName(capacityOfRole.getRoleName() ? *capacityOfRole.getRoleName() : StringHolder()),
+    roleAliases(capacityOfRole.getRoleAliases() ? *capacityOfRole.getRoleAliases() : List<StringHolder>()),
     capacity(capacityOfRole.getCapacity() ? *capacityOfRole.getCapacity() : 0)
 {
-    participants.emplace();
     if (capacityOfRole.getParticipants())
     {
         for (int i = 0; i < capacityOfRole.getParticipants()->getCount(); ++i)
         {
-            *participants += EzPlayer((*capacityOfRole.getParticipants())[i]);
+            participants += EzPlayer((*capacityOfRole.getParticipants())[i]);
+        }
+    }
+}
+
+EzCapacityOfRole::Data::Data(const gs2::optional<gs2::matchmaking::CapacityOfRole>& capacityOfRole) :
+    roleName(capacityOfRole && capacityOfRole->getRoleName() ? *capacityOfRole->getRoleName() : StringHolder()),
+    roleAliases(capacityOfRole && capacityOfRole->getRoleAliases() ? *capacityOfRole->getRoleAliases() : List<StringHolder>()),
+    capacity(capacityOfRole && capacityOfRole->getCapacity() ? *capacityOfRole->getCapacity() : 0)
+{
+    if (capacityOfRole && capacityOfRole->getParticipants())
+    {
+        for (int i = 0; i < capacityOfRole->getParticipants()->getCount(); ++i)
+        {
+            participants += EzPlayer((*capacityOfRole->getParticipants())[i]);
         }
     }
 }
 
 EzCapacityOfRole::EzCapacityOfRole(gs2::matchmaking::CapacityOfRole capacityOfRole) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(capacityOfRole)
+{
+}
+
+EzCapacityOfRole::EzCapacityOfRole(gs2::optional<gs2::matchmaking::CapacityOfRole> capacityOfRole) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(capacityOfRole)
 {
 }

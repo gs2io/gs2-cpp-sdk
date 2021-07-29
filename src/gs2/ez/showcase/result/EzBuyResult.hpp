@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::showcase::BuyResult& buyResult) :
-            item(*buyResult.getItem()),
-            stampSheet(*buyResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*buyResult.getStampSheetEncryptionKeyId())
+            item(buyResult.getItem()),
+            stampSheet(buyResult.getStampSheet() ? *buyResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(buyResult.getStampSheetEncryptionKeyId() ? *buyResult.getStampSheetEncryptionKeyId() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzBuyResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBuyResult);
-    }
-
-    static bool isConvertible(const gs2::showcase::BuyResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================

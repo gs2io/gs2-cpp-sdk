@@ -43,12 +43,13 @@ private:
     {
     public:
         /** 入手アクションのリスト */
-        gs2::optional<List<EzAcquireAction>> acquireActions;
+        List<EzAcquireAction> acquireActions;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lottery::DrawnPrize& drawnPrize);
+        Data(const gs2::optional<gs2::lottery::DrawnPrize>& drawnPrize);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -64,6 +65,7 @@ public:
     ~EzDrawnPrize() = default;
 
     EzDrawnPrize(gs2::lottery::DrawnPrize drawnPrize);
+    EzDrawnPrize(gs2::optional<gs2::lottery::DrawnPrize> drawnPrize);
 
     EzDrawnPrize& operator=(const EzDrawnPrize& ezDrawnPrize) = default;
     EzDrawnPrize& operator=(EzDrawnPrize&& ezDrawnPrize) = default;
@@ -78,7 +80,7 @@ public:
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *ensureData().acquireActions;
+        return ensureData().acquireActions;
     }
 
     // ========================================

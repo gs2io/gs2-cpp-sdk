@@ -59,12 +59,12 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::formation::GetFormWithSignatureResult& getFormWithSignatureResult) :
-            item(*getFormWithSignatureResult.getItem()),
-            body(*getFormWithSignatureResult.getBody()),
-            signature(*getFormWithSignatureResult.getSignature()),
-            mold(*getFormWithSignatureResult.getMold()),
-            moldModel(*getFormWithSignatureResult.getMoldModel()),
-            formModel(*getFormWithSignatureResult.getFormModel())
+            item(getFormWithSignatureResult.getItem()),
+            body(getFormWithSignatureResult.getBody() ? *getFormWithSignatureResult.getBody() : StringHolder()),
+            signature(getFormWithSignatureResult.getSignature() ? *getFormWithSignatureResult.getSignature() : StringHolder()),
+            mold(getFormWithSignatureResult.getMold()),
+            moldModel(getFormWithSignatureResult.getMoldModel()),
+            formModel(getFormWithSignatureResult.getFormModel())
         {
         }
 
@@ -92,17 +92,6 @@ public:
     EzGetFormWithSignatureResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetFormWithSignatureResult);
-    }
-
-    static bool isConvertible(const gs2::formation::GetFormWithSignatureResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getBody().has_value() &&
-            result.getSignature().has_value() &&
-            result.getMold().has_value() &&
-            result.getMoldModel().has_value() &&
-            result.getFormModel().has_value();
     }
 
     // ========================================

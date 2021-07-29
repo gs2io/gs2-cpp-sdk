@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::ranking::SubscribeResult& subscribeResult) :
-            item(*subscribeResult.getItem())
+            item(subscribeResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzSubscribeResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSubscribeResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::SubscribeResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

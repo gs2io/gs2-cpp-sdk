@@ -37,7 +37,20 @@ EzWallet::Data::Data(const gs2::money::Wallet& wallet) :
 {
 }
 
+EzWallet::Data::Data(const gs2::optional<gs2::money::Wallet>& wallet) :
+    slot(wallet && wallet->getSlot() ? *wallet->getSlot() : 0),
+    paid(wallet && wallet->getPaid() ? *wallet->getPaid() : 0),
+    free(wallet && wallet->getFree() ? *wallet->getFree() : 0),
+    updatedAt(wallet && wallet->getUpdatedAt() ? *wallet->getUpdatedAt() : 0)
+{
+}
+
 EzWallet::EzWallet(gs2::money::Wallet wallet) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(wallet)
+{
+}
+
+EzWallet::EzWallet(gs2::optional<gs2::money::Wallet> wallet) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(wallet)
 {
 }

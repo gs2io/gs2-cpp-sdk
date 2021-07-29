@@ -29,13 +29,25 @@ EzAccessToken::Data::Data(const Data& data) :
 }
 
 EzAccessToken::Data::Data(const gs2::auth::AccessToken& accessToken) :
-    token(accessToken.getToken()),
-    userId(accessToken.getUserId()),
+    token(accessToken.getToken() ? *accessToken.getToken() : StringHolder()),
+    userId(accessToken.getUserId() ? *accessToken.getUserId() : StringHolder()),
     expire(accessToken.getExpire() ? *accessToken.getExpire() : 0)
 {
 }
 
+EzAccessToken::Data::Data(const gs2::optional<gs2::auth::AccessToken>& accessToken) :
+    token(accessToken && accessToken->getToken() ? *accessToken->getToken() : StringHolder()),
+    userId(accessToken && accessToken->getUserId() ? *accessToken->getUserId() : StringHolder()),
+    expire(accessToken && accessToken->getExpire() ? *accessToken->getExpire() : 0)
+{
+}
+
 EzAccessToken::EzAccessToken(gs2::auth::AccessToken accessToken) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(accessToken)
+{
+}
+
+EzAccessToken::EzAccessToken(gs2::optional<gs2::auth::AccessToken> accessToken) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(accessToken)
 {
 }

@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 新着メッセージ通知を受け取るカテゴリ */
-        gs2::optional<Int32> category;
+        Int32 category;
         /** オフラインだった時にモバイルプッシュ通知に転送するか */
-        gs2::optional<Bool> enableTransferMobilePushNotification;
+        Bool enableTransferMobilePushNotification;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::chat::NotificationType& notificationType);
+        Data(const gs2::optional<gs2::chat::NotificationType>& notificationType);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzNotificationType() = default;
 
     EzNotificationType(gs2::chat::NotificationType notificationType);
+    EzNotificationType(gs2::optional<gs2::chat::NotificationType> notificationType);
 
     EzNotificationType& operator=(const EzNotificationType& ezNotificationType) = default;
     EzNotificationType& operator=(EzNotificationType&& ezNotificationType) = default;
@@ -79,12 +81,12 @@ public:
 
     Int32 getCategory() const
     {
-        return *ensureData().category;
+        return ensureData().category;
     }
 
     Bool getEnableTransferMobilePushNotification() const
     {
-        return *ensureData().enableTransferMobilePushNotification;
+        return ensureData().enableTransferMobilePushNotification;
     }
 
     // ========================================

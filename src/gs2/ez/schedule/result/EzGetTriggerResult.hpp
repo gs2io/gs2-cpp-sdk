@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::schedule::GetTriggerResult& getTriggerResult) :
-            item(*getTriggerResult.getItem())
+            item(getTriggerResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetTriggerResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetTriggerResult);
-    }
-
-    static bool isConvertible(const gs2::schedule::GetTriggerResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

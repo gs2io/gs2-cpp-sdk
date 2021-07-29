@@ -43,26 +43,27 @@ private:
     {
     public:
         /** グループ名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** タスクリスト */
-        gs2::optional<List<EzMissionTaskModel>> tasks;
+        List<EzMissionTaskModel> tasks;
         /** リセットタイミング */
-        gs2::optional<StringHolder> resetType;
+        StringHolder resetType;
         /** リセットをする日にち */
-        gs2::optional<Int32> resetDayOfMonth;
+        Int32 resetDayOfMonth;
         /** リセットする曜日 */
-        gs2::optional<StringHolder> resetDayOfWeek;
+        StringHolder resetDayOfWeek;
         /** リセット時刻 */
-        gs2::optional<Int32> resetHour;
+        Int32 resetHour;
         /** ミッションを達成したときの通知先ネームスペース のGRN */
-        gs2::optional<StringHolder> completeNotificationNamespaceId;
+        StringHolder completeNotificationNamespaceId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::MissionGroupModel& missionGroupModel);
+        Data(const gs2::optional<gs2::mission::MissionGroupModel>& missionGroupModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,6 +79,7 @@ public:
     ~EzMissionGroupModel() = default;
 
     EzMissionGroupModel(gs2::mission::MissionGroupModel missionGroupModel);
+    EzMissionGroupModel(gs2::optional<gs2::mission::MissionGroupModel> missionGroupModel);
 
     EzMissionGroupModel& operator=(const EzMissionGroupModel& ezMissionGroupModel) = default;
     EzMissionGroupModel& operator=(EzMissionGroupModel&& ezMissionGroupModel) = default;
@@ -92,42 +94,42 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzMissionTaskModel>& getTasks() const
     {
-        return *ensureData().tasks;
+        return ensureData().tasks;
     }
 
     const StringHolder& getResetType() const
     {
-        return *ensureData().resetType;
+        return ensureData().resetType;
     }
 
     Int32 getResetDayOfMonth() const
     {
-        return *ensureData().resetDayOfMonth;
+        return ensureData().resetDayOfMonth;
     }
 
     const StringHolder& getResetDayOfWeek() const
     {
-        return *ensureData().resetDayOfWeek;
+        return ensureData().resetDayOfWeek;
     }
 
     Int32 getResetHour() const
     {
-        return *ensureData().resetHour;
+        return ensureData().resetHour;
     }
 
     const StringHolder& getCompleteNotificationNamespaceId() const
     {
-        return *ensureData().completeNotificationNamespaceId;
+        return ensureData().completeNotificationNamespaceId;
     }
 
     // ========================================

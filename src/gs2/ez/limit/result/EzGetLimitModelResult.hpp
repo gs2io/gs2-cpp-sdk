@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::limit::GetLimitModelResult& getLimitModelResult) :
-            item(*getLimitModelResult.getItem())
+            item(getLimitModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetLimitModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetLimitModelResult);
-    }
-
-    static bool isConvertible(const gs2::limit::GetLimitModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

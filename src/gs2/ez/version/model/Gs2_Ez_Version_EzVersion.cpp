@@ -35,7 +35,19 @@ EzVersion::Data::Data(const gs2::version::Version& version) :
 {
 }
 
+EzVersion::Data::Data(const gs2::optional<gs2::version::Version>& version) :
+    major_(version && version->getMajor() ? *version->getMajor() : 0),
+    minor_(version && version->getMinor() ? *version->getMinor() : 0),
+    micro(version && version->getMicro() ? *version->getMicro() : 0)
+{
+}
+
 EzVersion::EzVersion(gs2::version::Version version) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(version)
+{
+}
+
+EzVersion::EzVersion(gs2::optional<gs2::version::Version> version) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(version)
 {
 }

@@ -50,9 +50,10 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::news::DescribeNewsResult& describeNewsResult) :
-            contentHash(*describeNewsResult.getContentHash()),
-            templateHash(*describeNewsResult.getTemplateHash())
+            contentHash(describeNewsResult.getContentHash() ? *describeNewsResult.getContentHash() : StringHolder()),
+            templateHash(describeNewsResult.getTemplateHash() ? *describeNewsResult.getTemplateHash() : StringHolder())
         {
+            if (describeNewsResult.getItems())
             {
                 auto& list = *describeNewsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -86,14 +87,6 @@ public:
     EzListNewsesResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListNewsesResult);
-    }
-
-    static bool isConvertible(const gs2::news::DescribeNewsResult& result)
-    {
-        return
-            result.getItems().has_value() &&
-            result.getContentHash().has_value() &&
-            result.getTemplateHash().has_value();
     }
 
     // ========================================

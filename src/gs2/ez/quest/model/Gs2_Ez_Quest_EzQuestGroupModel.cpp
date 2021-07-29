@@ -26,28 +26,43 @@ EzQuestGroupModel::Data::Data(const Data& data) :
     metadata(data.metadata),
     challengePeriodEventId(data.challengePeriodEventId)
 {
-    if (data.quests)
-    {
-        quests = data.quests->deepCopy();
-    }
+    quests = data.quests.deepCopy();
 }
 
 EzQuestGroupModel::Data::Data(const gs2::quest::QuestGroupModel& questGroupModel) :
-    name(questGroupModel.getName()),
-    metadata(questGroupModel.getMetadata()),
-    challengePeriodEventId(questGroupModel.getChallengePeriodEventId())
+    name(questGroupModel.getName() ? *questGroupModel.getName() : StringHolder()),
+    metadata(questGroupModel.getMetadata() ? *questGroupModel.getMetadata() : StringHolder()),
+    challengePeriodEventId(questGroupModel.getChallengePeriodEventId() ? *questGroupModel.getChallengePeriodEventId() : StringHolder())
 {
-    quests.emplace();
     if (questGroupModel.getQuests())
     {
         for (int i = 0; i < questGroupModel.getQuests()->getCount(); ++i)
         {
-            *quests += EzQuestModel((*questGroupModel.getQuests())[i]);
+            quests += EzQuestModel((*questGroupModel.getQuests())[i]);
+        }
+    }
+}
+
+EzQuestGroupModel::Data::Data(const gs2::optional<gs2::quest::QuestGroupModel>& questGroupModel) :
+    name(questGroupModel && questGroupModel->getName() ? *questGroupModel->getName() : StringHolder()),
+    metadata(questGroupModel && questGroupModel->getMetadata() ? *questGroupModel->getMetadata() : StringHolder()),
+    challengePeriodEventId(questGroupModel && questGroupModel->getChallengePeriodEventId() ? *questGroupModel->getChallengePeriodEventId() : StringHolder())
+{
+    if (questGroupModel && questGroupModel->getQuests())
+    {
+        for (int i = 0; i < questGroupModel->getQuests()->getCount(); ++i)
+        {
+            quests += EzQuestModel((*questGroupModel->getQuests())[i]);
         }
     }
 }
 
 EzQuestGroupModel::EzQuestGroupModel(gs2::quest::QuestGroupModel questGroupModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(questGroupModel)
+{
+}
+
+EzQuestGroupModel::EzQuestGroupModel(gs2::optional<gs2::quest::QuestGroupModel> questGroupModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(questGroupModel)
 {
 }

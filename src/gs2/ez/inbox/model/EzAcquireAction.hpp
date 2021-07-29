@@ -42,14 +42,15 @@ private:
     {
     public:
         /** スタンプシートで実行するアクションの種類 */
-        gs2::optional<StringHolder> action;
+        StringHolder action;
         /** 入手リクエストのJSON */
-        gs2::optional<StringHolder> request;
+        StringHolder request;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inbox::AcquireAction& acquireAction);
+        Data(const gs2::optional<gs2::inbox::AcquireAction>& acquireAction);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzAcquireAction() = default;
 
     EzAcquireAction(gs2::inbox::AcquireAction acquireAction);
+    EzAcquireAction(gs2::optional<gs2::inbox::AcquireAction> acquireAction);
 
     EzAcquireAction& operator=(const EzAcquireAction& ezAcquireAction) = default;
     EzAcquireAction& operator=(EzAcquireAction&& ezAcquireAction) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getAction() const
     {
-        return *ensureData().action;
+        return ensureData().action;
     }
 
     const StringHolder& getRequest() const
     {
-        return *ensureData().request;
+        return ensureData().request;
     }
 
     // ========================================

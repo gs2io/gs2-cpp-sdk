@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 記事を閲覧できるようにするために設定してほしい Cookie のキー値 */
-        gs2::optional<StringHolder> key;
+        StringHolder key;
         /** 記事を閲覧できるようにするために設定してほしい Cookie の値 */
-        gs2::optional<StringHolder> value;
+        StringHolder value;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::news::SetCookieRequestEntry& setCookieRequestEntry);
+        Data(const gs2::optional<gs2::news::SetCookieRequestEntry>& setCookieRequestEntry);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzSetCookieRequestEntry() = default;
 
     EzSetCookieRequestEntry(gs2::news::SetCookieRequestEntry setCookieRequestEntry);
+    EzSetCookieRequestEntry(gs2::optional<gs2::news::SetCookieRequestEntry> setCookieRequestEntry);
 
     EzSetCookieRequestEntry& operator=(const EzSetCookieRequestEntry& ezSetCookieRequestEntry) = default;
     EzSetCookieRequestEntry& operator=(EzSetCookieRequestEntry&& ezSetCookieRequestEntry) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getKey() const
     {
-        return *ensureData().key;
+        return ensureData().key;
     }
 
     const StringHolder& getValue() const
     {
-        return *ensureData().value;
+        return ensureData().value;
     }
 
     // ========================================

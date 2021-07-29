@@ -49,6 +49,7 @@ private:
         Data(const gs2::schedule::DescribeTriggersResult& describeTriggersResult) :
             nextPageToken(describeTriggersResult.getNextPageToken())
         {
+            if (describeTriggersResult.getItems())
             {
                 auto& list = *describeTriggersResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -82,12 +83,6 @@ public:
     EzListTriggersResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListTriggersResult);
-    }
-
-    static bool isConvertible(const gs2::schedule::DescribeTriggersResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

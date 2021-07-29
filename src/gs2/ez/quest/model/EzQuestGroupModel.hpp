@@ -43,18 +43,19 @@ private:
     {
     public:
         /** クエストグループ名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** クエストグループのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** グループに属するクエスト */
-        gs2::optional<List<EzQuestModel>> quests;
+        List<EzQuestModel> quests;
         /** 挑戦可能な期間を指定するイベントマスター のGRN */
-        gs2::optional<StringHolder> challengePeriodEventId;
+        StringHolder challengePeriodEventId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::QuestGroupModel& questGroupModel);
+        Data(const gs2::optional<gs2::quest::QuestGroupModel>& questGroupModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,6 +71,7 @@ public:
     ~EzQuestGroupModel() = default;
 
     EzQuestGroupModel(gs2::quest::QuestGroupModel questGroupModel);
+    EzQuestGroupModel(gs2::optional<gs2::quest::QuestGroupModel> questGroupModel);
 
     EzQuestGroupModel& operator=(const EzQuestGroupModel& ezQuestGroupModel) = default;
     EzQuestGroupModel& operator=(EzQuestGroupModel&& ezQuestGroupModel) = default;
@@ -84,22 +86,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzQuestModel>& getQuests() const
     {
-        return *ensureData().quests;
+        return ensureData().quests;
     }
 
     const StringHolder& getChallengePeriodEventId() const
     {
-        return *ensureData().challengePeriodEventId;
+        return ensureData().challengePeriodEventId;
     }
 
     // ========================================

@@ -43,26 +43,27 @@ private:
     {
     public:
         /** メッセージ */
-        gs2::optional<StringHolder> messageId;
+        StringHolder messageId;
         /** メッセージID */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メッセージの内容に相当するメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 既読状態 */
-        gs2::optional<Bool> isRead;
+        Bool isRead;
         /** 開封時に実行する入手アクション */
-        gs2::optional<List<EzAcquireAction>> readAcquireActions;
+        List<EzAcquireAction> readAcquireActions;
         /** 作成日時 */
-        gs2::optional<Int64> receivedAt;
+        Int64 receivedAt;
         /** 最終更新日時 */
-        gs2::optional<Int64> readAt;
+        Int64 readAt;
         /** メッセージの有効期限 */
-        gs2::optional<Int64> expiresAt;
+        Int64 expiresAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inbox::Message& message);
+        Data(const gs2::optional<gs2::inbox::Message>& message);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,6 +79,7 @@ public:
     ~EzMessage() = default;
 
     EzMessage(gs2::inbox::Message message);
+    EzMessage(gs2::optional<gs2::inbox::Message> message);
 
     EzMessage& operator=(const EzMessage& ezMessage) = default;
     EzMessage& operator=(EzMessage&& ezMessage) = default;
@@ -92,42 +94,42 @@ public:
 
     const StringHolder& getMessageId() const
     {
-        return *ensureData().messageId;
+        return ensureData().messageId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Bool getIsRead() const
     {
-        return *ensureData().isRead;
+        return ensureData().isRead;
     }
 
     const List<EzAcquireAction>& getReadAcquireActions() const
     {
-        return *ensureData().readAcquireActions;
+        return ensureData().readAcquireActions;
     }
 
     Int64 getReceivedAt() const
     {
-        return *ensureData().receivedAt;
+        return ensureData().receivedAt;
     }
 
     Int64 getReadAt() const
     {
-        return *ensureData().readAt;
+        return ensureData().readAt;
     }
 
     Int64 getExpiresAt() const
     {
-        return *ensureData().expiresAt;
+        return ensureData().expiresAt;
     }
 
     // ========================================

@@ -42,14 +42,15 @@ private:
     {
     public:
         /** エントリーの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** エントリーの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::dictionary::EntryModel& entryModel);
+        Data(const gs2::optional<gs2::dictionary::EntryModel>& entryModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzEntryModel() = default;
 
     EzEntryModel(gs2::dictionary::EntryModel entryModel);
+    EzEntryModel(gs2::optional<gs2::dictionary::EntryModel> entryModel);
 
     EzEntryModel& operator=(const EzEntryModel& ezEntryModel) = default;
     EzEntryModel& operator=(EzEntryModel&& ezEntryModel) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     // ========================================

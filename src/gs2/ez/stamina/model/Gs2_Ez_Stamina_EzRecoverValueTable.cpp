@@ -26,21 +26,31 @@ EzRecoverValueTable::Data::Data(const Data& data) :
     metadata(data.metadata),
     experienceModelId(data.experienceModelId)
 {
-    if (data.values)
-    {
-        values = data.values->deepCopy();
-    }
+    values = data.values.deepCopy();
 }
 
 EzRecoverValueTable::Data::Data(const gs2::stamina::RecoverValueTable& recoverValueTable) :
-    name(recoverValueTable.getName()),
-    metadata(recoverValueTable.getMetadata()),
-    experienceModelId(recoverValueTable.getExperienceModelId()),
-    values(recoverValueTable.getValues())
+    name(recoverValueTable.getName() ? *recoverValueTable.getName() : StringHolder()),
+    metadata(recoverValueTable.getMetadata() ? *recoverValueTable.getMetadata() : StringHolder()),
+    experienceModelId(recoverValueTable.getExperienceModelId() ? *recoverValueTable.getExperienceModelId() : StringHolder()),
+    values(recoverValueTable.getValues() ? *recoverValueTable.getValues() : List<Int32>())
+{
+}
+
+EzRecoverValueTable::Data::Data(const gs2::optional<gs2::stamina::RecoverValueTable>& recoverValueTable) :
+    name(recoverValueTable && recoverValueTable->getName() ? *recoverValueTable->getName() : StringHolder()),
+    metadata(recoverValueTable && recoverValueTable->getMetadata() ? *recoverValueTable->getMetadata() : StringHolder()),
+    experienceModelId(recoverValueTable && recoverValueTable->getExperienceModelId() ? *recoverValueTable->getExperienceModelId() : StringHolder()),
+    values(recoverValueTable && recoverValueTable->getValues() ? *recoverValueTable->getValues() : List<Int32>())
 {
 }
 
 EzRecoverValueTable::EzRecoverValueTable(gs2::stamina::RecoverValueTable recoverValueTable) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(recoverValueTable)
+{
+}
+
+EzRecoverValueTable::EzRecoverValueTable(gs2::optional<gs2::stamina::RecoverValueTable> recoverValueTable) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(recoverValueTable)
 {
 }

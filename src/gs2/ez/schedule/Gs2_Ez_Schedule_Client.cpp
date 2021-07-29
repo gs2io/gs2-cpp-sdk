@@ -55,7 +55,7 @@ void Client::listTriggers(
                 AsyncEzListTriggersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListTriggersResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListTriggersResult ezResult(*r.getResult());
                 AsyncEzListTriggersResult asyncResult(std::move(ezResult));
@@ -93,7 +93,7 @@ void Client::getTrigger(
                 AsyncEzGetTriggerResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetTriggerResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetTriggerResult ezResult(*r.getResult());
                 AsyncEzGetTriggerResult asyncResult(std::move(ezResult));
@@ -129,7 +129,7 @@ void Client::listEvents(
                 AsyncEzListEventsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListEventsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListEventsResult ezResult(*r.getResult());
                 AsyncEzListEventsResult asyncResult(std::move(ezResult));
@@ -167,7 +167,7 @@ void Client::getEvent(
                 AsyncEzGetEventResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetEventResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetEventResult ezResult(*r.getResult());
                 AsyncEzGetEventResult asyncResult(std::move(ezResult));

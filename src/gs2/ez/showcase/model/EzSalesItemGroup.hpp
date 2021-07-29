@@ -43,16 +43,17 @@ private:
     {
     public:
         /** 商品グループ名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 商品リスト */
-        gs2::optional<List<EzSalesItem>> salesItems;
+        List<EzSalesItem> salesItems;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::showcase::SalesItemGroup& salesItemGroup);
+        Data(const gs2::optional<gs2::showcase::SalesItemGroup>& salesItemGroup);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -68,6 +69,7 @@ public:
     ~EzSalesItemGroup() = default;
 
     EzSalesItemGroup(gs2::showcase::SalesItemGroup salesItemGroup);
+    EzSalesItemGroup(gs2::optional<gs2::showcase::SalesItemGroup> salesItemGroup);
 
     EzSalesItemGroup& operator=(const EzSalesItemGroup& ezSalesItemGroup) = default;
     EzSalesItemGroup& operator=(EzSalesItemGroup&& ezSalesItemGroup) = default;
@@ -82,17 +84,17 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzSalesItem>& getSalesItems() const
     {
-        return *ensureData().salesItems;
+        return ensureData().salesItems;
     }
 
     // ========================================

@@ -32,16 +32,31 @@ EzNews::Data::Data(const Data& data) :
 }
 
 EzNews::Data::Data(const gs2::news::News& news) :
-    section(news.getSection()),
-    content(news.getContent()),
-    title(news.getTitle()),
-    scheduleEventId(news.getScheduleEventId()),
+    section(news.getSection() ? *news.getSection() : StringHolder()),
+    content(news.getContent() ? *news.getContent() : StringHolder()),
+    title(news.getTitle() ? *news.getTitle() : StringHolder()),
+    scheduleEventId(news.getScheduleEventId() ? *news.getScheduleEventId() : StringHolder()),
     timestamp(news.getTimestamp() ? *news.getTimestamp() : 0),
-    frontMatter(news.getFrontMatter())
+    frontMatter(news.getFrontMatter() ? *news.getFrontMatter() : StringHolder())
+{
+}
+
+EzNews::Data::Data(const gs2::optional<gs2::news::News>& news) :
+    section(news && news->getSection() ? *news->getSection() : StringHolder()),
+    content(news && news->getContent() ? *news->getContent() : StringHolder()),
+    title(news && news->getTitle() ? *news->getTitle() : StringHolder()),
+    scheduleEventId(news && news->getScheduleEventId() ? *news->getScheduleEventId() : StringHolder()),
+    timestamp(news && news->getTimestamp() ? *news->getTimestamp() : 0),
+    frontMatter(news && news->getFrontMatter() ? *news->getFrontMatter() : StringHolder())
 {
 }
 
 EzNews::EzNews(gs2::news::News news) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(news)
+{
+}
+
+EzNews::EzNews(gs2::optional<gs2::news::News> news) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(news)
 {
 }

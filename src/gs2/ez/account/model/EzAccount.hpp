@@ -42,16 +42,17 @@ private:
     {
     public:
         /** アカウントID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** パスワード */
-        gs2::optional<StringHolder> password;
+        StringHolder password;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::account::Account& account);
+        Data(const gs2::optional<gs2::account::Account>& account);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzAccount() = default;
 
     EzAccount(gs2::account::Account account);
+    EzAccount(gs2::optional<gs2::account::Account> account);
 
     EzAccount& operator=(const EzAccount& ezAccount) = default;
     EzAccount& operator=(EzAccount&& ezAccount) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getPassword() const
     {
-        return *ensureData().password;
+        return ensureData().password;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     // ========================================

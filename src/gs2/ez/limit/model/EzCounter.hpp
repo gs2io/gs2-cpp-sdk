@@ -42,22 +42,23 @@ private:
     {
     public:
         /** カウンター */
-        gs2::optional<StringHolder> counterId;
+        StringHolder counterId;
         /** 回数制限の種類の名前 */
-        gs2::optional<StringHolder> limitName;
+        StringHolder limitName;
         /** カウンターの名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** カウント値 */
-        gs2::optional<Int32> count;
+        Int32 count;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
         /** 最終更新日時 */
-        gs2::optional<Int64> updatedAt;
+        Int64 updatedAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::limit::Counter& counter);
+        Data(const gs2::optional<gs2::limit::Counter>& counter);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzCounter() = default;
 
     EzCounter(gs2::limit::Counter counter);
+    EzCounter(gs2::optional<gs2::limit::Counter> counter);
 
     EzCounter& operator=(const EzCounter& ezCounter) = default;
     EzCounter& operator=(EzCounter&& ezCounter) = default;
@@ -87,32 +89,32 @@ public:
 
     const StringHolder& getCounterId() const
     {
-        return *ensureData().counterId;
+        return ensureData().counterId;
     }
 
     const StringHolder& getLimitName() const
     {
-        return *ensureData().limitName;
+        return ensureData().limitName;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int32 getCount() const
     {
-        return *ensureData().count;
+        return ensureData().count;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *ensureData().updatedAt;
+        return ensureData().updatedAt;
     }
 
     // ========================================

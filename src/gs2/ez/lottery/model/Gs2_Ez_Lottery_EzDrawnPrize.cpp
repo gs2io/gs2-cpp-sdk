@@ -23,25 +23,37 @@ namespace gs2 { namespace ez { namespace lottery {
 EzDrawnPrize::Data::Data(const Data& data) :
     Gs2Object(data)
 {
-    if (data.acquireActions)
-    {
-        acquireActions = data.acquireActions->deepCopy();
-    }
+    acquireActions = data.acquireActions.deepCopy();
 }
 
 EzDrawnPrize::Data::Data(const gs2::lottery::DrawnPrize& drawnPrize)
 {
-    acquireActions.emplace();
     if (drawnPrize.getAcquireActions())
     {
         for (int i = 0; i < drawnPrize.getAcquireActions()->getCount(); ++i)
         {
-            *acquireActions += EzAcquireAction((*drawnPrize.getAcquireActions())[i]);
+            acquireActions += EzAcquireAction((*drawnPrize.getAcquireActions())[i]);
+        }
+    }
+}
+
+EzDrawnPrize::Data::Data(const gs2::optional<gs2::lottery::DrawnPrize>& drawnPrize)
+{
+    if (drawnPrize && drawnPrize->getAcquireActions())
+    {
+        for (int i = 0; i < drawnPrize->getAcquireActions()->getCount(); ++i)
+        {
+            acquireActions += EzAcquireAction((*drawnPrize->getAcquireActions())[i]);
         }
     }
 }
 
 EzDrawnPrize::EzDrawnPrize(gs2::lottery::DrawnPrize drawnPrize) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(drawnPrize)
+{
+}
+
+EzDrawnPrize::EzDrawnPrize(gs2::optional<gs2::lottery::DrawnPrize> drawnPrize) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(drawnPrize)
 {
 }

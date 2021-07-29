@@ -30,14 +30,27 @@ EzRoom::Data::Data(const Data& data) :
 }
 
 EzRoom::Data::Data(const gs2::realtime::Room& room) :
-    name(room.getName()),
-    ipAddress(room.getIpAddress()),
+    name(room.getName() ? *room.getName() : StringHolder()),
+    ipAddress(room.getIpAddress() ? *room.getIpAddress() : StringHolder()),
     port(room.getPort() ? *room.getPort() : 0),
-    encryptionKey(room.getEncryptionKey())
+    encryptionKey(room.getEncryptionKey() ? *room.getEncryptionKey() : StringHolder())
+{
+}
+
+EzRoom::Data::Data(const gs2::optional<gs2::realtime::Room>& room) :
+    name(room && room->getName() ? *room->getName() : StringHolder()),
+    ipAddress(room && room->getIpAddress() ? *room->getIpAddress() : StringHolder()),
+    port(room && room->getPort() ? *room->getPort() : 0),
+    encryptionKey(room && room->getEncryptionKey() ? *room->getEncryptionKey() : StringHolder())
 {
 }
 
 EzRoom::EzRoom(gs2::realtime::Room room) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(room)
+{
+}
+
+EzRoom::EzRoom(gs2::optional<gs2::realtime::Room> room) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(room)
 {
 }

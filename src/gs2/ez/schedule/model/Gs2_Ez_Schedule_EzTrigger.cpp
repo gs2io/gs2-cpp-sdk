@@ -30,14 +30,27 @@ EzTrigger::Data::Data(const Data& data) :
 }
 
 EzTrigger::Data::Data(const gs2::schedule::Trigger& trigger) :
-    triggerId(trigger.getTriggerId()),
-    name(trigger.getName()),
+    triggerId(trigger.getTriggerId() ? *trigger.getTriggerId() : StringHolder()),
+    name(trigger.getName() ? *trigger.getName() : StringHolder()),
     createdAt(trigger.getCreatedAt() ? *trigger.getCreatedAt() : 0),
     expiresAt(trigger.getExpiresAt() ? *trigger.getExpiresAt() : 0)
 {
 }
 
+EzTrigger::Data::Data(const gs2::optional<gs2::schedule::Trigger>& trigger) :
+    triggerId(trigger && trigger->getTriggerId() ? *trigger->getTriggerId() : StringHolder()),
+    name(trigger && trigger->getName() ? *trigger->getName() : StringHolder()),
+    createdAt(trigger && trigger->getCreatedAt() ? *trigger->getCreatedAt() : 0),
+    expiresAt(trigger && trigger->getExpiresAt() ? *trigger->getExpiresAt() : 0)
+{
+}
+
 EzTrigger::EzTrigger(gs2::schedule::Trigger trigger) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(trigger)
+{
+}
+
+EzTrigger::EzTrigger(gs2::optional<gs2::schedule::Trigger> trigger) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(trigger)
 {
 }

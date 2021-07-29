@@ -31,15 +31,29 @@ EzSlotWithSignature::Data::Data(const Data& data) :
 }
 
 EzSlotWithSignature::Data::Data(const gs2::formation::SlotWithSignature& slotWithSignature) :
-    name(slotWithSignature.getName()),
-    propertyType(slotWithSignature.getPropertyType()),
-    body(slotWithSignature.getBody()),
-    signature(slotWithSignature.getSignature()),
-    metadata(slotWithSignature.getMetadata())
+    name(slotWithSignature.getName() ? *slotWithSignature.getName() : StringHolder()),
+    propertyType(slotWithSignature.getPropertyType() ? *slotWithSignature.getPropertyType() : StringHolder()),
+    body(slotWithSignature.getBody() ? *slotWithSignature.getBody() : StringHolder()),
+    signature(slotWithSignature.getSignature() ? *slotWithSignature.getSignature() : StringHolder()),
+    metadata(slotWithSignature.getMetadata() ? *slotWithSignature.getMetadata() : StringHolder())
+{
+}
+
+EzSlotWithSignature::Data::Data(const gs2::optional<gs2::formation::SlotWithSignature>& slotWithSignature) :
+    name(slotWithSignature && slotWithSignature->getName() ? *slotWithSignature->getName() : StringHolder()),
+    propertyType(slotWithSignature && slotWithSignature->getPropertyType() ? *slotWithSignature->getPropertyType() : StringHolder()),
+    body(slotWithSignature && slotWithSignature->getBody() ? *slotWithSignature->getBody() : StringHolder()),
+    signature(slotWithSignature && slotWithSignature->getSignature() ? *slotWithSignature->getSignature() : StringHolder()),
+    metadata(slotWithSignature && slotWithSignature->getMetadata() ? *slotWithSignature->getMetadata() : StringHolder())
 {
 }
 
 EzSlotWithSignature::EzSlotWithSignature(gs2::formation::SlotWithSignature slotWithSignature) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(slotWithSignature)
+{
+}
+
+EzSlotWithSignature::EzSlotWithSignature(gs2::optional<gs2::formation::SlotWithSignature> slotWithSignature) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(slotWithSignature)
 {
 }

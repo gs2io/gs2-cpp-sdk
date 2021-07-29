@@ -47,8 +47,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::datastore::PrepareReUploadResult& prepareReUploadResult) :
-            item(*prepareReUploadResult.getItem()),
-            uploadUrl(*prepareReUploadResult.getUploadUrl())
+            item(prepareReUploadResult.getItem()),
+            uploadUrl(prepareReUploadResult.getUploadUrl() ? *prepareReUploadResult.getUploadUrl() : StringHolder())
         {
         }
 
@@ -76,13 +76,6 @@ public:
     EzPrepareReUploadResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPrepareReUploadResult);
-    }
-
-    static bool isConvertible(const gs2::datastore::PrepareReUploadResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getUploadUrl().has_value();
     }
 
     // ========================================

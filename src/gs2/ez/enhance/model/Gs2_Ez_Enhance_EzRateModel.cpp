@@ -32,16 +32,31 @@ EzRateModel::Data::Data(const Data& data) :
 }
 
 EzRateModel::Data::Data(const gs2::enhance::RateModel& rateModel) :
-    name(rateModel.getName()),
-    metadata(rateModel.getMetadata()),
-    targetInventoryModelId(rateModel.getTargetInventoryModelId()),
-    acquireExperienceSuffix(rateModel.getAcquireExperienceSuffix()),
-    materialInventoryModelId(rateModel.getMaterialInventoryModelId()),
-    experienceModelId(rateModel.getExperienceModelId())
+    name(rateModel.getName() ? *rateModel.getName() : StringHolder()),
+    metadata(rateModel.getMetadata() ? *rateModel.getMetadata() : StringHolder()),
+    targetInventoryModelId(rateModel.getTargetInventoryModelId() ? *rateModel.getTargetInventoryModelId() : StringHolder()),
+    acquireExperienceSuffix(rateModel.getAcquireExperienceSuffix() ? *rateModel.getAcquireExperienceSuffix() : StringHolder()),
+    materialInventoryModelId(rateModel.getMaterialInventoryModelId() ? *rateModel.getMaterialInventoryModelId() : StringHolder()),
+    experienceModelId(rateModel.getExperienceModelId() ? *rateModel.getExperienceModelId() : StringHolder())
+{
+}
+
+EzRateModel::Data::Data(const gs2::optional<gs2::enhance::RateModel>& rateModel) :
+    name(rateModel && rateModel->getName() ? *rateModel->getName() : StringHolder()),
+    metadata(rateModel && rateModel->getMetadata() ? *rateModel->getMetadata() : StringHolder()),
+    targetInventoryModelId(rateModel && rateModel->getTargetInventoryModelId() ? *rateModel->getTargetInventoryModelId() : StringHolder()),
+    acquireExperienceSuffix(rateModel && rateModel->getAcquireExperienceSuffix() ? *rateModel->getAcquireExperienceSuffix() : StringHolder()),
+    materialInventoryModelId(rateModel && rateModel->getMaterialInventoryModelId() ? *rateModel->getMaterialInventoryModelId() : StringHolder()),
+    experienceModelId(rateModel && rateModel->getExperienceModelId() ? *rateModel->getExperienceModelId() : StringHolder())
 {
 }
 
 EzRateModel::EzRateModel(gs2::enhance::RateModel rateModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(rateModel)
+{
+}
+
+EzRateModel::EzRateModel(gs2::optional<gs2::enhance::RateModel> rateModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(rateModel)
 {
 }

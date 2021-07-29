@@ -42,18 +42,19 @@ private:
     {
     public:
         /** トリガー */
-        gs2::optional<StringHolder> triggerId;
+        StringHolder triggerId;
         /** トリガーの名前 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
         /** トリガーの有効期限 */
-        gs2::optional<Int64> expiresAt;
+        Int64 expiresAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::schedule::Trigger& trigger);
+        Data(const gs2::optional<gs2::schedule::Trigger>& trigger);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzTrigger() = default;
 
     EzTrigger(gs2::schedule::Trigger trigger);
+    EzTrigger(gs2::optional<gs2::schedule::Trigger> trigger);
 
     EzTrigger& operator=(const EzTrigger& ezTrigger) = default;
     EzTrigger& operator=(EzTrigger&& ezTrigger) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getTriggerId() const
     {
-        return *ensureData().triggerId;
+        return ensureData().triggerId;
     }
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     Int64 getExpiresAt() const
     {
-        return *ensureData().expiresAt;
+        return ensureData().expiresAt;
     }
 
     // ========================================

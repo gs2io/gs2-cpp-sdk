@@ -24,19 +24,27 @@ EzThreshold::Data::Data(const Data& data) :
     Gs2Object(data),
     metadata(data.metadata)
 {
-    if (data.values)
-    {
-        values = data.values->deepCopy();
-    }
+    values = data.values.deepCopy();
 }
 
 EzThreshold::Data::Data(const gs2::experience::Threshold& threshold) :
-    metadata(threshold.getMetadata()),
-    values(threshold.getValues())
+    metadata(threshold.getMetadata() ? *threshold.getMetadata() : StringHolder()),
+    values(threshold.getValues() ? *threshold.getValues() : List<Int64>())
+{
+}
+
+EzThreshold::Data::Data(const gs2::optional<gs2::experience::Threshold>& threshold) :
+    metadata(threshold && threshold->getMetadata() ? *threshold->getMetadata() : StringHolder()),
+    values(threshold && threshold->getValues() ? *threshold->getValues() : List<Int64>())
 {
 }
 
 EzThreshold::EzThreshold(gs2::experience::Threshold threshold) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(threshold)
+{
+}
+
+EzThreshold::EzThreshold(gs2::optional<gs2::experience::Threshold> threshold) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(threshold)
 {
 }

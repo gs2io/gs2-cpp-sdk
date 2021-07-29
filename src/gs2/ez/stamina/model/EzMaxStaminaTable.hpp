@@ -42,18 +42,19 @@ private:
     {
     public:
         /** 最大スタミナ値テーブル名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 最大スタミナ値テーブルのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 経験値の種類マスター のGRN */
-        gs2::optional<StringHolder> experienceModelId;
+        StringHolder experienceModelId;
         /** ランク毎のスタミナの最大値テーブル */
-        gs2::optional<List<Int32>> values;
+        List<Int32> values;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::stamina::MaxStaminaTable& maxStaminaTable);
+        Data(const gs2::optional<gs2::stamina::MaxStaminaTable>& maxStaminaTable);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzMaxStaminaTable() = default;
 
     EzMaxStaminaTable(gs2::stamina::MaxStaminaTable maxStaminaTable);
+    EzMaxStaminaTable(gs2::optional<gs2::stamina::MaxStaminaTable> maxStaminaTable);
 
     EzMaxStaminaTable& operator=(const EzMaxStaminaTable& ezMaxStaminaTable) = default;
     EzMaxStaminaTable& operator=(EzMaxStaminaTable&& ezMaxStaminaTable) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getExperienceModelId() const
     {
-        return *ensureData().experienceModelId;
+        return ensureData().experienceModelId;
     }
 
     const List<Int32>& getValues() const
     {
-        return *ensureData().values;
+        return ensureData().values;
     }
 
     // ========================================

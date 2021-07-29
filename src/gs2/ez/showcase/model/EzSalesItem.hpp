@@ -44,18 +44,19 @@ private:
     {
     public:
         /** 商品名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 商品のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 消費アクションリスト */
-        gs2::optional<List<EzConsumeAction>> consumeActions;
+        List<EzConsumeAction> consumeActions;
         /** 入手アクションリスト */
-        gs2::optional<List<EzAcquireAction>> acquireActions;
+        List<EzAcquireAction> acquireActions;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::showcase::SalesItem& salesItem);
+        Data(const gs2::optional<gs2::showcase::SalesItem>& salesItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzSalesItem() = default;
 
     EzSalesItem(gs2::showcase::SalesItem salesItem);
+    EzSalesItem(gs2::optional<gs2::showcase::SalesItem> salesItem);
 
     EzSalesItem& operator=(const EzSalesItem& ezSalesItem) = default;
     EzSalesItem& operator=(EzSalesItem&& ezSalesItem) = default;
@@ -85,22 +87,22 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<EzConsumeAction>& getConsumeActions() const
     {
-        return *ensureData().consumeActions;
+        return ensureData().consumeActions;
     }
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *ensureData().acquireActions;
+        return ensureData().acquireActions;
     }
 
     // ========================================

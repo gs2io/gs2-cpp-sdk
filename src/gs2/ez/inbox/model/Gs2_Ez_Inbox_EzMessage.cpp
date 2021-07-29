@@ -30,32 +30,51 @@ EzMessage::Data::Data(const Data& data) :
     readAt(data.readAt),
     expiresAt(data.expiresAt)
 {
-    if (data.readAcquireActions)
-    {
-        readAcquireActions = data.readAcquireActions->deepCopy();
-    }
+    readAcquireActions = data.readAcquireActions.deepCopy();
 }
 
 EzMessage::Data::Data(const gs2::inbox::Message& message) :
-    messageId(message.getMessageId()),
-    name(message.getName()),
-    metadata(message.getMetadata()),
+    messageId(message.getMessageId() ? *message.getMessageId() : StringHolder()),
+    name(message.getName() ? *message.getName() : StringHolder()),
+    metadata(message.getMetadata() ? *message.getMetadata() : StringHolder()),
     isRead(message.getIsRead() ? *message.getIsRead() : false),
     receivedAt(message.getReceivedAt() ? *message.getReceivedAt() : 0),
     readAt(message.getReadAt() ? *message.getReadAt() : 0),
     expiresAt(message.getExpiresAt() ? *message.getExpiresAt() : 0)
 {
-    readAcquireActions.emplace();
     if (message.getReadAcquireActions())
     {
         for (int i = 0; i < message.getReadAcquireActions()->getCount(); ++i)
         {
-            *readAcquireActions += EzAcquireAction((*message.getReadAcquireActions())[i]);
+            readAcquireActions += EzAcquireAction((*message.getReadAcquireActions())[i]);
+        }
+    }
+}
+
+EzMessage::Data::Data(const gs2::optional<gs2::inbox::Message>& message) :
+    messageId(message && message->getMessageId() ? *message->getMessageId() : StringHolder()),
+    name(message && message->getName() ? *message->getName() : StringHolder()),
+    metadata(message && message->getMetadata() ? *message->getMetadata() : StringHolder()),
+    isRead(message && message->getIsRead() ? *message->getIsRead() : false),
+    receivedAt(message && message->getReceivedAt() ? *message->getReceivedAt() : 0),
+    readAt(message && message->getReadAt() ? *message->getReadAt() : 0),
+    expiresAt(message && message->getExpiresAt() ? *message->getExpiresAt() : 0)
+{
+    if (message && message->getReadAcquireActions())
+    {
+        for (int i = 0; i < message->getReadAcquireActions()->getCount(); ++i)
+        {
+            readAcquireActions += EzAcquireAction((*message->getReadAcquireActions())[i]);
         }
     }
 }
 
 EzMessage::EzMessage(gs2::inbox::Message message) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(message)
+{
+}
+
+EzMessage::EzMessage(gs2::optional<gs2::inbox::Message> message) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(message)
 {
 }

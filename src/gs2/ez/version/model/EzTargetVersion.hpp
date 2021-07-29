@@ -43,18 +43,19 @@ private:
     {
     public:
         /** バージョンの名前 */
-        gs2::optional<StringHolder> versionName;
+        StringHolder versionName;
         /** バージョン */
-        gs2::optional<EzVersion> version;
+        EzVersion version;
         /** ボディ */
-        gs2::optional<StringHolder> body;
+        StringHolder body;
         /** 署名 */
-        gs2::optional<StringHolder> signature;
+        StringHolder signature;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::version::TargetVersion& targetVersion);
+        Data(const gs2::optional<gs2::version::TargetVersion>& targetVersion);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,6 +71,7 @@ public:
     ~EzTargetVersion() = default;
 
     EzTargetVersion(gs2::version::TargetVersion targetVersion);
+    EzTargetVersion(gs2::optional<gs2::version::TargetVersion> targetVersion);
 
     EzTargetVersion& operator=(const EzTargetVersion& ezTargetVersion) = default;
     EzTargetVersion& operator=(EzTargetVersion&& ezTargetVersion) = default;
@@ -84,22 +86,22 @@ public:
 
     const StringHolder& getVersionName() const
     {
-        return *ensureData().versionName;
+        return ensureData().versionName;
     }
 
     const EzVersion& getVersion() const
     {
-        return *ensureData().version;
+        return ensureData().version;
     }
 
     const StringHolder& getBody() const
     {
-        return *ensureData().body;
+        return ensureData().body;
     }
 
     const StringHolder& getSignature() const
     {
-        return *ensureData().signature;
+        return ensureData().signature;
     }
 
     // ========================================

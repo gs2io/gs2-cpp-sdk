@@ -50,9 +50,9 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::account::AuthenticationResult& authenticationResult) :
-            item(*authenticationResult.getItem()),
-            body(*authenticationResult.getBody()),
-            signature(*authenticationResult.getSignature())
+            item(authenticationResult.getItem()),
+            body(authenticationResult.getBody() ? *authenticationResult.getBody() : StringHolder()),
+            signature(authenticationResult.getSignature() ? *authenticationResult.getSignature() : StringHolder())
         {
         }
 
@@ -80,14 +80,6 @@ public:
     EzAuthenticationResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAuthenticationResult);
-    }
-
-    static bool isConvertible(const gs2::account::AuthenticationResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getBody().has_value() &&
-            result.getSignature().has_value();
     }
 
     // ========================================

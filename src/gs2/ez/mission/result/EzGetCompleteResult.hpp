@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::mission::GetCompleteResult& getCompleteResult) :
-            item(*getCompleteResult.getItem())
+            item(getCompleteResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetCompleteResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCompleteResult);
-    }
-
-    static bool isConvertible(const gs2::mission::GetCompleteResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

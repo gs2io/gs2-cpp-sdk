@@ -42,14 +42,15 @@ private:
     {
     public:
         /** 排出確率テーブル名 */
-        gs2::optional<StringHolder> prizeTableName;
+        StringHolder prizeTableName;
         /** 排出済み景品のインデックスのリスト */
-        gs2::optional<List<Int32>> drawnIndexes;
+        List<Int32> drawnIndexes;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::lottery::Box& box);
+        Data(const gs2::optional<gs2::lottery::Box>& box);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzBox() = default;
 
     EzBox(gs2::lottery::Box box);
+    EzBox(gs2::optional<gs2::lottery::Box> box);
 
     EzBox& operator=(const EzBox& ezBox) = default;
     EzBox& operator=(EzBox&& ezBox) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getPrizeTableName() const
     {
-        return *ensureData().prizeTableName;
+        return ensureData().prizeTableName;
     }
 
     const List<Int32>& getDrawnIndexes() const
     {
-        return *ensureData().drawnIndexes;
+        return ensureData().drawnIndexes;
     }
 
     // ========================================

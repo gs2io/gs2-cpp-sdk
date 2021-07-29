@@ -28,23 +28,35 @@ EzExperienceModel::Data::Data(const Data& data) :
     defaultRankCap(data.defaultRankCap),
     maxRankCap(data.maxRankCap)
 {
-    if (data.rankThreshold)
-    {
-        rankThreshold = data.rankThreshold->deepCopy();
-    }
+    rankThreshold = data.rankThreshold.deepCopy();
 }
 
 EzExperienceModel::Data::Data(const gs2::experience::ExperienceModel& experienceModel) :
-    name(experienceModel.getName()),
-    metadata(experienceModel.getMetadata()),
+    name(experienceModel.getName() ? *experienceModel.getName() : StringHolder()),
+    metadata(experienceModel.getMetadata() ? *experienceModel.getMetadata() : StringHolder()),
     defaultExperience(experienceModel.getDefaultExperience() ? *experienceModel.getDefaultExperience() : 0),
     defaultRankCap(experienceModel.getDefaultRankCap() ? *experienceModel.getDefaultRankCap() : 0),
     maxRankCap(experienceModel.getMaxRankCap() ? *experienceModel.getMaxRankCap() : 0),
-    rankThreshold(*experienceModel.getRankThreshold())
+    rankThreshold(experienceModel.getRankThreshold())
+{
+}
+
+EzExperienceModel::Data::Data(const gs2::optional<gs2::experience::ExperienceModel>& experienceModel) :
+    name(experienceModel && experienceModel->getName() ? *experienceModel->getName() : StringHolder()),
+    metadata(experienceModel && experienceModel->getMetadata() ? *experienceModel->getMetadata() : StringHolder()),
+    defaultExperience(experienceModel && experienceModel->getDefaultExperience() ? *experienceModel->getDefaultExperience() : 0),
+    defaultRankCap(experienceModel && experienceModel->getDefaultRankCap() ? *experienceModel->getDefaultRankCap() : 0),
+    maxRankCap(experienceModel && experienceModel->getMaxRankCap() ? *experienceModel->getMaxRankCap() : 0),
+    rankThreshold(experienceModel ? experienceModel->getRankThreshold() : gs2::optional<gs2::experience::Threshold>())
 {
 }
 
 EzExperienceModel::EzExperienceModel(gs2::experience::ExperienceModel experienceModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(experienceModel)
+{
+}
+
+EzExperienceModel::EzExperienceModel(gs2::optional<gs2::experience::ExperienceModel> experienceModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(experienceModel)
 {
 }

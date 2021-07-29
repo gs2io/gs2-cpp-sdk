@@ -30,14 +30,27 @@ EzDataObjectHistory::Data::Data(const Data& data) :
 }
 
 EzDataObjectHistory::Data::Data(const gs2::datastore::DataObjectHistory& dataObjectHistory) :
-    dataObjectHistoryId(dataObjectHistory.getDataObjectHistoryId()),
-    generation(dataObjectHistory.getGeneration()),
+    dataObjectHistoryId(dataObjectHistory.getDataObjectHistoryId() ? *dataObjectHistory.getDataObjectHistoryId() : StringHolder()),
+    generation(dataObjectHistory.getGeneration() ? *dataObjectHistory.getGeneration() : StringHolder()),
     contentLength(dataObjectHistory.getContentLength() ? *dataObjectHistory.getContentLength() : 0),
     createdAt(dataObjectHistory.getCreatedAt() ? *dataObjectHistory.getCreatedAt() : 0)
 {
 }
 
+EzDataObjectHistory::Data::Data(const gs2::optional<gs2::datastore::DataObjectHistory>& dataObjectHistory) :
+    dataObjectHistoryId(dataObjectHistory && dataObjectHistory->getDataObjectHistoryId() ? *dataObjectHistory->getDataObjectHistoryId() : StringHolder()),
+    generation(dataObjectHistory && dataObjectHistory->getGeneration() ? *dataObjectHistory->getGeneration() : StringHolder()),
+    contentLength(dataObjectHistory && dataObjectHistory->getContentLength() ? *dataObjectHistory->getContentLength() : 0),
+    createdAt(dataObjectHistory && dataObjectHistory->getCreatedAt() ? *dataObjectHistory->getCreatedAt() : 0)
+{
+}
+
 EzDataObjectHistory::EzDataObjectHistory(gs2::datastore::DataObjectHistory dataObjectHistory) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(dataObjectHistory)
+{
+}
+
+EzDataObjectHistory::EzDataObjectHistory(gs2::optional<gs2::datastore::DataObjectHistory> dataObjectHistory) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(dataObjectHistory)
 {
 }

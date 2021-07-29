@@ -28,12 +28,23 @@ EzRoom::Data::Data(const Data& data) :
 }
 
 EzRoom::Data::Data(const gs2::chat::Room& room) :
-    name(room.getName()),
-    metadata(room.getMetadata())
+    name(room.getName() ? *room.getName() : StringHolder()),
+    metadata(room.getMetadata() ? *room.getMetadata() : StringHolder())
+{
+}
+
+EzRoom::Data::Data(const gs2::optional<gs2::chat::Room>& room) :
+    name(room && room->getName() ? *room->getName() : StringHolder()),
+    metadata(room && room->getMetadata() ? *room->getMetadata() : StringHolder())
 {
 }
 
 EzRoom::EzRoom(gs2::chat::Room room) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(room)
+{
+}
+
+EzRoom::EzRoom(gs2::optional<gs2::chat::Room> room) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(room)
 {
 }

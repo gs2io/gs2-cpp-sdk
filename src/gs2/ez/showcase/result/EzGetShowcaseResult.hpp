@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::showcase::GetShowcaseResult& getShowcaseResult) :
-            item(*getShowcaseResult.getItem())
+            item(getShowcaseResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetShowcaseResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetShowcaseResult);
-    }
-
-    static bool isConvertible(const gs2::showcase::GetShowcaseResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

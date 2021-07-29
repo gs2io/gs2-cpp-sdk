@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::mission::DescribeCounterModelsResult& describeCounterModelsResult)
         {
+            if (describeCounterModelsResult.getItems())
             {
                 auto& list = *describeCounterModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListCounterModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListCounterModelsResult);
-    }
-
-    static bool isConvertible(const gs2::mission::DescribeCounterModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

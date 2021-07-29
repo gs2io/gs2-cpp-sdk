@@ -32,7 +32,7 @@ EzStamina::Data::Data(const Data& data) :
 }
 
 EzStamina::Data::Data(const gs2::stamina::Stamina& stamina) :
-    staminaName(stamina.getStaminaName()),
+    staminaName(stamina.getStaminaName() ? *stamina.getStaminaName() : StringHolder()),
     value(stamina.getValue() ? *stamina.getValue() : 0),
     maxValue(stamina.getMaxValue() ? *stamina.getMaxValue() : 0),
     recoverIntervalMinutes(stamina.getRecoverIntervalMinutes() ? *stamina.getRecoverIntervalMinutes() : 0),
@@ -41,7 +41,22 @@ EzStamina::Data::Data(const gs2::stamina::Stamina& stamina) :
 {
 }
 
+EzStamina::Data::Data(const gs2::optional<gs2::stamina::Stamina>& stamina) :
+    staminaName(stamina && stamina->getStaminaName() ? *stamina->getStaminaName() : StringHolder()),
+    value(stamina && stamina->getValue() ? *stamina->getValue() : 0),
+    maxValue(stamina && stamina->getMaxValue() ? *stamina->getMaxValue() : 0),
+    recoverIntervalMinutes(stamina && stamina->getRecoverIntervalMinutes() ? *stamina->getRecoverIntervalMinutes() : 0),
+    recoverValue(stamina && stamina->getRecoverValue() ? *stamina->getRecoverValue() : 0),
+    nextRecoverAt(stamina && stamina->getNextRecoverAt() ? *stamina->getNextRecoverAt() : 0)
+{
+}
+
 EzStamina::EzStamina(gs2::stamina::Stamina stamina) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(stamina)
+{
+}
+
+EzStamina::EzStamina(gs2::optional<gs2::stamina::Stamina> stamina) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(stamina)
 {
 }

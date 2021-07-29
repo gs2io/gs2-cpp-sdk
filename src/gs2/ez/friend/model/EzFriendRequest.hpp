@@ -42,14 +42,15 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** ユーザーID */
-        gs2::optional<StringHolder> targetUserId;
+        StringHolder targetUserId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::friend_::FriendRequest& friendRequest);
+        Data(const gs2::optional<gs2::friend_::FriendRequest>& friendRequest);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzFriendRequest() = default;
 
     EzFriendRequest(gs2::friend_::FriendRequest friendRequest);
+    EzFriendRequest(gs2::optional<gs2::friend_::FriendRequest> friendRequest);
 
     EzFriendRequest& operator=(const EzFriendRequest& ezFriendRequest) = default;
     EzFriendRequest& operator=(EzFriendRequest&& ezFriendRequest) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     const StringHolder& getTargetUserId() const
     {
-        return *ensureData().targetUserId;
+        return ensureData().targetUserId;
     }
 
     // ========================================

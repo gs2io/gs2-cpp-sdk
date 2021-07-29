@@ -43,14 +43,15 @@ private:
     {
     public:
         /** カウンター名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 値 */
-        gs2::optional<List<EzScopedValue>> values;
+        List<EzScopedValue> values;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::mission::Counter& counter);
+        Data(const gs2::optional<gs2::mission::Counter>& counter);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,6 +67,7 @@ public:
     ~EzCounter() = default;
 
     EzCounter(gs2::mission::Counter counter);
+    EzCounter(gs2::optional<gs2::mission::Counter> counter);
 
     EzCounter& operator=(const EzCounter& ezCounter) = default;
     EzCounter& operator=(EzCounter&& ezCounter) = default;
@@ -80,12 +82,12 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const List<EzScopedValue>& getValues() const
     {
-        return *ensureData().values;
+        return ensureData().values;
     }
 
     // ========================================

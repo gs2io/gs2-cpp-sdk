@@ -44,14 +44,15 @@ private:
     {
     public:
         /** バージョン設定 */
-        gs2::optional<EzVersionModel> versionModel;
+        EzVersionModel versionModel;
         /** 現在のバージョン */
-        gs2::optional<EzVersion> currentVersion;
+        EzVersion currentVersion;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::version::Status& status);
+        Data(const gs2::optional<gs2::version::Status>& status);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzStatus() = default;
 
     EzStatus(gs2::version::Status status);
+    EzStatus(gs2::optional<gs2::version::Status> status);
 
     EzStatus& operator=(const EzStatus& ezStatus) = default;
     EzStatus& operator=(EzStatus&& ezStatus) = default;
@@ -81,12 +83,12 @@ public:
 
     const EzVersionModel& getVersionModel() const
     {
-        return *ensureData().versionModel;
+        return ensureData().versionModel;
     }
 
     const EzVersion& getCurrentVersion() const
     {
-        return *ensureData().currentVersion;
+        return ensureData().currentVersion;
     }
 
     // ========================================

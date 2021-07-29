@@ -83,7 +83,7 @@ void Client::createGathering(
                 AsyncEzCreateGatheringResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCreateGatheringResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCreateGatheringResult ezResult(*r.getResult());
                 AsyncEzCreateGatheringResult asyncResult(std::move(ezResult));
@@ -131,7 +131,7 @@ void Client::updateGathering(
                 AsyncEzUpdateGatheringResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUpdateGatheringResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUpdateGatheringResult ezResult(*r.getResult());
                 AsyncEzUpdateGatheringResult asyncResult(std::move(ezResult));
@@ -174,7 +174,7 @@ void Client::doMatchmaking(
                 AsyncEzDoMatchmakingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDoMatchmakingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDoMatchmakingResult ezResult(*r.getResult());
                 AsyncEzDoMatchmakingResult asyncResult(std::move(ezResult));
@@ -210,7 +210,7 @@ void Client::getGathering(
                 AsyncEzGetGatheringResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetGatheringResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetGatheringResult ezResult(*r.getResult());
                 AsyncEzGetGatheringResult asyncResult(std::move(ezResult));
@@ -248,7 +248,7 @@ void Client::cancelMatchmaking(
                 AsyncEzCancelMatchmakingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCancelMatchmakingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCancelMatchmakingResult ezResult(*r.getResult());
                 AsyncEzCancelMatchmakingResult asyncResult(std::move(ezResult));
@@ -282,7 +282,7 @@ void Client::listRatingModels(
                 AsyncEzListRatingModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListRatingModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListRatingModelsResult ezResult(*r.getResult());
                 AsyncEzListRatingModelsResult asyncResult(std::move(ezResult));
@@ -318,7 +318,7 @@ void Client::getRatingModel(
                 AsyncEzGetRatingModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetRatingModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetRatingModelResult ezResult(*r.getResult());
                 AsyncEzGetRatingModelResult asyncResult(std::move(ezResult));
@@ -364,7 +364,7 @@ void Client::listRatings(
                 AsyncEzListRatingsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListRatingsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzListRatingsResult ezResult(*r.getResult());
                 AsyncEzListRatingsResult asyncResult(std::move(ezResult));
@@ -402,7 +402,7 @@ void Client::getRating(
                 AsyncEzGetRatingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetRatingResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetRatingResult ezResult(*r.getResult());
                 AsyncEzGetRatingResult asyncResult(std::move(ezResult));
@@ -442,7 +442,7 @@ void Client::createVote(
                 AsyncEzCreateVoteResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzCreateVoteResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzCreateVoteResult ezResult(*r.getResult());
                 AsyncEzCreateVoteResult asyncResult(std::move(ezResult));
@@ -489,7 +489,7 @@ void Client::vote(
                 AsyncEzVoteResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzVoteResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzVoteResult ezResult(*r.getResult());
                 AsyncEzVoteResult asyncResult(std::move(ezResult));
@@ -541,7 +541,7 @@ void Client::voteMultiple(
                 AsyncEzVoteMultipleResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzVoteMultipleResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzVoteMultipleResult ezResult(*r.getResult());
                 AsyncEzVoteMultipleResult asyncResult(std::move(ezResult));

@@ -42,16 +42,17 @@ private:
     {
     public:
         /** アクセストークン */
-        gs2::optional<StringHolder> token;
+        StringHolder token;
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** 有効期限 */
-        gs2::optional<Int64> expire;
+        Int64 expire;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::auth::AccessToken& accessToken);
+        Data(const gs2::optional<gs2::auth::AccessToken>& accessToken);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -67,6 +68,7 @@ public:
     ~EzAccessToken() = default;
 
     EzAccessToken(gs2::auth::AccessToken accessToken);
+    EzAccessToken(gs2::optional<gs2::auth::AccessToken> accessToken);
 
     EzAccessToken& operator=(const EzAccessToken& ezAccessToken) = default;
     EzAccessToken& operator=(EzAccessToken&& ezAccessToken) = default;
@@ -81,17 +83,17 @@ public:
 
     const StringHolder& getToken() const
     {
-        return *ensureData().token;
+        return ensureData().token;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Int64 getExpire() const
     {
-        return *ensureData().expire;
+        return ensureData().expire;
     }
 
     // ========================================

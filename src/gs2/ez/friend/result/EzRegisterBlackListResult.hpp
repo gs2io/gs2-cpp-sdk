@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::friend_::RegisterBlackListResult& registerBlackListResult) :
-            item(*registerBlackListResult.getItem())
+            item(registerBlackListResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzRegisterBlackListResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRegisterBlackListResult);
-    }
-
-    static bool isConvertible(const gs2::friend_::RegisterBlackListResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

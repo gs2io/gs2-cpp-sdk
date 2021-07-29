@@ -25,27 +25,41 @@ EzShowcase::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata)
 {
-    if (data.displayItems)
-    {
-        displayItems = data.displayItems->deepCopy();
-    }
+    displayItems = data.displayItems.deepCopy();
 }
 
 EzShowcase::Data::Data(const gs2::showcase::Showcase& showcase) :
-    name(showcase.getName()),
-    metadata(showcase.getMetadata())
+    name(showcase.getName() ? *showcase.getName() : StringHolder()),
+    metadata(showcase.getMetadata() ? *showcase.getMetadata() : StringHolder())
 {
-    displayItems.emplace();
     if (showcase.getDisplayItems())
     {
         for (int i = 0; i < showcase.getDisplayItems()->getCount(); ++i)
         {
-            *displayItems += EzDisplayItem((*showcase.getDisplayItems())[i]);
+            displayItems += EzDisplayItem((*showcase.getDisplayItems())[i]);
+        }
+    }
+}
+
+EzShowcase::Data::Data(const gs2::optional<gs2::showcase::Showcase>& showcase) :
+    name(showcase && showcase->getName() ? *showcase->getName() : StringHolder()),
+    metadata(showcase && showcase->getMetadata() ? *showcase->getMetadata() : StringHolder())
+{
+    if (showcase && showcase->getDisplayItems())
+    {
+        for (int i = 0; i < showcase->getDisplayItems()->getCount(); ++i)
+        {
+            displayItems += EzDisplayItem((*showcase->getDisplayItems())[i]);
         }
     }
 }
 
 EzShowcase::EzShowcase(gs2::showcase::Showcase showcase) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(showcase)
+{
+}
+
+EzShowcase::EzShowcase(gs2::optional<gs2::showcase::Showcase> showcase) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(showcase)
 {
 }

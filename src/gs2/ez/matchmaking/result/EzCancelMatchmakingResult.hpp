@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::matchmaking::CancelMatchmakingResult& cancelMatchmakingResult) :
-            item(*cancelMatchmakingResult.getItem())
+            item(cancelMatchmakingResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzCancelMatchmakingResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCancelMatchmakingResult);
-    }
-
-    static bool isConvertible(const gs2::matchmaking::CancelMatchmakingResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

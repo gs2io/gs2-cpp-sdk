@@ -56,11 +56,11 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::enhance::DirectEnhanceResult& directEnhanceResult) :
-            item(*directEnhanceResult.getItem()),
-            stampSheet(*directEnhanceResult.getStampSheet()),
-            stampSheetEncryptionKeyId(*directEnhanceResult.getStampSheetEncryptionKeyId()),
-            acquireExperience(*directEnhanceResult.getAcquireExperience()),
-            bonusRate(*directEnhanceResult.getBonusRate())
+            item(directEnhanceResult.getItem()),
+            stampSheet(directEnhanceResult.getStampSheet() ? *directEnhanceResult.getStampSheet() : StringHolder()),
+            stampSheetEncryptionKeyId(directEnhanceResult.getStampSheetEncryptionKeyId() ? *directEnhanceResult.getStampSheetEncryptionKeyId() : StringHolder()),
+            acquireExperience(directEnhanceResult.getAcquireExperience() ? *directEnhanceResult.getAcquireExperience() : 0),
+            bonusRate(directEnhanceResult.getBonusRate() ? *directEnhanceResult.getBonusRate() : 0)
         {
         }
 
@@ -88,16 +88,6 @@ public:
     EzEnhanceResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzEnhanceResult);
-    }
-
-    static bool isConvertible(const gs2::enhance::DirectEnhanceResult& result)
-    {
-        return
-            result.getItem().has_value() &&
-            result.getStampSheet().has_value() &&
-            result.getStampSheetEncryptionKeyId().has_value() &&
-            result.getAcquireExperience().has_value() &&
-            result.getBonusRate().has_value();
     }
 
     // ========================================

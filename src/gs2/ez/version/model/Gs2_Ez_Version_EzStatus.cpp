@@ -23,23 +23,28 @@ namespace gs2 { namespace ez { namespace version {
 EzStatus::Data::Data(const Data& data) :
     Gs2Object(data)
 {
-    if (data.versionModel)
-    {
-        versionModel = data.versionModel->deepCopy();
-    }
-    if (data.currentVersion)
-    {
-        currentVersion = data.currentVersion->deepCopy();
-    }
+    versionModel = data.versionModel.deepCopy();
+    currentVersion = data.currentVersion.deepCopy();
 }
 
 EzStatus::Data::Data(const gs2::version::Status& status) :
-    versionModel(*status.getVersionModel()),
-    currentVersion(*status.getCurrentVersion())
+    versionModel(status.getVersionModel()),
+    currentVersion(status.getCurrentVersion())
+{
+}
+
+EzStatus::Data::Data(const gs2::optional<gs2::version::Status>& status) :
+    versionModel(status ? status->getVersionModel() : gs2::optional<gs2::version::VersionModel>()),
+    currentVersion(status ? status->getCurrentVersion() : gs2::optional<gs2::version::Version>())
 {
 }
 
 EzStatus::EzStatus(gs2::version::Status status) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(status)
+{
+}
+
+EzStatus::EzStatus(gs2::optional<gs2::version::Status> status) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(status)
 {
 }

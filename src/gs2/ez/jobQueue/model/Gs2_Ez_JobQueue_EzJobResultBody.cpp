@@ -32,12 +32,25 @@ EzJobResultBody::Data::Data(const Data& data) :
 EzJobResultBody::Data::Data(const gs2::jobQueue::JobResultBody& jobResultBody) :
     tryNumber(jobResultBody.getTryNumber() ? *jobResultBody.getTryNumber() : 0),
     statusCode(jobResultBody.getStatusCode() ? *jobResultBody.getStatusCode() : 0),
-    result(jobResultBody.getResult()),
+    result(jobResultBody.getResult() ? *jobResultBody.getResult() : StringHolder()),
     tryAt(jobResultBody.getTryAt() ? *jobResultBody.getTryAt() : 0)
 {
 }
 
+EzJobResultBody::Data::Data(const gs2::optional<gs2::jobQueue::JobResultBody>& jobResultBody) :
+    tryNumber(jobResultBody && jobResultBody->getTryNumber() ? *jobResultBody->getTryNumber() : 0),
+    statusCode(jobResultBody && jobResultBody->getStatusCode() ? *jobResultBody->getStatusCode() : 0),
+    result(jobResultBody && jobResultBody->getResult() ? *jobResultBody->getResult() : StringHolder()),
+    tryAt(jobResultBody && jobResultBody->getTryAt() ? *jobResultBody->getTryAt() : 0)
+{
+}
+
 EzJobResultBody::EzJobResultBody(gs2::jobQueue::JobResultBody jobResultBody) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(jobResultBody)
+{
+}
+
+EzJobResultBody::EzJobResultBody(gs2::optional<gs2::jobQueue::JobResultBody> jobResultBody) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(jobResultBody)
 {
 }

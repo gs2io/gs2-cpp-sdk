@@ -25,39 +25,56 @@ EzRateModel::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata)
 {
-    if (data.consumeActions)
-    {
-        consumeActions = data.consumeActions->deepCopy();
-    }
-    if (data.acquireActions)
-    {
-        acquireActions = data.acquireActions->deepCopy();
-    }
+    consumeActions = data.consumeActions.deepCopy();
+    acquireActions = data.acquireActions.deepCopy();
 }
 
 EzRateModel::Data::Data(const gs2::exchange::RateModel& rateModel) :
-    name(rateModel.getName()),
-    metadata(rateModel.getMetadata())
+    name(rateModel.getName() ? *rateModel.getName() : StringHolder()),
+    metadata(rateModel.getMetadata() ? *rateModel.getMetadata() : StringHolder())
 {
-    consumeActions.emplace();
     if (rateModel.getConsumeActions())
     {
         for (int i = 0; i < rateModel.getConsumeActions()->getCount(); ++i)
         {
-            *consumeActions += EzConsumeAction((*rateModel.getConsumeActions())[i]);
+            consumeActions += EzConsumeAction((*rateModel.getConsumeActions())[i]);
         }
     }
-    acquireActions.emplace();
     if (rateModel.getAcquireActions())
     {
         for (int i = 0; i < rateModel.getAcquireActions()->getCount(); ++i)
         {
-            *acquireActions += EzAcquireAction((*rateModel.getAcquireActions())[i]);
+            acquireActions += EzAcquireAction((*rateModel.getAcquireActions())[i]);
+        }
+    }
+}
+
+EzRateModel::Data::Data(const gs2::optional<gs2::exchange::RateModel>& rateModel) :
+    name(rateModel && rateModel->getName() ? *rateModel->getName() : StringHolder()),
+    metadata(rateModel && rateModel->getMetadata() ? *rateModel->getMetadata() : StringHolder())
+{
+    if (rateModel && rateModel->getConsumeActions())
+    {
+        for (int i = 0; i < rateModel->getConsumeActions()->getCount(); ++i)
+        {
+            consumeActions += EzConsumeAction((*rateModel->getConsumeActions())[i]);
+        }
+    }
+    if (rateModel && rateModel->getAcquireActions())
+    {
+        for (int i = 0; i < rateModel->getAcquireActions()->getCount(); ++i)
+        {
+            acquireActions += EzAcquireAction((*rateModel->getAcquireActions())[i]);
         }
     }
 }
 
 EzRateModel::EzRateModel(gs2::exchange::RateModel rateModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(rateModel)
+{
+}
+
+EzRateModel::EzRateModel(gs2::optional<gs2::exchange::RateModel> rateModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(rateModel)
 {
 }

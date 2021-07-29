@@ -29,48 +29,67 @@ EzGathering::Data::Data(const Data& data) :
     createdAt(data.createdAt),
     updatedAt(data.updatedAt)
 {
-    if (data.attributeRanges)
-    {
-        attributeRanges = data.attributeRanges->deepCopy();
-    }
-    if (data.capacityOfRoles)
-    {
-        capacityOfRoles = data.capacityOfRoles->deepCopy();
-    }
-    if (data.allowUserIds)
-    {
-        allowUserIds = data.allowUserIds->deepCopy();
-    }
+    attributeRanges = data.attributeRanges.deepCopy();
+    capacityOfRoles = data.capacityOfRoles.deepCopy();
+    allowUserIds = data.allowUserIds.deepCopy();
 }
 
 EzGathering::Data::Data(const gs2::matchmaking::Gathering& gathering) :
-    gatheringId(gathering.getGatheringId()),
-    name(gathering.getName()),
-    allowUserIds(gathering.getAllowUserIds()),
-    metadata(gathering.getMetadata()),
+    gatheringId(gathering.getGatheringId() ? *gathering.getGatheringId() : StringHolder()),
+    name(gathering.getName() ? *gathering.getName() : StringHolder()),
+    allowUserIds(gathering.getAllowUserIds() ? *gathering.getAllowUserIds() : List<StringHolder>()),
+    metadata(gathering.getMetadata() ? *gathering.getMetadata() : StringHolder()),
     expiresAt(gathering.getExpiresAt() ? *gathering.getExpiresAt() : 0),
     createdAt(gathering.getCreatedAt() ? *gathering.getCreatedAt() : 0),
     updatedAt(gathering.getUpdatedAt() ? *gathering.getUpdatedAt() : 0)
 {
-    attributeRanges.emplace();
     if (gathering.getAttributeRanges())
     {
         for (int i = 0; i < gathering.getAttributeRanges()->getCount(); ++i)
         {
-            *attributeRanges += EzAttributeRange((*gathering.getAttributeRanges())[i]);
+            attributeRanges += EzAttributeRange((*gathering.getAttributeRanges())[i]);
         }
     }
-    capacityOfRoles.emplace();
     if (gathering.getCapacityOfRoles())
     {
         for (int i = 0; i < gathering.getCapacityOfRoles()->getCount(); ++i)
         {
-            *capacityOfRoles += EzCapacityOfRole((*gathering.getCapacityOfRoles())[i]);
+            capacityOfRoles += EzCapacityOfRole((*gathering.getCapacityOfRoles())[i]);
+        }
+    }
+}
+
+EzGathering::Data::Data(const gs2::optional<gs2::matchmaking::Gathering>& gathering) :
+    gatheringId(gathering && gathering->getGatheringId() ? *gathering->getGatheringId() : StringHolder()),
+    name(gathering && gathering->getName() ? *gathering->getName() : StringHolder()),
+    allowUserIds(gathering && gathering->getAllowUserIds() ? *gathering->getAllowUserIds() : List<StringHolder>()),
+    metadata(gathering && gathering->getMetadata() ? *gathering->getMetadata() : StringHolder()),
+    expiresAt(gathering && gathering->getExpiresAt() ? *gathering->getExpiresAt() : 0),
+    createdAt(gathering && gathering->getCreatedAt() ? *gathering->getCreatedAt() : 0),
+    updatedAt(gathering && gathering->getUpdatedAt() ? *gathering->getUpdatedAt() : 0)
+{
+    if (gathering && gathering->getAttributeRanges())
+    {
+        for (int i = 0; i < gathering->getAttributeRanges()->getCount(); ++i)
+        {
+            attributeRanges += EzAttributeRange((*gathering->getAttributeRanges())[i]);
+        }
+    }
+    if (gathering && gathering->getCapacityOfRoles())
+    {
+        for (int i = 0; i < gathering->getCapacityOfRoles()->getCount(); ++i)
+        {
+            capacityOfRoles += EzCapacityOfRole((*gathering->getCapacityOfRoles())[i]);
         }
     }
 }
 
 EzGathering::EzGathering(gs2::matchmaking::Gathering gathering) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(gathering)
+{
+}
+
+EzGathering::EzGathering(gs2::optional<gs2::matchmaking::Gathering> gathering) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(gathering)
 {
 }

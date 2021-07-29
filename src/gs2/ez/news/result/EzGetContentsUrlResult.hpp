@@ -50,9 +50,10 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::news::WantGrantResult& wantGrantResult) :
-            browserUrl(*wantGrantResult.getBrowserUrl()),
-            zipUrl(*wantGrantResult.getZipUrl())
+            browserUrl(wantGrantResult.getBrowserUrl() ? *wantGrantResult.getBrowserUrl() : StringHolder()),
+            zipUrl(wantGrantResult.getZipUrl() ? *wantGrantResult.getZipUrl() : StringHolder())
         {
+            if (wantGrantResult.getItems())
             {
                 auto& list = *wantGrantResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -86,14 +87,6 @@ public:
     EzGetContentsUrlResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetContentsUrlResult);
-    }
-
-    static bool isConvertible(const gs2::news::WantGrantResult& result)
-    {
-        return
-            result.getItems().has_value() &&
-            result.getBrowserUrl().has_value() &&
-            result.getZipUrl().has_value();
     }
 
     // ========================================

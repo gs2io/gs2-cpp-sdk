@@ -42,18 +42,19 @@ private:
     {
     public:
         /** 試行回数 */
-        gs2::optional<Int32> tryNumber;
+        Int32 tryNumber;
         /** ステータスコード */
-        gs2::optional<Int32> statusCode;
+        Int32 statusCode;
         /** レスポンスの内容 */
-        gs2::optional<StringHolder> result;
+        StringHolder result;
         /** 実行日時 */
-        gs2::optional<Int64> tryAt;
+        Int64 tryAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::jobQueue::JobResultBody& jobResultBody);
+        Data(const gs2::optional<gs2::jobQueue::JobResultBody>& jobResultBody);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzJobResultBody() = default;
 
     EzJobResultBody(gs2::jobQueue::JobResultBody jobResultBody);
+    EzJobResultBody(gs2::optional<gs2::jobQueue::JobResultBody> jobResultBody);
 
     EzJobResultBody& operator=(const EzJobResultBody& ezJobResultBody) = default;
     EzJobResultBody& operator=(EzJobResultBody&& ezJobResultBody) = default;
@@ -83,22 +85,22 @@ public:
 
     Int32 getTryNumber() const
     {
-        return *ensureData().tryNumber;
+        return ensureData().tryNumber;
     }
 
     Int32 getStatusCode() const
     {
-        return *ensureData().statusCode;
+        return ensureData().statusCode;
     }
 
     const StringHolder& getResult() const
     {
-        return *ensureData().result;
+        return ensureData().result;
     }
 
     Int64 getTryAt() const
     {
-        return *ensureData().tryAt;
+        return ensureData().tryAt;
     }
 
     // ========================================

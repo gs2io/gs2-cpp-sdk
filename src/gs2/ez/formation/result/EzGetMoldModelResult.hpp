@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::formation::GetMoldModelResult& getMoldModelResult) :
-            item(*getMoldModelResult.getItem())
+            item(getMoldModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetMoldModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetMoldModelResult);
-    }
-
-    static bool isConvertible(const gs2::formation::GetMoldModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

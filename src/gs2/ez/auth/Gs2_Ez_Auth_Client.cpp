@@ -59,7 +59,7 @@ void Client::login(
                 AsyncEzLoginResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzLoginResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzLoginResult ezResult(*r.getResult());
                 AsyncEzLoginResult asyncResult(std::move(ezResult));

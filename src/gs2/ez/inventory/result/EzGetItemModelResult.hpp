@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::inventory::GetItemModelResult& getItemModelResult) :
-            item(*getItemModelResult.getItem())
+            item(getItemModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetItemModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetItemModelResult);
-    }
-
-    static bool isConvertible(const gs2::inventory::GetItemModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

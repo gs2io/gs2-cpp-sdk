@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::ranking::GetCategoryModelResult& getCategoryModelResult) :
-            item(*getCategoryModelResult.getItem())
+            item(getCategoryModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetCategoryResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCategoryResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::GetCategoryModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

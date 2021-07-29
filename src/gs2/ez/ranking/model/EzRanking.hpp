@@ -42,22 +42,23 @@ private:
     {
     public:
         /** 順位 */
-        gs2::optional<Int64> rank;
+        Int64 rank;
         /** 1位からのインデックス */
-        gs2::optional<Int64> index;
+        Int64 index;
         /** ユーザID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** スコア */
-        gs2::optional<Int64> score;
+        Int64 score;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::ranking::Ranking& ranking);
+        Data(const gs2::optional<gs2::ranking::Ranking>& ranking);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzRanking() = default;
 
     EzRanking(gs2::ranking::Ranking ranking);
+    EzRanking(gs2::optional<gs2::ranking::Ranking> ranking);
 
     EzRanking& operator=(const EzRanking& ezRanking) = default;
     EzRanking& operator=(EzRanking&& ezRanking) = default;
@@ -87,32 +89,32 @@ public:
 
     Int64 getRank() const
     {
-        return *ensureData().rank;
+        return ensureData().rank;
     }
 
     Int64 getIndex() const
     {
-        return *ensureData().index;
+        return ensureData().index;
     }
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Int64 getScore() const
     {
-        return *ensureData().score;
+        return ensureData().score;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     // ========================================

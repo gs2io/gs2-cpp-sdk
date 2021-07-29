@@ -44,7 +44,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::mission::GetMissionGroupModelResult& getMissionGroupModelResult) :
-            item(*getMissionGroupModelResult.getItem())
+            item(getMissionGroupModelResult.getItem())
         {
         }
 
@@ -72,12 +72,6 @@ public:
     EzGetMissionGroupModelResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetMissionGroupModelResult);
-    }
-
-    static bool isConvertible(const gs2::mission::GetMissionGroupModelResult& result)
-    {
-        return
-            result.getItem().has_value();
     }
 
     // ========================================

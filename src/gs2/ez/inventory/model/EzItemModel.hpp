@@ -42,20 +42,21 @@ private:
     {
     public:
         /** アイテムモデルの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** アイテムモデルの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** スタック可能な最大数量 */
-        gs2::optional<Int64> stackingLimit;
+        Int64 stackingLimit;
         /** スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか */
-        gs2::optional<Bool> allowMultipleStacks;
+        Bool allowMultipleStacks;
         /** 表示順番 */
-        gs2::optional<Int32> sortValue;
+        Int32 sortValue;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::inventory::ItemModel& itemModel);
+        Data(const gs2::optional<gs2::inventory::ItemModel>& itemModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzItemModel() = default;
 
     EzItemModel(gs2::inventory::ItemModel itemModel);
+    EzItemModel(gs2::optional<gs2::inventory::ItemModel> itemModel);
 
     EzItemModel& operator=(const EzItemModel& ezItemModel) = default;
     EzItemModel& operator=(EzItemModel&& ezItemModel) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int64 getStackingLimit() const
     {
-        return *ensureData().stackingLimit;
+        return ensureData().stackingLimit;
     }
 
     Bool getAllowMultipleStacks() const
     {
-        return *ensureData().allowMultipleStacks;
+        return ensureData().allowMultipleStacks;
     }
 
     Int32 getSortValue() const
     {
-        return *ensureData().sortValue;
+        return ensureData().sortValue;
     }
 
     // ========================================

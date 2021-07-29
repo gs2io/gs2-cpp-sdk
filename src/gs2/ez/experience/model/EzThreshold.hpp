@@ -42,14 +42,15 @@ private:
     {
     public:
         /** ランクアップ閾値のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** ランクアップ経験値閾値リスト */
-        gs2::optional<List<Int64>> values;
+        List<Int64> values;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::experience::Threshold& threshold);
+        Data(const gs2::optional<gs2::experience::Threshold>& threshold);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzThreshold() = default;
 
     EzThreshold(gs2::experience::Threshold threshold);
+    EzThreshold(gs2::optional<gs2::experience::Threshold> threshold);
 
     EzThreshold& operator=(const EzThreshold& ezThreshold) = default;
     EzThreshold& operator=(EzThreshold&& ezThreshold) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const List<Int64>& getValues() const
     {
-        return *ensureData().values;
+        return ensureData().values;
     }
 
     // ========================================

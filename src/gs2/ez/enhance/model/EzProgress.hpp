@@ -42,20 +42,21 @@ private:
     {
     public:
         /** 強化実行 */
-        gs2::optional<StringHolder> progressId;
+        StringHolder progressId;
         /** レートモデル名 */
-        gs2::optional<StringHolder> rateName;
+        StringHolder rateName;
         /** 強化対象のプロパティID */
-        gs2::optional<StringHolder> propertyId;
+        StringHolder propertyId;
         /** 入手できる経験値 */
-        gs2::optional<Int32> experienceValue;
+        Int32 experienceValue;
         /** 経験値倍率 */
-        gs2::optional<Float> rate;
+        Float rate;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::enhance::Progress& progress);
+        Data(const gs2::optional<gs2::enhance::Progress>& progress);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -71,6 +72,7 @@ public:
     ~EzProgress() = default;
 
     EzProgress(gs2::enhance::Progress progress);
+    EzProgress(gs2::optional<gs2::enhance::Progress> progress);
 
     EzProgress& operator=(const EzProgress& ezProgress) = default;
     EzProgress& operator=(EzProgress&& ezProgress) = default;
@@ -85,27 +87,27 @@ public:
 
     const StringHolder& getProgressId() const
     {
-        return *ensureData().progressId;
+        return ensureData().progressId;
     }
 
     const StringHolder& getRateName() const
     {
-        return *ensureData().rateName;
+        return ensureData().rateName;
     }
 
     const StringHolder& getPropertyId() const
     {
-        return *ensureData().propertyId;
+        return ensureData().propertyId;
     }
 
     Int32 getExperienceValue() const
     {
-        return *ensureData().experienceValue;
+        return ensureData().experienceValue;
     }
 
     Float getRate() const
     {
-        return *ensureData().rate;
+        return ensureData().rate;
     }
 
     // ========================================

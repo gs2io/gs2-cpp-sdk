@@ -42,14 +42,15 @@ private:
     {
     public:
         /** スタンプタスクで実行するアクションの種類 */
-        gs2::optional<StringHolder> action;
+        StringHolder action;
         /** 消費リクエストのJSON */
-        gs2::optional<StringHolder> request;
+        StringHolder request;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::quest::ConsumeAction& consumeAction);
+        Data(const gs2::optional<gs2::quest::ConsumeAction>& consumeAction);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzConsumeAction() = default;
 
     EzConsumeAction(gs2::quest::ConsumeAction consumeAction);
+    EzConsumeAction(gs2::optional<gs2::quest::ConsumeAction> consumeAction);
 
     EzConsumeAction& operator=(const EzConsumeAction& ezConsumeAction) = default;
     EzConsumeAction& operator=(EzConsumeAction&& ezConsumeAction) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getAction() const
     {
-        return *ensureData().action;
+        return ensureData().action;
     }
 
     const StringHolder& getRequest() const
     {
-        return *ensureData().request;
+        return ensureData().request;
     }
 
     // ========================================

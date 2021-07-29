@@ -55,7 +55,7 @@ void Client::getProfile(
                 AsyncEzGetProfileResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetProfileResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetProfileResult ezResult(*r.getResult());
                 AsyncEzGetProfileResult asyncResult(std::move(ezResult));
@@ -106,7 +106,7 @@ void Client::updateProfile(
                 AsyncEzUpdateProfileResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUpdateProfileResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUpdateProfileResult ezResult(*r.getResult());
                 AsyncEzUpdateProfileResult asyncResult(std::move(ezResult));
@@ -142,7 +142,7 @@ void Client::getPublicProfile(
                 AsyncEzGetPublicProfileResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetPublicProfileResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetPublicProfileResult ezResult(*r.getResult());
                 AsyncEzGetPublicProfileResult asyncResult(std::move(ezResult));
@@ -190,7 +190,7 @@ void Client::describeFollowUsers(
                 AsyncEzDescribeFollowUsersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDescribeFollowUsersResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDescribeFollowUsersResult ezResult(*r.getResult());
                 AsyncEzDescribeFollowUsersResult asyncResult(std::move(ezResult));
@@ -228,7 +228,7 @@ void Client::follow(
                 AsyncEzFollowResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzFollowResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzFollowResult ezResult(*r.getResult());
                 AsyncEzFollowResult asyncResult(std::move(ezResult));
@@ -266,7 +266,7 @@ void Client::unfollow(
                 AsyncEzUnfollowResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUnfollowResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUnfollowResult ezResult(*r.getResult());
                 AsyncEzUnfollowResult asyncResult(std::move(ezResult));
@@ -314,7 +314,7 @@ void Client::describeFriends(
                 AsyncEzDescribeFriendsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDescribeFriendsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDescribeFriendsResult ezResult(*r.getResult());
                 AsyncEzDescribeFriendsResult asyncResult(std::move(ezResult));
@@ -354,7 +354,7 @@ void Client::getFriend(
                 AsyncEzGetFriendResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetFriendResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetFriendResult ezResult(*r.getResult());
                 AsyncEzGetFriendResult asyncResult(std::move(ezResult));
@@ -392,7 +392,7 @@ void Client::deleteFriend(
                 AsyncEzDeleteFriendResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDeleteFriendResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDeleteFriendResult ezResult(*r.getResult());
                 AsyncEzDeleteFriendResult asyncResult(std::move(ezResult));
@@ -428,7 +428,7 @@ void Client::describeSendRequests(
                 AsyncEzDescribeSendRequestsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDescribeSendRequestsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDescribeSendRequestsResult ezResult(*r.getResult());
                 AsyncEzDescribeSendRequestsResult asyncResult(std::move(ezResult));
@@ -466,7 +466,7 @@ void Client::sendRequest(
                 AsyncEzSendRequestResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzSendRequestResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzSendRequestResult ezResult(*r.getResult());
                 AsyncEzSendRequestResult asyncResult(std::move(ezResult));
@@ -504,7 +504,7 @@ void Client::deleteRequest(
                 AsyncEzDeleteRequestResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDeleteRequestResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDeleteRequestResult ezResult(*r.getResult());
                 AsyncEzDeleteRequestResult asyncResult(std::move(ezResult));
@@ -540,7 +540,7 @@ void Client::describeReceiveRequests(
                 AsyncEzDescribeReceiveRequestsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDescribeReceiveRequestsResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzDescribeReceiveRequestsResult ezResult(*r.getResult());
                 AsyncEzDescribeReceiveRequestsResult asyncResult(std::move(ezResult));
@@ -578,7 +578,7 @@ void Client::accept(
                 AsyncEzAcceptResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzAcceptResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzAcceptResult ezResult(*r.getResult());
                 AsyncEzAcceptResult asyncResult(std::move(ezResult));
@@ -616,7 +616,7 @@ void Client::reject(
                 AsyncEzRejectResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRejectResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRejectResult ezResult(*r.getResult());
                 AsyncEzRejectResult asyncResult(std::move(ezResult));
@@ -652,7 +652,7 @@ void Client::getBlackList(
                 AsyncEzGetBlackListResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetBlackListResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzGetBlackListResult ezResult(*r.getResult());
                 AsyncEzGetBlackListResult asyncResult(std::move(ezResult));
@@ -690,7 +690,7 @@ void Client::registerBlackList(
                 AsyncEzRegisterBlackListResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzRegisterBlackListResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzRegisterBlackListResult ezResult(*r.getResult());
                 AsyncEzRegisterBlackListResult asyncResult(std::move(ezResult));
@@ -728,7 +728,7 @@ void Client::unregisterBlackList(
                 AsyncEzUnregisterBlackListResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzUnregisterBlackListResult::isConvertible(*r.getResult()))
+            else if (r.getResult())
             {
                 EzUnregisterBlackListResult ezResult(*r.getResult());
                 AsyncEzUnregisterBlackListResult asyncResult(std::move(ezResult));

@@ -45,30 +45,31 @@ private:
     {
     public:
         /** スタミナの種類名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** スタミナの種類のメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** スタミナを回復する速度(分) */
-        gs2::optional<Int32> recoverIntervalMinutes;
+        Int32 recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
-        gs2::optional<Int32> recoverValue;
+        Int32 recoverValue;
         /** スタミナの最大値の初期値 */
-        gs2::optional<Int32> initialCapacity;
+        Int32 initialCapacity;
         /** 最大値を超えて回復するか */
-        gs2::optional<Bool> isOverflow;
+        Bool isOverflow;
         /** 溢れた状況での最大値 */
-        gs2::optional<Int32> maxCapacity;
+        Int32 maxCapacity;
         /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
-        gs2::optional<EzMaxStaminaTable> maxStaminaTable;
+        EzMaxStaminaTable maxStaminaTable;
         /** GS2-Experience と連携する際に使用する回復間隔テーブル */
-        gs2::optional<EzRecoverIntervalTable> recoverIntervalTable;
+        EzRecoverIntervalTable recoverIntervalTable;
         /** GS2-Experience と連携する際に使用する回復量テーブル */
-        gs2::optional<EzRecoverValueTable> recoverValueTable;
+        EzRecoverValueTable recoverValueTable;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::stamina::StaminaModel& staminaModel);
+        Data(const gs2::optional<gs2::stamina::StaminaModel>& staminaModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -84,6 +85,7 @@ public:
     ~EzStaminaModel() = default;
 
     EzStaminaModel(gs2::stamina::StaminaModel staminaModel);
+    EzStaminaModel(gs2::optional<gs2::stamina::StaminaModel> staminaModel);
 
     EzStaminaModel& operator=(const EzStaminaModel& ezStaminaModel) = default;
     EzStaminaModel& operator=(EzStaminaModel&& ezStaminaModel) = default;
@@ -98,52 +100,52 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     Int32 getRecoverIntervalMinutes() const
     {
-        return *ensureData().recoverIntervalMinutes;
+        return ensureData().recoverIntervalMinutes;
     }
 
     Int32 getRecoverValue() const
     {
-        return *ensureData().recoverValue;
+        return ensureData().recoverValue;
     }
 
     Int32 getInitialCapacity() const
     {
-        return *ensureData().initialCapacity;
+        return ensureData().initialCapacity;
     }
 
     Bool getIsOverflow() const
     {
-        return *ensureData().isOverflow;
+        return ensureData().isOverflow;
     }
 
     Int32 getMaxCapacity() const
     {
-        return *ensureData().maxCapacity;
+        return ensureData().maxCapacity;
     }
 
     const EzMaxStaminaTable& getMaxStaminaTable() const
     {
-        return *ensureData().maxStaminaTable;
+        return ensureData().maxStaminaTable;
     }
 
     const EzRecoverIntervalTable& getRecoverIntervalTable() const
     {
-        return *ensureData().recoverIntervalTable;
+        return ensureData().recoverIntervalTable;
     }
 
     const EzRecoverValueTable& getRecoverValueTable() const
     {
-        return *ensureData().recoverValueTable;
+        return ensureData().recoverValueTable;
     }
 
     // ========================================

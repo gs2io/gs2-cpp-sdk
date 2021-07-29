@@ -29,13 +29,25 @@ EzAccount::Data::Data(const Data& data) :
 }
 
 EzAccount::Data::Data(const gs2::account::Account& account) :
-    userId(account.getUserId()),
-    password(account.getPassword()),
+    userId(account.getUserId() ? *account.getUserId() : StringHolder()),
+    password(account.getPassword() ? *account.getPassword() : StringHolder()),
     createdAt(account.getCreatedAt() ? *account.getCreatedAt() : 0)
 {
 }
 
+EzAccount::Data::Data(const gs2::optional<gs2::account::Account>& account) :
+    userId(account && account->getUserId() ? *account->getUserId() : StringHolder()),
+    password(account && account->getPassword() ? *account->getPassword() : StringHolder()),
+    createdAt(account && account->getCreatedAt() ? *account->getCreatedAt() : 0)
+{
+}
+
 EzAccount::EzAccount(gs2::account::Account account) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(account)
+{
+}
+
+EzAccount::EzAccount(gs2::optional<gs2::account::Account> account) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(account)
 {
 }

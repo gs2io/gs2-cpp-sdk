@@ -31,15 +31,29 @@ EzMessage::Data::Data(const Data& data) :
 }
 
 EzMessage::Data::Data(const gs2::chat::Message& message) :
-    roomName(message.getRoomName()),
-    userId(message.getUserId()),
+    roomName(message.getRoomName() ? *message.getRoomName() : StringHolder()),
+    userId(message.getUserId() ? *message.getUserId() : StringHolder()),
     category(message.getCategory() ? *message.getCategory() : 0),
-    metadata(message.getMetadata()),
+    metadata(message.getMetadata() ? *message.getMetadata() : StringHolder()),
     createdAt(message.getCreatedAt() ? *message.getCreatedAt() : 0)
 {
 }
 
+EzMessage::Data::Data(const gs2::optional<gs2::chat::Message>& message) :
+    roomName(message && message->getRoomName() ? *message->getRoomName() : StringHolder()),
+    userId(message && message->getUserId() ? *message->getUserId() : StringHolder()),
+    category(message && message->getCategory() ? *message->getCategory() : 0),
+    metadata(message && message->getMetadata() ? *message->getMetadata() : StringHolder()),
+    createdAt(message && message->getCreatedAt() ? *message->getCreatedAt() : 0)
+{
+}
+
 EzMessage::EzMessage(gs2::chat::Message message) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(message)
+{
+}
+
+EzMessage::EzMessage(gs2::optional<gs2::chat::Message> message) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(message)
 {
 }

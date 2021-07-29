@@ -26,21 +26,31 @@ EzRecoverIntervalTable::Data::Data(const Data& data) :
     metadata(data.metadata),
     experienceModelId(data.experienceModelId)
 {
-    if (data.values)
-    {
-        values = data.values->deepCopy();
-    }
+    values = data.values.deepCopy();
 }
 
 EzRecoverIntervalTable::Data::Data(const gs2::stamina::RecoverIntervalTable& recoverIntervalTable) :
-    name(recoverIntervalTable.getName()),
-    metadata(recoverIntervalTable.getMetadata()),
-    experienceModelId(recoverIntervalTable.getExperienceModelId()),
-    values(recoverIntervalTable.getValues())
+    name(recoverIntervalTable.getName() ? *recoverIntervalTable.getName() : StringHolder()),
+    metadata(recoverIntervalTable.getMetadata() ? *recoverIntervalTable.getMetadata() : StringHolder()),
+    experienceModelId(recoverIntervalTable.getExperienceModelId() ? *recoverIntervalTable.getExperienceModelId() : StringHolder()),
+    values(recoverIntervalTable.getValues() ? *recoverIntervalTable.getValues() : List<Int32>())
+{
+}
+
+EzRecoverIntervalTable::Data::Data(const gs2::optional<gs2::stamina::RecoverIntervalTable>& recoverIntervalTable) :
+    name(recoverIntervalTable && recoverIntervalTable->getName() ? *recoverIntervalTable->getName() : StringHolder()),
+    metadata(recoverIntervalTable && recoverIntervalTable->getMetadata() ? *recoverIntervalTable->getMetadata() : StringHolder()),
+    experienceModelId(recoverIntervalTable && recoverIntervalTable->getExperienceModelId() ? *recoverIntervalTable->getExperienceModelId() : StringHolder()),
+    values(recoverIntervalTable && recoverIntervalTable->getValues() ? *recoverIntervalTable->getValues() : List<Int32>())
 {
 }
 
 EzRecoverIntervalTable::EzRecoverIntervalTable(gs2::stamina::RecoverIntervalTable recoverIntervalTable) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(recoverIntervalTable)
+{
+}
+
+EzRecoverIntervalTable::EzRecoverIntervalTable(gs2::optional<gs2::stamina::RecoverIntervalTable> recoverIntervalTable) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(recoverIntervalTable)
 {
 }

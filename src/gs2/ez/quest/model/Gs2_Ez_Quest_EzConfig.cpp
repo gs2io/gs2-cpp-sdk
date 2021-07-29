@@ -28,12 +28,23 @@ EzConfig::Data::Data(const Data& data) :
 }
 
 EzConfig::Data::Data(const gs2::quest::Config& config) :
-    key(config.getKey()),
-    value(config.getValue())
+    key(config.getKey() ? *config.getKey() : StringHolder()),
+    value(config.getValue() ? *config.getValue() : StringHolder())
+{
+}
+
+EzConfig::Data::Data(const gs2::optional<gs2::quest::Config>& config) :
+    key(config && config->getKey() ? *config->getKey() : StringHolder()),
+    value(config && config->getValue() ? *config->getValue() : StringHolder())
 {
 }
 
 EzConfig::EzConfig(gs2::quest::Config config) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(config)
+{
+}
+
+EzConfig::EzConfig(gs2::optional<gs2::quest::Config> config) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(config)
 {
 }

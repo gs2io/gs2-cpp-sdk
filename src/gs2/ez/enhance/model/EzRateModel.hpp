@@ -42,22 +42,23 @@ private:
     {
     public:
         /** 強化レート名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** 強化レートのメタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
         /** 強化対象に使用できるインベントリモデル のGRN */
-        gs2::optional<StringHolder> targetInventoryModelId;
+        StringHolder targetInventoryModelId;
         /** GS2-Experience で入手した経験値を格納する プロパティID に付与するサフィックス */
-        gs2::optional<StringHolder> acquireExperienceSuffix;
+        StringHolder acquireExperienceSuffix;
         /** 強化素材に使用できるインベントリモデル のGRN */
-        gs2::optional<StringHolder> materialInventoryModelId;
+        StringHolder materialInventoryModelId;
         /** 獲得できる経験値の種類マスター のGRN */
-        gs2::optional<StringHolder> experienceModelId;
+        StringHolder experienceModelId;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::enhance::RateModel& rateModel);
+        Data(const gs2::optional<gs2::enhance::RateModel>& rateModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -73,6 +74,7 @@ public:
     ~EzRateModel() = default;
 
     EzRateModel(gs2::enhance::RateModel rateModel);
+    EzRateModel(gs2::optional<gs2::enhance::RateModel> rateModel);
 
     EzRateModel& operator=(const EzRateModel& ezRateModel) = default;
     EzRateModel& operator=(EzRateModel&& ezRateModel) = default;
@@ -87,32 +89,32 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     const StringHolder& getTargetInventoryModelId() const
     {
-        return *ensureData().targetInventoryModelId;
+        return ensureData().targetInventoryModelId;
     }
 
     const StringHolder& getAcquireExperienceSuffix() const
     {
-        return *ensureData().acquireExperienceSuffix;
+        return ensureData().acquireExperienceSuffix;
     }
 
     const StringHolder& getMaterialInventoryModelId() const
     {
-        return *ensureData().materialInventoryModelId;
+        return ensureData().materialInventoryModelId;
     }
 
     const StringHolder& getExperienceModelId() const
     {
-        return *ensureData().experienceModelId;
+        return ensureData().experienceModelId;
     }
 
     // ========================================

@@ -25,27 +25,41 @@ EzBoxItems::Data::Data(const Data& data) :
     boxId(data.boxId),
     prizeTableName(data.prizeTableName)
 {
-    if (data.items)
-    {
-        items = data.items->deepCopy();
-    }
+    items = data.items.deepCopy();
 }
 
 EzBoxItems::Data::Data(const gs2::lottery::BoxItems& boxItems) :
-    boxId(boxItems.getBoxId()),
-    prizeTableName(boxItems.getPrizeTableName())
+    boxId(boxItems.getBoxId() ? *boxItems.getBoxId() : StringHolder()),
+    prizeTableName(boxItems.getPrizeTableName() ? *boxItems.getPrizeTableName() : StringHolder())
 {
-    items.emplace();
     if (boxItems.getItems())
     {
         for (int i = 0; i < boxItems.getItems()->getCount(); ++i)
         {
-            *items += EzBoxItem((*boxItems.getItems())[i]);
+            items += EzBoxItem((*boxItems.getItems())[i]);
+        }
+    }
+}
+
+EzBoxItems::Data::Data(const gs2::optional<gs2::lottery::BoxItems>& boxItems) :
+    boxId(boxItems && boxItems->getBoxId() ? *boxItems->getBoxId() : StringHolder()),
+    prizeTableName(boxItems && boxItems->getPrizeTableName() ? *boxItems->getPrizeTableName() : StringHolder())
+{
+    if (boxItems && boxItems->getItems())
+    {
+        for (int i = 0; i < boxItems->getItems()->getCount(); ++i)
+        {
+            items += EzBoxItem((*boxItems->getItems())[i]);
         }
     }
 }
 
 EzBoxItems::EzBoxItems(gs2::lottery::BoxItems boxItems) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(boxItems)
+{
+}
+
+EzBoxItems::EzBoxItems(gs2::optional<gs2::lottery::BoxItems> boxItems) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(boxItems)
 {
 }

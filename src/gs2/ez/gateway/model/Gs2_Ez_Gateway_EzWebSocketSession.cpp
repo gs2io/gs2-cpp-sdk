@@ -29,13 +29,25 @@ EzWebSocketSession::Data::Data(const Data& data) :
 }
 
 EzWebSocketSession::Data::Data(const gs2::gateway::WebSocketSession& webSocketSession) :
-    connectionId(webSocketSession.getConnectionId()),
-    namespaceName(webSocketSession.getNamespaceName()),
-    userId(webSocketSession.getUserId())
+    connectionId(webSocketSession.getConnectionId() ? *webSocketSession.getConnectionId() : StringHolder()),
+    namespaceName(webSocketSession.getNamespaceName() ? *webSocketSession.getNamespaceName() : StringHolder()),
+    userId(webSocketSession.getUserId() ? *webSocketSession.getUserId() : StringHolder())
+{
+}
+
+EzWebSocketSession::Data::Data(const gs2::optional<gs2::gateway::WebSocketSession>& webSocketSession) :
+    connectionId(webSocketSession && webSocketSession->getConnectionId() ? *webSocketSession->getConnectionId() : StringHolder()),
+    namespaceName(webSocketSession && webSocketSession->getNamespaceName() ? *webSocketSession->getNamespaceName() : StringHolder()),
+    userId(webSocketSession && webSocketSession->getUserId() ? *webSocketSession->getUserId() : StringHolder())
 {
 }
 
 EzWebSocketSession::EzWebSocketSession(gs2::gateway::WebSocketSession webSocketSession) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(webSocketSession)
+{
+}
+
+EzWebSocketSession::EzWebSocketSession(gs2::optional<gs2::gateway::WebSocketSession> webSocketSession) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(webSocketSession)
 {
 }

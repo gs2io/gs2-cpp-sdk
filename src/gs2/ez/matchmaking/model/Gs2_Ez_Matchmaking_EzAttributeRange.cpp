@@ -29,13 +29,25 @@ EzAttributeRange::Data::Data(const Data& data) :
 }
 
 EzAttributeRange::Data::Data(const gs2::matchmaking::AttributeRange& attributeRange) :
-    name(attributeRange.getName()),
+    name(attributeRange.getName() ? *attributeRange.getName() : StringHolder()),
     min(attributeRange.getMin() ? *attributeRange.getMin() : 0),
     max(attributeRange.getMax() ? *attributeRange.getMax() : 0)
 {
 }
 
+EzAttributeRange::Data::Data(const gs2::optional<gs2::matchmaking::AttributeRange>& attributeRange) :
+    name(attributeRange && attributeRange->getName() ? *attributeRange->getName() : StringHolder()),
+    min(attributeRange && attributeRange->getMin() ? *attributeRange->getMin() : 0),
+    max(attributeRange && attributeRange->getMax() ? *attributeRange->getMax() : 0)
+{
+}
+
 EzAttributeRange::EzAttributeRange(gs2::matchmaking::AttributeRange attributeRange) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(attributeRange)
+{
+}
+
+EzAttributeRange::EzAttributeRange(gs2::optional<gs2::matchmaking::AttributeRange> attributeRange) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(attributeRange)
 {
 }

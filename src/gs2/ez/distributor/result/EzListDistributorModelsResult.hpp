@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::distributor::DescribeDistributorModelsResult& describeDistributorModelsResult)
         {
+            if (describeDistributorModelsResult.getItems())
             {
                 auto& list = *describeDistributorModelsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzListDistributorModelsResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListDistributorModelsResult);
-    }
-
-    static bool isConvertible(const gs2::distributor::DescribeDistributorModelsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

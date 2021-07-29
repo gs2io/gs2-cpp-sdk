@@ -42,14 +42,15 @@ private:
     {
     public:
         /** ルーム名 */
-        gs2::optional<StringHolder> name;
+        StringHolder name;
         /** メタデータ */
-        gs2::optional<StringHolder> metadata;
+        StringHolder metadata;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::chat::Room& room);
+        Data(const gs2::optional<gs2::chat::Room>& room);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -65,6 +66,7 @@ public:
     ~EzRoom() = default;
 
     EzRoom(gs2::chat::Room room);
+    EzRoom(gs2::optional<gs2::chat::Room> room);
 
     EzRoom& operator=(const EzRoom& ezRoom) = default;
     EzRoom& operator=(EzRoom&& ezRoom) = default;
@@ -79,12 +81,12 @@ public:
 
     const StringHolder& getName() const
     {
-        return *ensureData().name;
+        return ensureData().name;
     }
 
     const StringHolder& getMetadata() const
     {
-        return *ensureData().metadata;
+        return ensureData().metadata;
     }
 
     // ========================================

@@ -45,6 +45,7 @@ private:
 
         Data(const gs2::ranking::DescribeNearRankingsResult& describeNearRankingsResult)
         {
+            if (describeNearRankingsResult.getItems())
             {
                 auto& list = *describeNearRankingsResult.getItems();
                 for (int i = 0; i < list.getCount(); ++i)
@@ -78,12 +79,6 @@ public:
     EzGetNearRankingResult deepCopy() const
     {
         GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetNearRankingResult);
-    }
-
-    static bool isConvertible(const gs2::ranking::DescribeNearRankingsResult& result)
-    {
-        return
-            result.getItems().has_value();
     }
 
     // ========================================

@@ -28,12 +28,23 @@ EzEntryModel::Data::Data(const Data& data) :
 }
 
 EzEntryModel::Data::Data(const gs2::dictionary::EntryModel& entryModel) :
-    name(entryModel.getName()),
-    metadata(entryModel.getMetadata())
+    name(entryModel.getName() ? *entryModel.getName() : StringHolder()),
+    metadata(entryModel.getMetadata() ? *entryModel.getMetadata() : StringHolder())
+{
+}
+
+EzEntryModel::Data::Data(const gs2::optional<gs2::dictionary::EntryModel>& entryModel) :
+    name(entryModel && entryModel->getName() ? *entryModel->getName() : StringHolder()),
+    metadata(entryModel && entryModel->getMetadata() ? *entryModel->getMetadata() : StringHolder())
 {
 }
 
 EzEntryModel::EzEntryModel(gs2::dictionary::EntryModel entryModel) :
+    GS2_CORE_SHARED_DATA_INITIALIZATION(entryModel)
+{
+}
+
+EzEntryModel::EzEntryModel(gs2::optional<gs2::dictionary::EntryModel> entryModel) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(entryModel)
 {
 }

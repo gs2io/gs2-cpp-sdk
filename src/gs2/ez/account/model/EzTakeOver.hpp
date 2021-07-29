@@ -42,18 +42,19 @@ private:
     {
     public:
         /** ユーザーID */
-        gs2::optional<StringHolder> userId;
+        StringHolder userId;
         /** スロット番号 */
-        gs2::optional<Int32> type;
+        Int32 type;
         /** 引き継ぎ用ユーザーID */
-        gs2::optional<StringHolder> userIdentifier;
+        StringHolder userIdentifier;
         /** 作成日時 */
-        gs2::optional<Int64> createdAt;
+        Int64 createdAt;
 
         Data() = default;
         Data(const Data& data);
         Data(Data&& data) = default;
         Data(const gs2::account::TakeOver& takeOver);
+        Data(const gs2::optional<gs2::account::TakeOver>& takeOver);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,6 +70,7 @@ public:
     ~EzTakeOver() = default;
 
     EzTakeOver(gs2::account::TakeOver takeOver);
+    EzTakeOver(gs2::optional<gs2::account::TakeOver> takeOver);
 
     EzTakeOver& operator=(const EzTakeOver& ezTakeOver) = default;
     EzTakeOver& operator=(EzTakeOver&& ezTakeOver) = default;
@@ -83,22 +85,22 @@ public:
 
     const StringHolder& getUserId() const
     {
-        return *ensureData().userId;
+        return ensureData().userId;
     }
 
     Int32 getType() const
     {
-        return *ensureData().type;
+        return ensureData().type;
     }
 
     const StringHolder& getUserIdentifier() const
     {
-        return *ensureData().userIdentifier;
+        return ensureData().userIdentifier;
     }
 
     Int64 getCreatedAt() const
     {
-        return *ensureData().createdAt;
+        return ensureData().createdAt;
     }
 
     // ========================================
